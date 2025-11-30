@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=press
+Exec=press
+Icon=io.github.masakk1.press
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=GTK;
+StartupNotify=true
+DBusActivatable=true

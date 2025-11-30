@@ -1,0 +1,111 @@
+# Meson build directories
+build/
+builddir/
+_build/
+build-dir/
+
+# Flatpak build directories
+.flatpak/
+.flatpak-builder/
+build-dir/
+repo/
+*.flatpak
+
+# Compiled Vala files
+*.c
+*.o
+*.so
+*.a
+*.la
+*.lo
+
+# But keep any hand-written C files if you have them
+# (uncomment and adjust if needed)
+# !src/*.c
+
+# Vala-specific
+*.vapi.stamp
+*.gir
+*.typelib
+*-custom.vala
+
+# Autotools (if used)
+Makefile
+Makefile.in
+.deps/
+.libs/
+*.la
+*.lo
+aclocal.m4
+autom4te.cache/
+compile
+config.guess
+config.h
+config.h.in
+config.log
+config.status
+config.sub
+configure
+depcomp
+install-sh
+libtool
+ltmain.sh
+missing
+stamp-h1
+
+# Generated files
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# GSettings compiled schema
+gschemas.compiled
+
+# Translation files (generated)
+*.mo
+*.pot
+
+# IDE specific
+.vscode/
+.idea/
+*.code-workspace
+
+# But you might want to keep vscode tasks/settings
+# !.vscode/tasks.json
+# !.vscode/settings.json
+
+# GObject introspection
+*.gir
+*.typelib
+
+# pkg-config files (generated)
+*.pc
+
+# Desktop files (if generated from .in files)
+*.desktop
+
+# But keep source desktop files
+!*.desktop.in
+
+# AppData/MetaInfo (if generated)
+# Uncomment if your .appdata.xml is generated from .in
+# *.appdata.xml
+# *.metainfo.xml
+
+# Keep the source files
+!*.appdata.xml.in
+!*.metainfo.xml.in
+
+# Backup files
+*~
+*.bak
+*.orig
+
+# Core dumps
+core
+core.*
+
+# Test results
+test-results/

@@ -29,7 +29,7 @@ public class Press.Application : Adw.Application {
             application_id: "io.github.masakk1.press",
             flags: ApplicationFlags.DEFAULT_FLAGS,
             resource_base_path: "/io/github/masakk1/press"
-        );
+            );
     }
 
     construct {
@@ -39,22 +39,22 @@ public class Press.Application : Adw.Application {
             { "quit", this.quit }
         };
         this.add_action_entries (action_entries, this);
-        this.set_accels_for_action ("app.quit", {"<control>q"});
+        this.set_accels_for_action ("app.quit", { "<control>q" });
     }
 
-    public override void activate () {
+    public override void activate() {
         base.activate ();
         var win = this.active_window ?? new Press.Window (this);
         win.present ();
     }
 
-    private void on_about_action () {
+    private void on_about_action() {
         string[] developers = { "Masakk1" };
         var about = new Adw.AboutDialog () {
             application_name = "press",
             application_icon = "io.github.masakk1.press",
             developer_name = "Masakk1",
-            translator_credits = _("translator-credits"),
+            translator_credits = _ ("translator-credits"),
             version = "0.1.0",
             developers = developers,
             copyright = "© 2025 Masakk1",
@@ -63,7 +63,8 @@ public class Press.Application : Adw.Application {
         about.present (this.active_window);
     }
 
-    private void on_preferences_action () {
+    private void on_preferences_action() {
         message ("app.preferences action activated");
     }
+
 }

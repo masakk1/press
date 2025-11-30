@@ -31,4 +31,5 @@ public class Press.Window : Adw.ApplicationWindow {
     public Window (Gtk.Application app) {
         Object (application: app);
     }
+
 }

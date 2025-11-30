@@ -25,14 +25,10 @@
 
 public class Press.Application : Adw.Application {
     public Application () {
-        Object (
-            application_id: "io.github.masakk1.press",
-            flags: ApplicationFlags.DEFAULT_FLAGS,
-            resource_base_path: "/io/github/masakk1/press"
-            );
-    }
+        application_id = "io.github.masakk1.press";
+        flags = ApplicationFlags.DEFAULT_FLAGS;
+        resource_base_path = "/io/github/masakk1/press";
 
-    construct {
         ActionEntry[] action_entries = {
             { "about", this.on_about_action },
             { "preferences", this.on_preferences_action },

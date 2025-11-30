@@ -29,7 +29,7 @@ public class Press.Window : Adw.ApplicationWindow {
     private unowned Gtk.Label label;
 
     public Window (Gtk.Application app) {
-        Object (application: app);
+        application = app;
     }
 
 }

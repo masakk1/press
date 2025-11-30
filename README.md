@@ -23,3 +23,6 @@ Using the Flatpak extension by Bilal Elmoussaoui on VSCode:
 This project uses a `.editorconfig` for spacing basics, and `uncrustify.cfg` for code formatting.
 
 The `uncrustify.cfg` is mostly from https://github.com/PerfectCarl/elementary-uncrustify, with some adjustments
+
+Then, there are some guidelines:
+1. Don't use GObject's construction system. Like `construct {}` and `Object(...)`.

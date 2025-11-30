@@ -11,6 +11,12 @@ flatpak install flathub org.gnome.Platform//49
 flatpak install flathub org.gnome.Sdk//49
 ```
 
+Using the Flatpak extension by Bilal Elmoussaoui on VSCode:
+```sh
+# Open command palette (Ctrl+Shift+P)
+> Build and run
+```
+
 ## Contributing
 
 ### Formatting

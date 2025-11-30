@@ -26,10 +26,60 @@
 [GtkTemplate (ui = "/io/github/masakk1/press/window.ui")]
 public class Press.Window : Adw.ApplicationWindow {
     [GtkChild]
-    private unowned Gtk.Label label;
+    private unowned Adw.ComboRow quality_selection;
+
+    [GtkChild]
+    private unowned Adw.ActionRow source_directory_row;
+
+    [GtkChild]
+    private unowned Gtk.Button source_directory_button;
 
     public Window (Gtk.Application app) {
         application = app;
+
+        // Quality Presets
+        var presets_list = new Gtk.StringList (null);
+        foreach(QualityPreset preset in QualityPresets.list){
+            presets_list.append (preset.name);
+        }
+        presets_list.append (QualityPresets.custom);
+        quality_selection.model = presets_list;
+
+        quality_selection.notify["selected"].connect (this.selected_quality_preset);
+
+        // Source Directory
+        source_directory_button.clicked.connect (this.set_source_directory);
+    }
+
+    private void set_source_directory() {
+        this.select_directory ((folder) => {
+            string ? subtitle = folder != null ? folder.get_path () : null;
+
+            source_directory_row.subtitle = subtitle;
+        });
+    }
+
+    private File ? select_directory(Func<File> callback) {
+        var dialog = new Gtk.FileDialog ();
+        File ? folder = null;
+        dialog.select_folder.begin (this, null, (obj, res) => {
+            try {
+                folder = dialog.select_folder.end (res);
+                callback (folder);
+            } catch ( Error err ){
+                stderr.printf ("Error trying to open folder");
+            }
+        });
+        return folder;
+    }
+
+    private void selected_quality_preset() {
+        var selected_item = quality_selection.selected_item;
+        var str_obj = selected_item as Gtk.StringObject;
+
+        if( str_obj.get_string () == QualityPresets.custom ){
+
+        }
     }
 
 }

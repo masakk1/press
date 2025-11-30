@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
-  <requires lib="Adw" version="1.0"/>
+  <requires lib="gtk" version="4.0" />
+  <requires lib="Adw" version="1.0" />
   <template class="PressWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">Press</property>
     <property name="default-width">800</property>
@@ -10,41 +10,38 @@
       <object class="AdwToolbarView">
         <child type="top">
           <object class="AdwHeaderBar">
-            <child type="end">
-              <object class="GtkMenuButton">
-                <property name="primary">True</property>
-                <property name="icon-name">open-menu-symbolic</property>
-                <property name="tooltip-text" translatable="yes">Main Menu</property>
-                <property name="menu-model">primary_menu</property>
-              </object>
-            </child>
           </object>
         </child>
         <property name="content">
-          <object class="GtkLabel" id="label">
-            <property name="label" translatable="yes">Hello, World!</property>
-            <style>
-              <class name="title-1"/>
-            </style>
+          <object class="GtkScrolledWindow">
+            <child>
+              <object class="GtkListBox">
+                <child>
+                  <object class="AdwActionRow" id="source_directory_row">
+                    <property name="title" translatable="yes">Source Directory</property>
+                    <property name="subtitle" translatable="yes">/path/to/directory</property>
+                    <property name="activatable-widget">source_directory_button</property>
+                    <child type="suffix">
+                      <object class="GtkButton" id="source_directory_button">
+                        <property name="icon-name">folder-open-symbolic</property>
+                        <property name="valign">3</property>
+                        <style>
+                          <class name="flat" />
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwComboRow" id="quality_selection">
+                    <property name="title" translatable="yes">Quality Preset</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </property>
       </object>
     </property>
   </template>
-  <menu id="primary_menu">
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">_Preferences</attribute>
-        <attribute name="action">app.preferences</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
-        <attribute name="action">app.shortcuts</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_About Press</attribute>
-        <attribute name="action">app.about</attribute>
-      </item>
-    </section>
-  </menu>
 </interface>

@@ -59,18 +59,17 @@ public class Press.Window : Adw.ApplicationWindow {
         });
     }
 
-    private File ? select_directory(Func<File> callback) {
+    private void select_directory(Func<File> callback) {
         var dialog = new Gtk.FileDialog ();
-        File ? folder = null;
         dialog.select_folder.begin (this, null, (obj, res) => {
             try {
-                folder = dialog.select_folder.end (res);
+                File folder = dialog.select_folder.end (res);
                 callback (folder);
             } catch ( Error err ){
                 stderr.printf ("Error trying to open folder");
             }
         });
-        return folder;
+        dialog.accept_label = "hello world";
     }
 
     private void selected_quality_preset() {

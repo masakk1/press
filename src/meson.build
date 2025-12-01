@@ -2,7 +2,7 @@ press_sources = [
   'main.vala',
   'application.vala',
   'window.vala',
-  'presets.vala',
+  'quality_presets.vala',
 ]
 
 press_deps = [

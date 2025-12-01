@@ -37,8 +37,8 @@
             "buildsystem": "meson",
             "sources": [
                 {
-                    "type": "git",
-                    "url": "file:///home/mas/Documents/Dev/ValaGTK"
+                    "type": "dir",
+                    "path": "."
                 }
             ]
         }

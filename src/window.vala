@@ -29,6 +29,9 @@ public class Press.Window : Adw.ApplicationWindow {
     private unowned Adw.ComboRow quality_selection;
 
     [GtkChild]
+    private unowned Adw.ComboRow custom_quality_format;
+
+    [GtkChild]
     private unowned Adw.ActionRow source_directory_row;
 
     [GtkChild]
@@ -77,7 +80,9 @@ public class Press.Window : Adw.ApplicationWindow {
         var str_obj = selected_item as Gtk.StringObject;
 
         if( str_obj.get_string () == QualityPresets.custom ){
-
+            custom_quality_format.visible = true;
+        } else {
+            custom_quality_format.visible = false;
         }
     }
 

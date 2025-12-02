@@ -4,8 +4,6 @@
   <requires lib="Adw" version="1.0" />
   <template class="PressWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">Press</property>
-    <property name="default-width">800</property>
-    <property name="default-height">600</property>
     <property name="content">
       <object class="AdwToolbarView">
         <child type="top">
@@ -13,14 +11,17 @@
           </object>
         </child>
         <property name="content">
-          <object class="GtkScrolledWindow">
+          <object class="AdwPreferencesPage">
             <child>
-              <object class="GtkListBox">
+              <object class="AdwPreferencesGroup">
                 <child>
                   <object class="AdwActionRow" id="source_directory_row">
                     <property name="title" translatable="yes">Source Directory</property>
                     <property name="subtitle" translatable="yes">/path/to/directory</property>
                     <property name="activatable-widget">source_directory_button</property>
+                    <style>
+                      <class name="property" />
+                    </style>
                     <child type="suffix">
                       <object class="GtkButton" id="source_directory_button">
                         <property name="icon-name">folder-open-symbolic</property>
@@ -35,6 +36,21 @@
                 <child>
                   <object class="AdwComboRow" id="quality_selection">
                     <property name="title" translatable="yes">Quality Preset</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwComboRow" id="custom_quality_format">
+                    <property name="title" translatable="yes">Format</property>
+                    <property name="visible">false</property>
+                    <property name="model">
+                      <object class="GtkStringList">
+                        <items>
+                          <item translatable="yes">Foo</item>
+                          <item translatable="yes">Bar</item>
+                          <item translatable="yes">Baz</item>
+                        </items>
+                      </object>
+                    </property>
                   </object>
                 </child>
               </object>

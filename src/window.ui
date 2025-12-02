@@ -4,6 +4,8 @@
   <requires lib="Adw" version="1.0" />
   <template class="PressWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">Press</property>
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
     <property name="content">
       <object class="AdwToolbarView">
         <child type="top">

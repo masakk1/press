@@ -26,12 +26,6 @@
 [GtkTemplate (ui = "/io/github/masakk1/press/window.ui")]
 public class Press.Window : Adw.ApplicationWindow {
     [GtkChild]
-    private unowned Adw.ComboRow quality_selection;
-
-    [GtkChild]
-    private unowned Adw.ComboRow custom_quality_format;
-
-    [GtkChild]
     private unowned Adw.ActionRow source_directory_row;
 
     [GtkChild]
@@ -44,6 +38,15 @@ public class Press.Window : Adw.ApplicationWindow {
     private unowned Gtk.Button target_directory_button;
 
     [GtkChild]
+    private unowned Adw.ComboRow quality_preset_selection;
+
+    [GtkChild]
+    private unowned Adw.PreferencesGroup custom_quality_group;
+
+    [GtkChild]
+    private unowned Adw.ComboRow custom_quality_format;
+
+    [GtkChild]
     private unowned Adw.ButtonRow compress_button;
 
     public Window (Gtk.Application app) {
@@ -51,13 +54,22 @@ public class Press.Window : Adw.ApplicationWindow {
 
         // Quality Presets
         var presets_list = new Gtk.StringList (null);
-        foreach(QualityPreset preset in QualityPresets.list){
+        foreach(var preset in QualityPresets.list){
             presets_list.append (preset.name);
         }
         presets_list.append (QualityPresets.custom);
-        quality_selection.model = presets_list;
+        quality_preset_selection.model = presets_list;
 
-        quality_selection.notify["selected"].connect (this.selected_quality_preset);
+        quality_preset_selection.notify["selected"].connect (this.selected_quality_preset);
+
+        // Quality Formats
+        var format_list = new Gtk.StringList (null);
+
+        foreach(var format in QualityFormats.list){
+            format_list.append (format.name);
+        }
+
+        custom_quality_format.model = format_list;
 
         // Source Directory
         source_directory_button.clicked.connect (this.set_source_directory);
@@ -95,13 +107,14 @@ public class Press.Window : Adw.ApplicationWindow {
     }
 
     private void selected_quality_preset() {
-        var selected_item = quality_selection.selected_item;
+        var selected_item = quality_preset_selection.selected_item;
         var str_obj = selected_item as Gtk.StringObject;
 
         if( str_obj.get_string () == QualityPresets.custom ){
-            custom_quality_format.visible = true;
+            custom_quality_group.visible = true;
         } else {
-            custom_quality_format.visible = false;
+            print (@"$(QualityFormats.flac.name)");
+            custom_quality_group.visible = false;
         }
     }
 

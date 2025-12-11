@@ -37,6 +37,12 @@ public class Press.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Gtk.Button source_directory_button;
 
+    [GtkChild]
+    private unowned Adw.ActionRow target_directory_row;
+
+    [GtkChild]
+    private unowned Gtk.Button target_directory_button;
+
     public Window (Gtk.Application app) {
         application = app;
 
@@ -52,6 +58,9 @@ public class Press.Window : Adw.ApplicationWindow {
 
         // Source Directory
         source_directory_button.clicked.connect (this.set_source_directory);
+
+        // Target Directory
+        target_directory_button.clicked.connect (this.set_target_directory);
     }
 
     private void set_source_directory() {
@@ -59,6 +68,14 @@ public class Press.Window : Adw.ApplicationWindow {
             string ? subtitle = folder != null ? folder.get_path () : null;
 
             source_directory_row.subtitle = subtitle;
+        });
+    }
+
+    private void set_target_directory() {
+        this.select_directory ((folder) => {
+            string ? subtitle = folder != null ? folder.get_path () : null;
+
+            target_directory_row.subtitle = subtitle;
         });
     }
 
@@ -72,7 +89,6 @@ public class Press.Window : Adw.ApplicationWindow {
                 stderr.printf ("Error trying to open folder");
             }
         });
-        dialog.accept_label = "hello world";
     }
 
     private void selected_quality_preset() {

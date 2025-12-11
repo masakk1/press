@@ -36,6 +36,25 @@
                   </object>
                 </child>
                 <child>
+                  <object class="AdwActionRow" id="target_directory_row">
+                    <property name="title" translatable="yes">Target Directory</property>
+                    <property name="subtitle" translatable="yes">/path/to/directory</property>
+                    <property name="activatable-widget">target_directory_button</property>
+                    <style>
+                      <class name="property" />
+                    </style>
+                    <child type="suffix">
+                      <object class="GtkButton" id="target_directory_button">
+                        <property name="icon-name">folder-open-symbolic</property>
+                        <property name="valign">3</property>
+                        <style>
+                          <class name="flat" />
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
                   <object class="AdwComboRow" id="quality_selection">
                     <property name="title" translatable="yes">Quality Preset</property>
                   </object>

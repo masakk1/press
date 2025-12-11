@@ -76,9 +76,19 @@
                 </child>
               </object>
             </child>
+            <child>
+              <object class="AdwPreferencesGroup">
+                <child>
+                  <object class="AdwButtonRow" id="compress_button">
+                    <property name="title" translatable="yes">Compress</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </property>
       </object>
     </property>
+
   </template>
 </interface>

@@ -43,6 +43,9 @@ public class Press.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Gtk.Button target_directory_button;
 
+    [GtkChild]
+    private unowned Adw.ButtonRow compress_button;
+
     public Window (Gtk.Application app) {
         application = app;
 

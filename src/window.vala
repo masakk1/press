@@ -53,23 +53,9 @@ public class Press.Window : Adw.ApplicationWindow {
         application = app;
 
         // Quality Presets
-        var presets_list = new Gtk.StringList (null);
-        foreach(var preset in QualityPresets.list){
-            presets_list.append (preset.name);
-        }
-        presets_list.append (QualityPresets.custom);
-        quality_preset_selection.model = presets_list;
-
         quality_preset_selection.notify["selected"].connect (this.selected_quality_preset);
 
         // Quality Formats
-        var format_list = new Gtk.StringList (null);
-
-        foreach(var format in QualityFormats.list){
-            format_list.append (format.name);
-        }
-
-        custom_quality_format.model = format_list;
 
         // Source Directory
         source_directory_button.clicked.connect (this.set_source_directory);
@@ -109,13 +95,6 @@ public class Press.Window : Adw.ApplicationWindow {
     private void selected_quality_preset() {
         var selected_item = quality_preset_selection.selected_item;
         var str_obj = selected_item as Gtk.StringObject;
-
-        if( str_obj.get_string () == QualityPresets.custom ){
-            custom_quality_group.visible = true;
-        } else {
-            print (@"$(QualityFormats.flac.name)");
-            custom_quality_group.visible = false;
-        }
     }
 
 }

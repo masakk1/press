@@ -11,8 +11,9 @@ press_deps = [
 ]
 
 press_sources += gnome.compile_resources('press-resources',
-  'press.gresource.xml',
-  c_name: 'press'
+  'ui/press.gresource.xml',
+  c_name: 'press',
+  source_dir: ['ui']
 )
 
 executable('press', press_sources,

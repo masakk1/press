@@ -8,6 +8,7 @@ press_deps = [
   config_dep,
   dependency('gtk4'),
   dependency('libadwaita-1', version: '>= 1.4'),
+  dependency('json-glib-1.0', required: true)
 ]
 
 press_sources += gnome.compile_resources('press-resources',

@@ -43,4 +43,6 @@ configure_file(
   install_dir: get_option('datadir') / 'dbus-1' / 'services'
 )
 
+install_data('presets.json', install_dir: get_option('prefix') / get_option('datadir'))
+
 subdir('icons')

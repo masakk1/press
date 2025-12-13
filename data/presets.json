@@ -1,0 +1,43 @@
+{
+    "formats": {
+        "mp3": {
+            "name": "MPEG / mp3",
+            "extension": "mp3"
+        },
+        "m4a": {
+            "name": "AAC / m4a",
+            "extension": "m4a"
+        },
+        "ogg": {
+            "name": "Opus / ogg",
+            "extension": "ogg"
+        }
+    },
+    "quality_presets": {
+        "high": {
+            "name": "High Quality",
+            "format": "m4a",
+            "bitrate": 192
+        },
+        "standard": {
+            "name": "Standard Quality",
+            "format": "m4a",
+            "bitrate": 128
+        },
+        "libre": {
+            "name": "Libre Codec (OGG)",
+            "format": "ogg",
+            "bitrate": 128
+        },
+        "compatibility": {
+            "name": "Compatibility",
+            "format": "mp3",
+            "bitrate": 128
+        },
+        "other": {
+            "name": "Other...",
+            "format": "mp3",
+            "bitrate": 128
+        }
+    }
+}

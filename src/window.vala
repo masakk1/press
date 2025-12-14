@@ -56,6 +56,9 @@ public class Press.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Adw.AlertDialog confirm_dialog;
 
+    [GtkChild]
+    private unowned Adw.NavigationView navigation_view;
+
     public Window (Gtk.Application app) {
         application = app;
 
@@ -228,8 +231,13 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private void answer_confirm_dialog(string response) {
         if( response == "compress" ){
-            print ("Switch to compressing window");
+            this.begin_compression ();
         }
+    }
+
+    private void begin_compression() {
+        navigation_view.push_by_tag ("compressing_page");
+        // compress files at destination, call the command
     }
 
 }

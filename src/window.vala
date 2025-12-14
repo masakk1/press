@@ -238,6 +238,8 @@ public class Press.Window : Adw.ApplicationWindow {
     private void begin_compression() {
         navigation_view.push_by_tag ("compressing_page");
         // compress files at destination, call the command
+        // when done:
+        // navigation_view.push_by_tag ("done_page");
     }
 
 }

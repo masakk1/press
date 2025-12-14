@@ -138,6 +138,27 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="AdwNavigationPage">
+            <property name="title" translatable="yes">Done</property>
+            <property name="tag">done_page</property>
+            <child>
+              <object class="AdwToolbarView">
+                <child type="top">
+                  <object class="AdwHeaderBar"></object>
+                </child>
+                <property name="content">
+                  <object class="AdwStatusPage">
+                    <property name="title" translatable="yes">All done!</property>
+                    <property
+                      name="description"
+                      translatable="yes">Your files are now compressed at the target directory.</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </property>
     <object class="AdwAlertDialog" id="confirm_dialog">

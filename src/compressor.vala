@@ -99,15 +99,15 @@ public class Press.Compressor : Object {
         File target_file = File.new_for_path (target_file_path);
         File ? target_parent = target_file.get_parent ();
 
-        bool valid_folder = true;
+        bool valid_folder = false;
 
         // NOTE: parent can be null for '/'
         if( target_parent != null && !target_parent.query_exists (null)){
             try {
+                valid_folder = true;
                 target_parent.make_directory_with_parents (null);
             } catch ( Error err ){
                 warning (@"Error creating folders for target file. Message: $(err.message)");
-                valid_folder = false;
             }
         }
 

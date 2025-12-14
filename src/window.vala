@@ -269,7 +269,7 @@ public class Press.Window : Adw.ApplicationWindow {
         if( folders_exist ){
             navigation_view.push_by_tag ("compressing_page");
 
-            string extension = this.format_data_object.get_string_member ("extension");
+            string extension = this.selected_format_data_object.get_string_member ("extension");
 
             this.compressor.format_extension = extension;
             this.compressor.bitrate = this.bitrate;

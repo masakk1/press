@@ -51,7 +51,7 @@ public class Press.Window : Adw.ApplicationWindow {
     private string quality_preset_custom_name = "nothing";
 
     [GtkChild]
-    private unowned Adw.ButtonRow compress_button;
+    private unowned Gtk.Button compress_button;
     [GtkChild]
     private unowned Adw.AlertDialog confirm_dialog;
     [GtkChild]
@@ -78,7 +78,7 @@ public class Press.Window : Adw.ApplicationWindow {
         custom_quality_bitrate.notify["value"].connect (this.select_custom_bitrate);
 
         // Compress button
-        compress_button.activated.connect (this.open_confirm_dialog);
+        compress_button.clicked.connect (this.open_confirm_dialog);
         confirm_dialog.response.connect (this.answer_confirm_dialog);
 
         // In compressing page

@@ -99,9 +99,10 @@
                     <child>
                       <object class="AdwPreferencesGroup">
                         <child>
-                          <object class="AdwButtonRow" id="compress_button">
-                            <property name="title" translatable="yes">Compress</property>
+                          <object class="GtkButton" id="compress_button">
+                            <property name="label" translatable="yes">Compress</property>
                             <style>
+                              <class name="pill" />
                               <class name="suggested-action" />
                             </style>
                           </object>

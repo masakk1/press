@@ -118,6 +118,7 @@
           <object class="AdwNavigationPage">
             <property name="title" translatable="yes">Compress</property>
             <property name="tag">compressing_page</property>
+            <property name="can-pop">false</property>
             <child>
               <object class="AdwToolbarView">
                 <child type="top">
@@ -142,6 +143,7 @@
           <object class="AdwNavigationPage">
             <property name="title" translatable="yes">Done</property>
             <property name="tag">done_page</property>
+            <property name="can-pop">false</property>
             <child>
               <object class="AdwToolbarView">
                 <child type="top">

@@ -122,15 +122,24 @@
             <child>
               <object class="AdwToolbarView">
                 <child type="top">
-                  <object class="AdwHeaderBar"></object>
+                  <object class="AdwHeaderBar">
+                    <child type="start">
+                      <object class="GtkButton" id="cancel_compressing_button">
+                        <property name="label">Cancel</property>
+                        <style>
+                          <class name="destructive-action" />
+                        </style>
+                      </object>
+                    </child>
+                  </object>
                 </child>
                 <property name="content">
-                  <object class="AdwStatusPage" id="compressing_page">
+                  <object class="AdwStatusPage" id="compressing_status_page">
                     <property name="title" translatable="yes">Compressing</property>
                     <property name="description">...</property>
                     <property name="paintable">
                       <object class="AdwSpinnerPaintable">
-                        <property name="widget">compressing_page</property>
+                        <property name="widget">compressing_status_page</property>
                       </object>
                     </property>
                   </object>
@@ -170,10 +179,21 @@
         translatable="yes">This will replace files with the same name at the destination directory.</property>
       <property name="default-response">compress</property>
       <property name="close-response">cancel</property>
-      <!-- <signal name="response" handler="response_cb" /> -->
       <responses>
         <response id="cancel" translatable="yes">_Cancel</response>
         <response id="compress" translatable="yes" appearance="destructive">_Compress</response>
+      </responses>
+    </object>
+    <object class="AdwAlertDialog" id="cancel_dialog">
+      <property name="heading" translatable="yes">Cancel compression?</property>
+      <property
+        name="body"
+        translatable="yes">This will stop the compression, but wont remove the changes already made.</property>
+      <property name="default-response">continue</property>
+      <property name="close-response">continue</property>
+      <responses>
+        <response id="continue" translatable="yes">_Continue</response>
+        <response id="cancel" translatable="yes" appearance="destructive">_Cancel</response>
       </responses>
     </object>
   </template>

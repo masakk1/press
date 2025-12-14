@@ -52,9 +52,12 @@ public class Press.Window : Adw.ApplicationWindow {
 
     [GtkChild]
     private unowned Adw.ButtonRow compress_button;
-
     [GtkChild]
     private unowned Adw.AlertDialog confirm_dialog;
+    [GtkChild]
+    private unowned Gtk.Button cancel_compressing_button;
+    [GtkChild]
+    private unowned Adw.AlertDialog cancel_dialog;
 
     [GtkChild]
     private unowned Adw.NavigationView navigation_view;
@@ -77,6 +80,10 @@ public class Press.Window : Adw.ApplicationWindow {
         // Compress button
         compress_button.activated.connect (this.open_confirm_dialog);
         confirm_dialog.response.connect (this.answer_confirm_dialog);
+
+        // In compressing page
+        cancel_compressing_button.clicked.connect (this.open_cancel_dialog);
+        cancel_dialog.response.connect (this.answer_cancel_dialog);
     }
 
     private bool load_presets() {
@@ -235,11 +242,26 @@ public class Press.Window : Adw.ApplicationWindow {
         }
     }
 
+    private void open_cancel_dialog() {
+        cancel_dialog.present (this);
+    }
+
+    private void answer_cancel_dialog(string response) {
+        if( response == "cancel" ){
+            this.cancel_compression ();
+        }
+    }
+
     private void begin_compression() {
         navigation_view.push_by_tag ("compressing_page");
         // compress files at destination, call the command
         // when done:
         // navigation_view.push_by_tag ("done_page");
+    }
+
+    private void cancel_compression() {
+        // cancel the compression process
+        navigation_view.pop_to_tag ("config_page");
     }
 
 }

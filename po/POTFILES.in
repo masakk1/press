@@ -5,4 +5,4 @@ data/io.github.masakk1.press.metainfo.xml.in
 data/io.github.masakk1.press.gschema.xml
 src/main.vala
 src/window.vala
-src/window.ui
+src/ui/window.ui

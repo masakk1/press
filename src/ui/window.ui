@@ -106,6 +106,18 @@
         </property>
       </object>
     </property>
-
+    <object class="AdwAlertDialog" id="confirm_dialog">
+      <property name="heading" translatable="yes">Compress and replace all files?</property>
+      <property
+        name="body"
+        translatable="yes">This will replace files with the same name at the destination directory.</property>
+      <property name="default-response">compress</property>
+      <property name="close-response">cancel</property>
+      <!-- <signal name="response" handler="response_cb" /> -->
+      <responses>
+        <response id="cancel" translatable="yes">_Cancel</response>
+        <response id="compress" translatable="yes" appearance="destructive">_Compress</response>
+      </responses>
+    </object>
   </template>
 </interface>

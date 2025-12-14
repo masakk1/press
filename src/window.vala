@@ -27,35 +27,34 @@
 public class Press.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Adw.ActionRow source_directory_row;
-
     [GtkChild]
     private unowned Gtk.Button source_directory_button;
-
     [GtkChild]
     private unowned Adw.ActionRow target_directory_row;
-
     [GtkChild]
     private unowned Gtk.Button target_directory_button;
 
     [GtkChild]
-    private unowned Adw.ComboRow quality_preset_selection;
-
-    [GtkChild]
     private unowned Adw.PreferencesGroup custom_quality_group;
-
+    [GtkChild]
+    private unowned Adw.ComboRow quality_preset_selection;
     [GtkChild]
     private unowned Adw.ComboRow custom_quality_format;
-
     [GtkChild]
-    private unowned Adw.ButtonRow compress_button;
+    private unowned Adw.SpinRow custom_quality_bitrate;
 
     private Json.Object quality_preset_data_object;
     private Json.Object selected_quality_preset_data_object;
     private Json.Object format_data_object;
     private Json.Object selected_format_data_object;
-    private int bitrate;
+    private int bitrate = 0;
     private string quality_preset_custom_name = "nothing";
 
+    [GtkChild]
+    private unowned Adw.ButtonRow compress_button;
+
+    [GtkChild]
+    private unowned Adw.AlertDialog confirm_dialog;
 
     public Window (Gtk.Application app) {
         application = app;
@@ -70,6 +69,11 @@ public class Press.Window : Adw.ApplicationWindow {
         load_presets ();
         quality_preset_selection.notify["selected"].connect (this.select_quality_preset);
         custom_quality_format.notify["selected"].connect (this.select_custom_format);
+        custom_quality_bitrate.notify["value"].connect (this.select_custom_bitrate);
+
+        // Compress button
+        compress_button.activated.connect (this.open_confirm_dialog);
+        confirm_dialog.response.connect (this.answer_confirm_dialog);
     }
 
     private bool load_presets() {
@@ -158,7 +162,7 @@ public class Press.Window : Adw.ApplicationWindow {
                 File folder = dialog.select_folder.end (res);
                 callback (folder);
             } catch ( Error err ){
-                stderr.printf ("Error trying to open folder");
+                error ("Error trying to open folder");
             }
         });
     }
@@ -190,11 +194,6 @@ public class Press.Window : Adw.ApplicationWindow {
                 this.selected_format_data_object = format_object;
 
                 this.bitrate = (int32) quality_preset_object.get_int_member ("bitrate");
-
-                print ("\n");
-                print ("selected: " + this.selected_quality_preset_data_object.get_string_member ("name") + "\n");
-                print ("format: " + this.selected_format_data_object.get_string_member ("name") + "\n");
-                print ("bitrate: " + this.bitrate.to_string () + "\n");
             }
         }
     }
@@ -208,13 +207,28 @@ public class Press.Window : Adw.ApplicationWindow {
     }
 
     private void load_custom_format(string name) {
-        foreach(var member_name in this.format_data_object.get_members ()){
+        foreach(string member_name in this.format_data_object.get_members ()){
             var format_object = this.format_data_object.get_object_member (member_name);
-            string format_name = format_object.get_string_member (name);
+            string format_name = format_object.get_string_member ("name");
 
             if( name == format_name ){
                 this.selected_format_data_object = format_object;
             }
+        }
+    }
+
+    private void select_custom_bitrate() {
+        int value = (int) this.custom_quality_bitrate.value;
+        this.bitrate = value;
+    }
+
+    private void open_confirm_dialog() {
+        confirm_dialog.present (this);
+    }
+
+    private void answer_confirm_dialog(string response) {
+        if( response == "compress" ){
+            print ("Switch to compressing window");
         }
     }
 

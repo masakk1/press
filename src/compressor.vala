@@ -97,27 +97,48 @@ public class Press.Compressor : Object {
         string target_file_path = target_folder_path + relative_path;
 
         File target_file = File.new_for_path (target_file_path);
-        File ? target_parent = target_file.get_parent ();
-
-        bool valid_folder = false;
-
-        // NOTE: parent can be null for '/'
-        if( target_parent != null && !target_parent.query_exists (null)){
-            try {
-                valid_folder = true;
-                target_parent.make_directory_with_parents (null);
-            } catch ( Error err ){
-                warning (@"Error creating folders for target file. Message: $(err.message)");
-            }
-        }
+        bool valid_folder = this.ensure_directory_exists (target_file);
 
         if( valid_folder ){
-            try {
-                target_file.create (FileCreateFlags.NONE, null);
-            } catch ( Error err ){
-                warning (@"Error trying to create target file. Message: $(err.message)");
+            bool is_audio = this.is_audio (source_file);
+
+            if( is_audio ){
+                this.convert_file (source_file, target_file);
+            } else {
+                // TODO: Copy file over entirely
             }
         }
+    }
+
+    private bool ensure_directory_exists(File target_file) {
+        File ? target_parent = target_file.get_parent ();
+
+        bool exists = false;
+
+        // NOTE: parent can be null for '/'
+        if( target_parent != null ){
+            exists = target_parent.query_exists (null);
+
+            if( !exists ){
+                try {
+                    target_parent.make_directory_with_parents (null);
+                    exists = true;
+                } catch ( Error err ){
+                    warning (@"Error creating folders for target file. Message: $(err.message)");
+                }
+            }
+        }
+
+        return exists;
+    }
+
+    private bool is_audio(File file) {
+        return true; // TODO
+    }
+
+    private void convert_file(File source_file, File target_file) {
+        print (@"convert file: $(target_file.get_path())");
+        return; // TODO
     }
 
     public void cancel_process() {

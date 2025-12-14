@@ -62,8 +62,11 @@ public class Press.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Adw.NavigationView navigation_view;
 
+    private Press.Compressor compressor;
+
     public Window (Gtk.Application app) {
         application = app;
+        compressor = new Compressor ();
 
         // Source Directory
         source_directory_button.clicked.connect (this.set_source_directory);

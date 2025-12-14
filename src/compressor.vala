@@ -24,6 +24,9 @@
  */
 
 public class Press.Compressor : Object {
+    // note: ^\.?(?<name>\/[^\/\n]+)+(?<ext>\.[A-z0-9\._-]+)$
+
+    private delegate void FileCallback(File file);
 
     public string format_extension;
     public int bitrate;
@@ -40,14 +43,58 @@ public class Press.Compressor : Object {
         this.process_cancel = false;
         this.source_folder = File.new_for_path (source_path);
         this.target_folder = File.new_for_path (target_path);
+
+        assert (this.source_folder.query_exists (null));
+        assert (this.target_folder.query_exists (null));
+
+        this.run_for_child (this.source_folder, (file) => {
+            this.process_file (file);
+        });
+    }
+
+    // run callback for each child of provided folder
+    private void run_for_child(File folder, FileCallback callback) {
+        return_if_fail (folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY);
+
+        try {
+            var enumerator = folder.enumerate_children (
+                FileAttribute.STANDARD_NAME + "," +
+                FileAttribute.STANDARD_TYPE,
+                FileQueryInfoFlags.NONE,
+                null);
+
+            FileInfo info;
+            while((info = enumerator.next_file ()) != null ){
+                string name = info.get_name ();
+                File file = folder.get_child (name);
+
+                bool is_folder = info.get_file_type () == FileType.DIRECTORY;
+
+                if( is_folder ){
+                    this.run_for_child (file, callback);
+                } else {
+                    callback (file);
+                }
+            }
+
+            enumerator.close ();
+
+        } catch ( Error err ){
+            print ("Error: %s\n", err.message);
+        }
     }
 
     // public async void compress_file_async(string source_file_path, string target_file_path) {
 
     // }
 
-    private async void process_file(File file) {
+    private void process_file(File source_file) {
+        string source_folder_path = this.source_folder.get_path ();
+        string target_folder_path = this.target_folder.get_path ();
+        string source_file_path = source_file.get_path ();
 
+        string relative_path = source_file_path.replace (source_folder_path, "");
+        string target_file_path = target_folder_path + relative_path;
     }
 
     public void cancel_process() {

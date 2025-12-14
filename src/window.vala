@@ -34,6 +34,9 @@ public class Press.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Gtk.Button target_directory_button;
 
+    private string source_directory_path;
+    private string target_directory_path;
+
     [GtkChild]
     private unowned Adw.PreferencesGroup custom_quality_group;
     [GtkChild]
@@ -154,17 +157,19 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private void set_source_directory() {
         this.select_directory ((folder) => {
-            string ? subtitle = folder != null ? folder.get_path () : null;
+            string path = folder != null ? folder.get_path () : "nothing";
 
-            source_directory_row.subtitle = subtitle;
+            this.source_directory_path = path;
+            source_directory_row.subtitle = path;
         });
     }
 
     private void set_target_directory() {
         this.select_directory ((folder) => {
-            string ? subtitle = folder != null ? folder.get_path () : null;
+            string ? path = folder != null ? folder.get_path () : "nothing";
 
-            target_directory_row.subtitle = subtitle;
+            this.target_directory_path = path;
+            target_directory_row.subtitle = path;
         });
     }
 
@@ -175,7 +180,7 @@ public class Press.Window : Adw.ApplicationWindow {
                 File folder = dialog.select_folder.end (res);
                 callback (folder);
             } catch ( Error err ){
-                error ("Error trying to open folder");
+                warning ("Error trying to open folder. Message: " + err.message);
             }
         });
     }
@@ -256,14 +261,34 @@ public class Press.Window : Adw.ApplicationWindow {
     }
 
     private void begin_compression() {
-        navigation_view.push_by_tag ("compressing_page");
-        // compress files at destination, call the command
-        // when done:
-        // navigation_view.push_by_tag ("done_page");
+
+        var source_folder = File.new_for_path (this.source_directory_path);
+        var target_folder = File.new_for_path (this.target_directory_path);
+        bool folders_exist = source_folder.query_exists (null) && target_folder.query_exists (null);
+
+        if( folders_exist ){
+            navigation_view.push_by_tag ("compressing_page");
+
+            string extension = this.format_data_object.get_string_member ("extension");
+
+            this.compressor.format_extension = extension;
+            this.compressor.bitrate = this.bitrate;
+
+            compressor.compress_library_async.begin (
+                this.source_directory_path,
+                this.target_directory_path,
+                (obj, res) => {
+                compressor.compress_library_async.end (res);
+
+                navigation_view.push_by_tag ("done_page");
+            });
+        } else {
+            // TODO: show a warning toast
+        }
     }
 
     private void cancel_compression() {
-        // cancel the compression process
+        compressor.cancel_process ();
         navigation_view.pop_to_tag ("config_page");
     }
 

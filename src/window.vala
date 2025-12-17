@@ -265,7 +265,7 @@ public class Press.Window : Adw.ApplicationWindow {
     }
 
     private void change_working_on(string job) {
-        this.compressing_status_page.description = @"Working on $job";
+        this.compressing_status_page.description = _ (@"Working on $job");
     }
 
     private void begin_compression() {

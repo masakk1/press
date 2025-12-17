@@ -61,6 +61,8 @@ public class Press.Window : Adw.ApplicationWindow {
     private unowned Gtk.Button cancel_compressing_button;
     [GtkChild]
     private unowned Adw.AlertDialog cancel_dialog;
+    [GtkChild]
+    private unowned Adw.StatusPage compressing_status_page;
 
     [GtkChild]
     private unowned Adw.NavigationView navigation_view;
@@ -91,6 +93,7 @@ public class Press.Window : Adw.ApplicationWindow {
         // In compressing page
         cancel_compressing_button.clicked.connect (this.open_cancel_dialog);
         cancel_dialog.response.connect (this.answer_cancel_dialog);
+        this.compressor.working_on_file.connect (this.change_working_on);
     }
 
     private bool load_presets() {
@@ -259,6 +262,10 @@ public class Press.Window : Adw.ApplicationWindow {
         if( response == "cancel" ){
             this.cancel_compression ();
         }
+    }
+
+    private void change_working_on(string job) {
+        this.compressing_status_page.description = @"Working on $job";
     }
 
     private void begin_compression() {

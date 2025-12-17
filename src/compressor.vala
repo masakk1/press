@@ -65,6 +65,7 @@ public class Press.Compressor : Object {
                     return;
                 }
 
+                this.working_on_file (file.get_basename ());
                 this.process_file (file);
             }
             Idle.add (compress_library_async.callback);

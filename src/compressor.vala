@@ -119,26 +119,27 @@ public class Press.Compressor : Object {
         string relative_path = source_file_path.replace (source_folder_path, "");
         string target_file_path = target_folder_path + relative_path;
 
-        try {
-            target_file_path = this.file_extension_regex.replace (
-                target_file_path,
-                target_file_path.length,
-                0,
-                this.format_extension);
-        } catch ( Error err ){
-            warning ("Error trying to change extension name. Message: %s\n", err.message);
+        bool is_audio = this.is_audio (source_file);
+        if( is_audio ){
+            try {
+                target_file_path = this.file_extension_regex.replace (
+                    target_file_path,
+                    target_file_path.length,
+                    0,
+                    this.format_extension);
+            } catch ( Error err ){
+                warning ("Error trying to change extension name. Message: %s\n", err.message);
+            }
         }
 
         File target_file = File.new_for_path (target_file_path);
         bool valid_folder = this.ensure_directory_exists (target_file);
 
         if( valid_folder ){
-            bool is_audio = this.is_audio (source_file);
-
             if( is_audio ){
                 this.convert_file (source_file, target_file);
             } else {
-                // TODO: Copy file over entirely
+                this.copy_file (source_file, target_file);
             }
         }
     }
@@ -208,6 +209,24 @@ public class Press.Compressor : Object {
         }
 
         return; // TODO
+    }
+
+    private void copy_file(File source_file, File target_file) {
+        source_file.copy_async.begin (
+            target_file,
+            FileCopyFlags.ALL_METADATA,
+            Priority.DEFAULT,
+            null,
+            null,
+            (obj, res) => {
+            try {
+                source_file.copy_async.end (res);
+            } catch ( Error err ){
+                warning (@"Error trying to copy "
+                         + @"$(source_file.get_path()) to $(target_file.get_path()). "
+                         + @"Message: $(err.message)");
+            }
+        });
     }
 
     public void cancel_process() {

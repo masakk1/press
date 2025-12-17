@@ -60,6 +60,11 @@ public class Press.Compressor : Object {
 
         var compress_thread = new Thread<void>("compress_thread", () => {
             foreach(File file in children){
+                if( this.process_cancel ){
+                    message ("Cancelling compressing queue");
+                    return;
+                }
+
                 this.process_file (file);
             }
             Idle.add (compress_library_async.callback);
@@ -103,7 +108,7 @@ public class Press.Compressor : Object {
             enumerator.close ();
 
         } catch ( Error err ){
-            print ("Error: %s\n", err.message);
+            message ("Error: %s\n", err.message);
         }
     }
 
@@ -208,7 +213,7 @@ public class Press.Compressor : Object {
             warning (@"Error trying to convert file $(source_file.get_path()). Message: $(err.message)");
         }
 
-        return; // TODO
+        return;
     }
 
     private void copy_file(File source_file, File target_file) {

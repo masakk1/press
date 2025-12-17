@@ -71,9 +71,13 @@ public class Press.Compressor : Object {
         });
 
         yield;
+
+        // if we are continuing because the process has been cancelled
+        if( this.process_cancel ){
+            this.cancelled ();
+        }
     }
 
-    // run callback for each child of provided folder
     private ArrayList<File> get_children(File folder) {
         var children = new ArrayList<File>();
         this._get_children (folder, children);

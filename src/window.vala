@@ -274,16 +274,16 @@ public class Press.Window : Adw.ApplicationWindow {
             this.compressor.format_extension = extension;
             this.compressor.bitrate = this.bitrate;
 
-            compressor.compress_library_async.begin (
+            this.compressor.compress_library_async.begin (
                 this.source_directory_path,
                 this.target_directory_path,
                 (obj, res) => {
-                compressor.compress_library_async.end (res);
-
+                this.compressor.compress_library_async.end (res);
                 navigation_view.push_by_tag ("done_page");
             });
         } else {
             // TODO: show a warning toast
+            warning (_ ("Configured folders don't exist"));
         }
     }
 

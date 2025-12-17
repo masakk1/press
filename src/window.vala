@@ -50,7 +50,7 @@ public class Press.Window : Adw.ApplicationWindow {
     private Json.Object selected_quality_preset_data_object;
     private Json.Object format_data_object;
     private Json.Object selected_format_data_object;
-    private int bitrate = 0;
+    private int bitrate = 128; // default parameter
     private string quality_preset_custom_name = "nothing";
 
     [GtkChild]
@@ -79,6 +79,7 @@ public class Press.Window : Adw.ApplicationWindow {
 
         // Presets
         load_presets ();
+        select_quality_preset (); // make sure the default one is chosen
         quality_preset_selection.notify["selected"].connect (this.select_quality_preset);
         custom_quality_format.notify["selected"].connect (this.select_custom_format);
         custom_quality_bitrate.notify["value"].connect (this.select_custom_bitrate);

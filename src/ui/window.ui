@@ -157,7 +157,19 @@
             <child>
               <object class="AdwToolbarView">
                 <child type="top">
-                  <object class="AdwHeaderBar"></object>
+                  <object class="AdwHeaderBar">
+                    <property name="show-back-button">false</property>
+                    <child type="start">
+                      <object class="GtkButton" id="done_page_back_button">
+                        <property name="child">
+                          <object class="AdwButtonContent">
+                            <property name="icon-name">go-previous-symbolic</property>
+                            <property name="label" translatable="yes">Back</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
                 </child>
                 <property name="content">
                   <object class="AdwStatusPage">

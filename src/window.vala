@@ -63,6 +63,8 @@ public class Press.Window : Adw.ApplicationWindow {
     private unowned Adw.AlertDialog cancel_dialog;
     [GtkChild]
     private unowned Adw.StatusPage compressing_status_page;
+    [GtkChild]
+    private unowned Gtk.Button done_page_back_button;
 
     [GtkChild]
     private unowned Adw.NavigationView navigation_view;
@@ -94,6 +96,9 @@ public class Press.Window : Adw.ApplicationWindow {
         cancel_compressing_button.clicked.connect (this.open_cancel_dialog);
         cancel_dialog.response.connect (this.answer_cancel_dialog);
         this.compressor.working_on_file.connect (this.change_working_on);
+
+        // In done page
+        done_page_back_button.clicked.connect (this.return_config_page);
     }
 
     private bool load_presets() {
@@ -300,4 +305,7 @@ public class Press.Window : Adw.ApplicationWindow {
         navigation_view.pop_to_tag ("config_page");
     }
 
+    private void return_config_page() {
+        navigation_view.pop_to_tag("config_page");
+    }
 }

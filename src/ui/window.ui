@@ -73,7 +73,7 @@
                         <property name="title" translatable="yes">Custom Target Quality</property>
                         <property
                           name="description"
-                          translatable="yes">Manulally configure the maximum target quality.</property>
+                          translatable="yes">Manually configure the maximum target quality.</property>
                         <property name="visible">false</property>
                         <child>
                           <object class="AdwComboRow" id="custom_quality_format">

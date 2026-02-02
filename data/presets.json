@@ -2,15 +2,18 @@
     "formats": {
         "mp3": {
             "name": "MPEG / mp3",
-            "extension": "mp3"
+            "extension": "mp3",
+            "video": true
         },
         "m4a": {
             "name": "AAC / m4a",
-            "extension": "m4a"
+            "extension": "m4a",
+            "video": true
         },
         "ogg": {
             "name": "Opus / ogg",
-            "extension": "ogg"
+            "extension": "ogg",
+            "video": false
         }
     },
     "quality_presets": {

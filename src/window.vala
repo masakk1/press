@@ -286,9 +286,11 @@ public class Press.Window : Adw.ApplicationWindow {
             navigation_view.push_by_tag ("compressing_page");
 
             string extension = this.selected_format_data_object.get_string_member ("extension");
+            bool attach_video = this.selected_format_data_object.get_boolean_member ("video");
 
             this.compressor.format_extension = extension;
             this.compressor.bitrate = this.bitrate;
+            this.compressor.attach_video = attach_video;
 
             this.compressor.compress_library_async.begin (
                 this.source_directory_path,

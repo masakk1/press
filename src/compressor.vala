@@ -28,6 +28,7 @@ public class Press.Compressor : Object {
     // note: ^\.?(?<name>\/[^\/\n]+)+(?<ext>\.[A-z0-9\._-]+)$
 
     public string format_extension;
+    public bool attach_video;
     public int bitrate;
 
     private File source_folder;
@@ -159,7 +160,8 @@ public class Press.Compressor : Object {
                     0,
                     this.format_extension);
             } catch ( Error err ){
-                warning ("Error trying to change extension name. Message: %s\n", err.message);
+                error ("Error trying to change extension name. Message: %s\n",
+                       err.message);
             }
         }
 
@@ -169,7 +171,7 @@ public class Press.Compressor : Object {
 
         if( valid_folder && !(file_exists && !replace_destination_files)){
             if( is_audio ){
-                this.convert_file (source_file, target_file, is_video);
+                this.convert_file (source_file, target_file, is_video && this.attach_video);
             } else {
                 this.copy_file (source_file, target_file);
             }
@@ -225,13 +227,13 @@ public class Press.Compressor : Object {
         }
     }
 
-    private void convert_file(File source_file, File target_file, bool is_video) {
+    private void convert_file(File source_file, File target_file, bool attach_video) {
         // if it's a video, include a -map v:0 (any video channels to 0)
-        // TODO: it cound error if a sound file had more than 1 video channel...
+        // TODO: it could error if a sound file had more than 1 video channel...
         //       that's an edge case, though.
-        string command = is_video
-            ? @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 ar 44100 -b:a $(this.bitrate)k -c:v mjpeg -map v:0 -movflags +faststart \"$(target_file.get_path())\" -y"
-            : @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -b:a $(this.bitrate)k \"$(target_file.get_path())\" -y";
+        string command = attach_video
+            ? @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar 44100 -b:a $(this.bitrate)k -c:v mjpeg -map v:0 -movflags +faststart \"$(target_file.get_path())\" -y"
+            : @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar 44100 -b:a $(this.bitrate)k \"$(target_file.get_path())\" -y";
 
         print ("------------------------------------------------------------------------------------\n");
         print (@"Command: $command");

@@ -37,6 +37,7 @@ public class Press.Compressor : Object {
     public signal void cancelled();
 
     private bool process_cancel = false;
+    private bool process_running = false;
 
     private Regex file_extension_regex;
 
@@ -48,8 +49,24 @@ public class Press.Compressor : Object {
         }
     }
 
-    public async void compress_library_async(string source_path, string target_path) {
+    private void start_process()
+    {
         this.process_cancel = false;
+        this.process_running = true;
+    }
+    private void stop_process()
+    {
+        this.process_cancel = false;
+        this.process_running = false;
+    }
+
+    public async void compress_library_async(
+        string source_path, string target_path,
+        bool replace_destination_files)
+    {
+        if (this.process_running) return;
+        this.start_process();
+
         this.source_folder = File.new_for_path (source_path);
         this.target_folder = File.new_for_path (target_path);
 
@@ -66,7 +83,7 @@ public class Press.Compressor : Object {
                 }
 
                 this.working_on_file (file.get_basename ());
-                this.process_file (file);
+                this.process_file (file, replace_destination_files);
             }
             Idle.add (compress_library_async.callback);
         });
@@ -77,6 +94,8 @@ public class Press.Compressor : Object {
         if( this.process_cancel ){
             this.cancelled ();
         }
+
+        this.stop_process();
     }
 
     private ArrayList<File> get_children(File folder) {
@@ -121,7 +140,7 @@ public class Press.Compressor : Object {
 
     // }
 
-    private void process_file(File source_file) {
+    private void process_file(File source_file, bool replace_destination_files) {
         string source_folder_path = this.source_folder.get_path ();
         string target_folder_path = this.target_folder.get_path ();
         string source_file_path = source_file.get_path ();
@@ -129,7 +148,9 @@ public class Press.Compressor : Object {
         string relative_path = source_file_path.replace (source_folder_path, "");
         string target_file_path = target_folder_path + relative_path;
 
-        bool is_audio = this.is_audio (source_file);
+        bool is_audio;
+        bool is_video;
+        this.check_streams(source_file, out is_audio, out is_video);
         if( is_audio ){
             try {
                 target_file_path = this.file_extension_regex.replace (
@@ -144,13 +165,18 @@ public class Press.Compressor : Object {
 
         File target_file = File.new_for_path (target_file_path);
         bool valid_folder = this.ensure_directory_exists (target_file);
+        bool file_exists = target_file.query_exists();
 
-        if( valid_folder ){
+        if( valid_folder && !(file_exists && !replace_destination_files)){
             if( is_audio ){
-                this.convert_file (source_file, target_file);
+                this.convert_file (source_file, target_file, is_video);
             } else {
                 this.copy_file (source_file, target_file);
             }
+        }
+        else
+        {
+            print (@"Skipping file: $(target_file.get_path())\n");
         }
     }
 
@@ -176,9 +202,10 @@ public class Press.Compressor : Object {
         return exists;
     }
 
-    private bool is_audio(File file) {
+    private void check_streams(File file, out bool is_audio, out bool is_video) {
         string command = @"ffprobe -loglevel error -show_entries stream=codec_type -of default=nw=1 \"$(file.get_path())\"";
-        bool is_audio = false;
+        is_audio = false;
+        is_video = false;
 
         try {
             string standard_output = "";
@@ -189,17 +216,23 @@ public class Press.Compressor : Object {
                                              out standard_error,
                                              out wait_status);
             is_audio = standard_output.contains ("codec_type=audio");
+            is_video = standard_output.contains ("codec_type=video");
 
         } catch ( Error err ){
-            warning (@"Error checking if file is audio. $(err.message)");
+            warning (@"Error checking if file is audio/video. $(err.message)");
             is_audio = false;
+            is_video = false;
         }
-
-        return is_audio;
     }
 
-    private void convert_file(File source_file, File target_file) {
-        string command = @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -b:a $(this.bitrate)k \"$(target_file.get_path())\" -y";
+    private void convert_file(File source_file, File target_file, bool is_video) {
+        // if it's a video, include a -map v:0 (any video channels to 0)
+        // TODO: it cound error if a sound file had more than 1 video channel...
+        //       that's an edge case, though.
+        string command = is_video
+            ? @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 ar 44100 -b:a $(this.bitrate)k -c:v mjpeg -map v:0 -movflags +faststart \"$(target_file.get_path())\" -y"
+            : @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -b:a $(this.bitrate)k \"$(target_file.get_path())\" -y";
+
         print ("------------------------------------------------------------------------------------\n");
         print (@"Command: $command");
         try {

@@ -66,6 +66,11 @@
                             <property name="title" translatable="yes">Quality Preset</property>
                           </object>
                         </child>
+                        <child>
+                          <object class="AdwSwitchRow" id="replace_destination_files_switch">
+                            <property name="title" translatable="yes">Replace files on destination</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>

@@ -87,7 +87,7 @@
                         </child>
                         <child>
                           <object class="AdwSpinRow" id="custom_quality_bitrate">
-                            <property name="title" translatable="yes">Bitrate</property>
+                            <property name="title" translatable="yes">Bitrate (Kbps)</property>
                             <property name="adjustment">
                               <object class="GtkAdjustment">
                                 <property name="lower">64</property>
@@ -95,6 +95,20 @@
                                 <property name="value">128</property>
                                 <property name="page-increment">32</property>
                                 <property name="step-increment">16</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwSpinRow" id="custom_quality_samplerate">
+                            <property name="title" translatable="yes">Sample Rate (Hz)</property>
+                            <property name="adjustment">
+                              <object class="GtkAdjustment">
+                                <property name="lower">8000</property>
+                                <property name="upper">96000</property>
+                                <property name="value">44100</property>
+                                <property name="page-increment">4000</property>
+                                <property name="step-increment">1000</property>
                               </object>
                             </property>
                           </object>

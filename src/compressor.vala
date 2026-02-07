@@ -30,6 +30,8 @@ public class Press.Compressor : Object {
     public string format_extension;
     public bool attach_video;
     public int bitrate;
+    public string codec;
+    public int samplerate;
 
     private File source_folder;
     private File target_folder;
@@ -50,13 +52,11 @@ public class Press.Compressor : Object {
         }
     }
 
-    private void start_process()
-    {
+    private void start_process() {
         this.process_cancel = false;
         this.process_running = true;
     }
-    private void stop_process()
-    {
+    private void stop_process() {
         this.process_cancel = false;
         this.process_running = false;
     }
@@ -96,7 +96,7 @@ public class Press.Compressor : Object {
             this.cancelled ();
         }
 
-        this.stop_process();
+        this.stop_process ();
     }
 
     private ArrayList<File> get_children(File folder) {
@@ -151,7 +151,7 @@ public class Press.Compressor : Object {
 
         bool is_audio;
         bool is_video;
-        this.check_streams(source_file, out is_audio, out is_video);
+        this.check_streams (source_file, out is_audio, out is_video);
         if( is_audio ){
             try {
                 target_file_path = this.file_extension_regex.replace (
@@ -167,7 +167,7 @@ public class Press.Compressor : Object {
 
         File target_file = File.new_for_path (target_file_path);
         bool valid_folder = this.ensure_directory_exists (target_file);
-        bool file_exists = target_file.query_exists();
+        bool file_exists = target_file.query_exists ();
 
         if( valid_folder && !(file_exists && !replace_destination_files)){
             if( is_audio ){
@@ -175,9 +175,7 @@ public class Press.Compressor : Object {
             } else {
                 this.copy_file (source_file, target_file);
             }
-        }
-        else
-        {
+        } else {
             print (@"Skipping file: $(target_file.get_path())\n");
         }
     }
@@ -230,10 +228,10 @@ public class Press.Compressor : Object {
     private void convert_file(File source_file, File target_file, bool attach_video) {
         // if it's a video, include a -map v:0 (any video channels to 0)
         // TODO: it could error if a sound file had more than 1 video channel...
-        //       that's an edge case, though.
+        // that's an edge case, though.
         string command = attach_video
-            ? @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar 44100 -b:a $(this.bitrate)k -c:v mjpeg -map v:0 -movflags +faststart \"$(target_file.get_path())\" -y"
-            : @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar 44100 -b:a $(this.bitrate)k \"$(target_file.get_path())\" -y";
+            ? @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar $(this.samplerate) -c:a $(codec) -b:a $(this.bitrate)k -c:v mjpeg -map v:0 -movflags +faststart \"$(target_file.get_path())\" -y"
+            : @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar $(this.samplerate) -c:a $(this.codec) -b:a $(this.bitrate)k \"$(target_file.get_path())\" -y";
 
         print ("------------------------------------------------------------------------------------\n");
         print (@"Command: $command");

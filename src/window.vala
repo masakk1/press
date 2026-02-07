@@ -48,12 +48,15 @@ public class Press.Window : Adw.ApplicationWindow {
     private unowned Adw.ComboRow custom_quality_format;
     [GtkChild]
     private unowned Adw.SpinRow custom_quality_bitrate;
+    [GtkChild]
+    private unowned Adw.SpinRow custom_quality_samplerate;
 
     private Json.Object quality_preset_data_object;
     private Json.Object selected_quality_preset_data_object;
     private Json.Object format_data_object;
     private Json.Object selected_format_data_object;
     private int bitrate = 128; // default parameter
+    private int samplerate = 44100; // default parameter
     private string quality_preset_custom_name = "nothing";
 
     [GtkChild]
@@ -90,6 +93,7 @@ public class Press.Window : Adw.ApplicationWindow {
         quality_preset_selection.notify["selected"].connect (this.select_quality_preset);
         custom_quality_format.notify["selected"].connect (this.select_custom_format);
         custom_quality_bitrate.notify["value"].connect (this.select_custom_bitrate);
+        custom_quality_samplerate.notify["value"].connect (this.select_custom_samplerate);
 
         // Compress button
         compress_button.clicked.connect (this.open_confirm_dialog);
@@ -224,6 +228,7 @@ public class Press.Window : Adw.ApplicationWindow {
                 this.selected_format_data_object = format_object;
 
                 this.bitrate = (int32) quality_preset_object.get_int_member ("bitrate");
+                this.samplerate = (int32) quality_preset_object.get_int_member ("samplerate");
             }
         }
     }
@@ -250,6 +255,11 @@ public class Press.Window : Adw.ApplicationWindow {
     private void select_custom_bitrate() {
         int value = (int) this.custom_quality_bitrate.value;
         this.bitrate = value;
+    }
+
+    private void select_custom_samplerate() {
+        int value = (int) this.custom_quality_samplerate.value;
+        this.samplerate = value;
     }
 
     private void open_confirm_dialog() {
@@ -287,10 +297,13 @@ public class Press.Window : Adw.ApplicationWindow {
 
             string extension = this.selected_format_data_object.get_string_member ("extension");
             bool attach_video = this.selected_format_data_object.get_boolean_member ("video");
+            string codec = this.selected_format_data_object.get_string_member ("codec");
 
             this.compressor.format_extension = extension;
             this.compressor.bitrate = this.bitrate;
+            this.compressor.samplerate = this.samplerate;
             this.compressor.attach_video = attach_video;
+            this.compressor.codec = codec;
 
             this.compressor.compress_library_async.begin (
                 this.source_directory_path,
@@ -312,6 +325,6 @@ public class Press.Window : Adw.ApplicationWindow {
     }
 
     private void return_config_page() {
-        navigation_view.pop_to_tag("config_page");
+        navigation_view.pop_to_tag ("config_page");
     }
 }

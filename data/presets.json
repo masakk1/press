@@ -3,44 +3,52 @@
         "mp3": {
             "name": "MPEG / mp3",
             "extension": "mp3",
-            "video": true
+            "video": true,
+            "codec": "libmp3lame"
         },
         "m4a": {
             "name": "AAC / m4a",
             "extension": "m4a",
-            "video": true
+            "video": true,
+            "codec": "aac"
         },
-        "ogg": {
-            "name": "Opus / ogg",
+        "vogg": {
+            "name": "Vorbis / ogg",
             "extension": "ogg",
-            "video": false
+            "video": false,
+            "codec": "libvorbis"
         }
     },
     "quality_presets": {
         "high": {
             "name": "High Quality",
             "format": "m4a",
-            "bitrate": 192
+            "bitrate": 192,
+            "samplerate": 48000
         },
         "standard": {
             "name": "Standard Quality",
             "format": "m4a",
-            "bitrate": 128
+            "bitrate": 128,
+            "samplerate": 44100
         },
         "libre": {
-            "name": "Libre Codec (OGG)",
-            "format": "ogg",
-            "bitrate": 128
+            "name": "Libre (Standard w/Vorbis)",
+            "format": "vogg",
+            "bitrate": 128,
+            "samplerate": 44100
         },
         "compatibility": {
             "name": "Compatibility",
             "format": "mp3",
-            "bitrate": 128
+            "bitrate": 128,
+            "samplerate": 44100
         },
         "other": {
             "name": "Other...",
             "format": "mp3",
-            "bitrate": 128
+            "bitrate": 128,
+            "samplerate": 44100
         }
     }
 }

@@ -23,9 +23,15 @@ Using the Flatpak extension by Bilal Elmoussaoui on VSCode:
 
 ### Building without sandboxing (meson)
 
+#### Dependencies
+
+- Arch: `pacman -S base-devel meson ninja vala gtk4 libadwaita glib2 gobject-introspection uncrustify libgee`
+
+#### Building
+
 These instructions describe how to build and run the application locally using Meson/Ninja (native build), matching what was used during development.
 
-- Configure or reconfigure the build directory (this project uses `_build`):
+1. Configure or reconfigure the build directory (this project uses `_build`):
 
 ```bash
 meson setup _build
@@ -33,7 +39,7 @@ meson setup _build
 meson setup --reconfigure _build
 ```
 
-- Build the project:
+2. Build the project:
 
 ```bash
 meson compile -C _build
@@ -41,10 +47,9 @@ meson compile -C _build
 ninja -C _build
 ```
 
-- Run the built binary (the executable is placed under `_build/src`):
-
+3. Run the built binary. Make sure to add the XDG_DATA_DIRS environment variable change. It won't run properly otherwise.
 ```bash
-_build/src/press
+XDG_DATA_DIRS=data:$XDG_DATA_DIRS _build/src/press
 ```
 
 - Useful environment variables and debugging tips:

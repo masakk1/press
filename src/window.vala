@@ -36,7 +36,9 @@ public class Press.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Adw.SwitchRow replace_destination_files_switch;
 
-    private bool replace_destination_files { get { return replace_destination_files_switch.active; } }
+    private bool replace_destination_files { get {
+                                                 return replace_destination_files_switch.active;
+                                             } }
     private string source_directory_path;
     private string target_directory_path;
 
@@ -108,67 +110,68 @@ public class Press.Window : Adw.ApplicationWindow {
         done_page_back_button.clicked.connect (this.return_config_page);
     }
 
-    private bool load_presets() {
-        var test_file_flatpak = File.new_for_path ("/app/share/presets.json");
-        var test_file_regular = File.new_for_path ("/usr/local/share");
+    private void load_presets() {
+        File ? presets_file = null;
 
-        var presets_file = test_file_flatpak.query_exists () ? test_file_flatpak : test_file_regular;
-
-        var format_list = new Gtk.StringList (null);
-        var quality_preset_list = new Gtk.StringList (null);
-
-        bool file_exists = presets_file.query_exists ();
-        bool can_read_file = true;
-
-        var parser = new Json.Parser ();
-
-        if( !file_exists ){
-            warning ("Could not find presets.json file, which contains the presets. "
-                     + "Try compiling for flatpak or install the app with meson.");
+        foreach(var dir in GLib.Environment.get_system_data_dirs ()){
+            string search_filename = GLib.Path.build_filename (dir, "presets.json");
+            var search_file = File.new_for_path (search_filename);
+            if( search_file.query_exists ()){
+                presets_file = search_file;
+                break;
+            }
         }
 
-        if( file_exists ){
+        if( presets_file == null ){
+            warning ("Could not find presets.json file, which contains the presets.");
+
+        } else {
+
+            bool can_read_file = true;
+            var parser = new Json.Parser ();
+
+            // Try to load the file onto the parser
             try {
                 parser.load_from_file (presets_file.get_path ());
             } catch ( Error err ){
                 warning (@"Could not read file from path $(presets_file.get_path ()). File should exists.");
                 can_read_file = false;
             }
-        }
 
-        if( file_exists && can_read_file ){
-            var root_object = parser.get_root ().get_object ();
+            if( can_read_file ){
+                var format_list = new Gtk.StringList (null);
+                var quality_preset_list = new Gtk.StringList (null);
+                var root_object = parser.get_root ().get_object ();
 
-            var formats_object = root_object.get_object_member ("formats");
-            var format_member_names = formats_object.get_members ();
+                var formats_object = root_object.get_object_member ("formats");
+                var format_member_names = formats_object.get_members ();
 
-            foreach(string member_name in format_member_names){
-                var format = formats_object.get_object_member (member_name);
-                string name = format.get_string_member ("name");
-                format_list.append (name);
+                foreach(string member_name in format_member_names){
+                    var format = formats_object.get_object_member (member_name);
+                    string name = format.get_string_member ("name");
+                    format_list.append (name);
+                }
+
+                this.format_data_object = formats_object;
+                custom_quality_format.model = format_list;
+
+                var quality_presets_object = root_object.get_object_member ("quality_presets");
+                var quality_presets_member_names = quality_presets_object.get_members ();
+
+                this.quality_preset_custom_name = quality_presets_object
+                                                   .get_object_member ("other")
+                                                   .get_string_member ("name");
+
+                foreach(string member_name in quality_presets_member_names){
+                    var quality_preset = quality_presets_object.get_object_member (member_name);
+                    string name = quality_preset.get_string_member ("name");
+                    quality_preset_list.append (name);
+                }
+
+                this.quality_preset_data_object = quality_presets_object;
+                quality_preset_selection.model = quality_preset_list;
             }
-
-            this.format_data_object = formats_object;
-            custom_quality_format.model = format_list;
-
-            var quality_presets_object = root_object.get_object_member ("quality_presets");
-            var quality_presets_member_names = quality_presets_object.get_members ();
-
-            this.quality_preset_custom_name = quality_presets_object
-                                               .get_object_member ("other")
-                                               .get_string_member ("name");
-
-            foreach(string member_name in quality_presets_member_names){
-                var quality_preset = quality_presets_object.get_object_member (member_name);
-                string name = quality_preset.get_string_member ("name");
-                quality_preset_list.append (name);
-            }
-
-            this.quality_preset_data_object = quality_presets_object;
-            quality_preset_selection.model = quality_preset_list;
         }
-
-        return file_exists && can_read_file;
     }
 
     private void set_source_directory() {
@@ -327,4 +330,5 @@ public class Press.Window : Adw.ApplicationWindow {
     private void return_config_page() {
         navigation_view.pop_to_tag ("config_page");
     }
+
 }

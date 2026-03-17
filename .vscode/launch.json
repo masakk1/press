@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Build and Run press",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/_build/src/press",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "meson-compile",
+            "env": {
+                "XDG_DATA_DIRS": "${workspaceFolder}/data:${env:XDG_DATA_DIRS}"
+            }
+        }
+    ]
+}

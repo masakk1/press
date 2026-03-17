@@ -73,8 +73,8 @@ gschemas.compiled
 *.code-workspace
 
 # But you might want to keep vscode tasks/settings
-# !.vscode/tasks.json
-# !.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
 
 # GObject introspection
 *.gir

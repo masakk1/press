@@ -88,7 +88,7 @@ public class Press.Compressor : Object {
                     });
                     this.process_file (file, replace_destination_files);
                 }
-            }, 4, false);
+            }, (int) GLib.get_num_processors (), false);
 
             foreach( File file in children ){
                 pool.add (file);

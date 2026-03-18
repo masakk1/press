@@ -76,20 +76,37 @@ public class Press.Compressor : Object {
 
         var children = this.get_children (this.source_folder);
 
-        var compress_thread = new Thread<void>("compress_thread", () => {
-            foreach(File file in children){
-                if( this.process_cancel ){
-                    message ("Cancelling compressing queue");
-                    return;
-                }
 
-                this.working_on_file (file.get_basename ());
+        // Inside the try, every thread is added to the pool
+        // When the try {} block is done, it starts running them.
+        try {
+            // TODO: if ThreadPool throws an error, it might not allow the yield to ever continue
+            var pool = new ThreadPool<File>.with_owned_data((file) => {
+                if( !this.process_cancel ){
+                    Idle.add (() => {
+                        this.working_on_file (file.get_basename ());
+                        return Source.REMOVE;
+                    });
                 this.process_file (file, replace_destination_files);
             }
-            Idle.add (compress_library_async.callback);
+            }, 4, false);
+
+            foreach( File file in children ){
+                pool.add (file);
+            }
+
+            new Thread<void>("wait_thread", () => {
+                ThreadPool.free ((owned) pool, false, true);
+                Idle.add (() => {
+                    compress_library_async.callback ();
+                    return Source.REMOVE;
+                });
         });
 
         yield;
+        } catch ( ThreadError err ){
+            critical ("Error creating thread pool in compressor. %s", err.message);
+        }
 
         // if we are continuing because the process has been cancelled
         if( this.process_cancel ){

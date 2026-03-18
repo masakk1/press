@@ -56,17 +56,16 @@ public class Press.Compressor : Object {
         this.process_cancel = false;
         this.process_running = true;
     }
+
     private void stop_process() {
         this.process_cancel = false;
         this.process_running = false;
     }
 
-    public async void compress_library_async(
-        string source_path, string target_path,
-        bool replace_destination_files)
-    {
-        if (this.process_running) return;
-        this.start_process();
+    public async void compress_library_async(string source_path, string target_path,
+                                             bool replace_destination_files) {
+        if( this.process_running )return;
+        this.start_process ();
 
         this.source_folder = File.new_for_path (source_path);
         this.target_folder = File.new_for_path (target_path);
@@ -87,8 +86,8 @@ public class Press.Compressor : Object {
                         this.working_on_file (file.get_basename ());
                         return Source.REMOVE;
                     });
-                this.process_file (file, replace_destination_files);
-            }
+                    this.process_file (file, replace_destination_files);
+                }
             }, 4, false);
 
             foreach( File file in children ){
@@ -101,9 +100,9 @@ public class Press.Compressor : Object {
                     compress_library_async.callback ();
                     return Source.REMOVE;
                 });
-        });
+            });
 
-        yield;
+            yield;
         } catch ( ThreadError err ){
             critical ("Error creating thread pool in compressor. %s", err.message);
         }

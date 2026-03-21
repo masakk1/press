@@ -1,17 +1,33 @@
 {
-    "version": "0.2.0",
+    "version": "0.3.0",
     "configurations": [
+        // {
+        //     "type": "gdb",
+        //     "request": "launch",
+        //     "name": "Launch Program",
+        //     "target": "./_build/src/press",
+        //     "cwd": "${workspaceRoot}",
+        //     "valuesFormatting": "parseText",
+        //     "env": {
+        //         "XDG_DATA_DIRS": "${workspaceFolder}/data:${env:XDG_DATA_DIRS}:/usr/local/share:/usr/share"
+        //     }
+        // },
         {
             "name": "Build and Run press",
-            "type": "lldb",
+            "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/_build/src/press",
             "args": [],
             "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
             "preLaunchTask": "meson-compile",
-            "env": {
-                "XDG_DATA_DIRS": "${workspaceFolder}/data:${env:XDG_DATA_DIRS}"
-            }
+            "environment": [
+                {
+                    "name": "XDG_DATA_DIRS",
+                    "value": "${workspaceFolder}/data:${env:XDG_DATA_DIRS}:/usr/local/share:/usr/share"
+                }
+            ]
         }
     ]
 }

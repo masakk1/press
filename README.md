@@ -25,7 +25,8 @@ Using the Flatpak extension by Bilal Elmoussaoui on VSCode:
 
 #### Dependencies
 
-- Arch: `pacman -S base-devel meson ninja vala gtk4 libadwaita glib2 gobject-introspection uncrustify libgee`
+- Arch: `pacman -S base-devel meson ninja vala gtk4 libadwaita glib2 gobject-introspection gdb uncrustify libgee`
+- Alpine: `sudo apk add alpine-sdk meson ninja gtk4.0-dev libadwaita-dev desktop-file-utils gobject-introspection-dev adwaita-icon-theme font-dejavu json-glib-dev libgee-dev uncrustify gdb vala vala-language-server`
 
 #### Building
 
@@ -47,9 +48,9 @@ meson compile -C _build
 ninja -C _build
 ```
 
-3. Run the built binary. Make sure to add the XDG_DATA_DIRS environment variable change. It won't run properly otherwise.
+3. Run the built binary. Make sure to add the XDG_DATA_DIRS environment variable change. It won't run properly otherwise. It may be necessary to hardcode "/usr/local/share:/usr/share" if XDG_DATA_DIRS is empty - useful in barebones distros, like the alpine image used in devcontainers.
 ```bash
-XDG_DATA_DIRS=data:$XDG_DATA_DIRS _build/src/press
+XDG_DATA_DIRS="data:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}" _build/src/press
 ```
 
 - Useful environment variables and debugging tips:

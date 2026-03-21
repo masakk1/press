@@ -1,0 +1,27 @@
+{
+    "name": "Alpine",
+    "image": "mcr.microsoft.com/devcontainers/base:alpine-3.22",
+    "postCreateCommand": "sudo apk update && sudo apk add alpine-sdk meson ninja gtk4.0-dev libadwaita-dev desktop-file-utils gobject-introspection-dev adwaita-icon-theme font-dejavu json-glib-dev libgee-dev uncrustify gdb vala vala-language-server",
+    "postAttachCommand": "meson setup _build",
+    // "containerEnv": {},
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // "vadimcn.vscode-lldb",
+                "ms-vscode.cpptools",
+                "mesonbuild.mesonbuild",
+                "Gruntfuggly.todo-tree",
+                "zachflower.uncrustify",
+                "prince781.vala",
+                "redhat.vscode-xml",
+                "EditorConfig.EditorConfig"
+                // "vscodevim.vim"
+            ],
+            "settings": {
+                "mesonbuild.configureOnOpen": false
+            }
+        }
+    }
+    // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+    // "remoteUser": "root"
+}

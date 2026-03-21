@@ -2,37 +2,34 @@
 
 A description of this project.
 
-# Guides
+## Devcontainers
+
+This project has a `devcontainer/devcontainer.json` file.
+
+For VSCode
+
+1. Get VSCode, Docker and the devcontainer VSCode extension
+2. Open the project and run Dev Containers : Rebuild Container
+3. You can Run and Debug the app by pressing F5, or in Run and Debug.
+
+Checkout [Building](#building) if you need to run commands manually.
+
+
 ## Building
-### Building with flatpak extension
 
-> :warning: This extension has some performance issues (2 Dec 2025), so checkout [Building without sandboxing](#building-without-sandboxing-meson) if that's still the case
+### Dependencies
 
-Install the GNOME Sdk and Platform package from flathub
-```sh
-# change it for whatever the new version is (the io.github.masakk1.press.json manifest will have the specific one)
-flatpak install flathub org.gnome.Platform//49
-flatpak install flathub org.gnome.Sdk//49
-```
+If you're not using devcontainers, these are the dependencies:
 
-Using the Flatpak extension by Bilal Elmoussaoui on VSCode:
-```sh
-# Open command palette (Ctrl+Shift+P)
-> Build and run
-```
+> `vala-language-server` and `gdb` are only need for development
 
-### Building without sandboxing (meson)
-
-#### Dependencies
-
-- Arch: `pacman -S base-devel meson ninja vala gtk4 libadwaita glib2 gobject-introspection gdb uncrustify libgee`
+- Arch: `pacman -S base-devel meson ninja vala vala-language-server gtk4 libadwaita glib2 gobject-introspection gdb uncrustify libgee`
 - Alpine: `sudo apk add alpine-sdk meson ninja gtk4.0-dev libadwaita-dev desktop-file-utils gobject-introspection-dev adwaita-icon-theme font-dejavu json-glib-dev libgee-dev uncrustify gdb vala vala-language-server`
 
-#### Building
+### Steps
 
-These instructions describe how to build and run the application locally using Meson/Ninja (native build), matching what was used during development.
-
-1. Configure or reconfigure the build directory (this project uses `_build`):
+#### Configurate
+this project uses `_build`
 
 ```bash
 meson setup _build
@@ -40,7 +37,7 @@ meson setup _build
 meson setup --reconfigure _build
 ```
 
-2. Build the project:
+#### Build
 
 ```bash
 meson compile -C _build
@@ -48,7 +45,9 @@ meson compile -C _build
 ninja -C _build
 ```
 
-3. Run the built binary. Make sure to add the XDG_DATA_DIRS environment variable change. It won't run properly otherwise. It may be necessary to hardcode "/usr/local/share:/usr/share" if XDG_DATA_DIRS is empty - useful in barebones distros, like the alpine image used in devcontainers.
+#### Run
+
+During development, it's necessary to include the local `data` folder. It may be necessary to hardcode "/usr/local/share:/usr/share" if XDG_DATA_DIRS is empty - Specially with alpine.
 ```bash
 XDG_DATA_DIRS="data:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}" _build/src/press
 ```
@@ -65,10 +64,9 @@ GDK_BACKEND=x11 _build/src/press
 G_MESSAGES_DEBUG=all _build/src/press
 ```
 
-- Notes:
-	- Make sure you run the app from a graphical session (X11 or Wayland) so `DISPLAY` or `WAYLAND_DISPLAY` is available.
-	- If `meson` complains about Meson version mismatches for an existing build directory, use `--reconfigure` or `meson setup --wipe _build` followed by `meson setup _build` to recreate the build directory.
-	- To install the app system-wide (requires appropriate permissions):
+- Make sure you run the app from a graphical session (X11 or Wayland) so `DISPLAY` or `WAYLAND_DISPLAY` is available.
+
+#### Install
 
 ```bash
 sudo meson install -C _build

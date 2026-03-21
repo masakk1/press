@@ -1,7 +1,7 @@
 FROM alpine:3.22
 
 RUN apk update && apk add --no-cache \
-    bash sudo shadow \
+    bash sudo shadow openssh \
     alpine-sdk meson ninja \
     gtk4.0-dev libadwaita-dev \
     desktop-file-utils gobject-introspection-dev \

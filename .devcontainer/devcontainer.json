@@ -1,5 +1,5 @@
 {
-    "name": "Alpine",
+    "name": "Vala Adwaita",
     "image": "mcr.microsoft.com/devcontainers/base:alpine-3.22",
     "postCreateCommand": "sudo apk update && sudo apk add alpine-sdk meson ninja gtk4.0-dev libadwaita-dev desktop-file-utils gobject-introspection-dev adwaita-icon-theme font-dejavu json-glib-dev libgee-dev uncrustify gdb vala vala-language-server",
     "postAttachCommand": "meson setup _build",

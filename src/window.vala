@@ -35,10 +35,15 @@ public class Press.Window : Adw.ApplicationWindow {
     private unowned Gtk.Button target_directory_button;
     [GtkChild]
     private unowned Adw.SwitchRow replace_destination_files_switch;
+    [GtkChild]
+    private unowned Adw.SwitchRow copy_noaudio_files_switch;
 
     private bool replace_destination_files { get {
                                                  return replace_destination_files_switch.active;
                                              } }
+    private bool copy_noaudio_files { get {
+                                          return copy_noaudio_files_switch.active;
+                                      } }
     private string source_directory_path;
     private string target_directory_path;
 
@@ -312,6 +317,7 @@ public class Press.Window : Adw.ApplicationWindow {
                 this.source_directory_path,
                 this.target_directory_path,
                 this.replace_destination_files,
+                this.copy_noaudio_files,
                 (obj, res) => {
                 this.compressor.compress_library_async.end (res);
                 navigation_view.push_by_tag ("done_page");

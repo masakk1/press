@@ -62,8 +62,10 @@ public class Press.Compressor : Object {
         this.process_running = false;
     }
 
-    public async void compress_library_async(string source_path, string target_path,
-                                             bool replace_destination_files) {
+    public async void compress_library_async(string source_path,
+                                             string target_path,
+                                             bool replace_destination_files,
+                                             bool copy_noaudio_files) {
         if( this.process_running )return;
         this.start_process ();
 
@@ -86,7 +88,7 @@ public class Press.Compressor : Object {
                         this.working_on_file (file.get_basename ());
                         return Source.REMOVE;
                     });
-                    this.process_file (file, replace_destination_files);
+                    this.process_file (file, replace_destination_files, copy_noaudio_files);
                 }
             }, (int) GLib.get_num_processors (), false);
 
@@ -157,7 +159,7 @@ public class Press.Compressor : Object {
 
     // }
 
-    private void process_file(File source_file, bool replace_destination_files) {
+    private void process_file(File source_file, bool replace_destination_files, bool copy_noaudio_files) {
         string source_folder_path = this.source_folder.get_path ();
         string target_folder_path = this.target_folder.get_path ();
         string source_file_path = source_file.get_path ();
@@ -188,7 +190,7 @@ public class Press.Compressor : Object {
         if( valid_folder && !(file_exists && !replace_destination_files)){
             if( is_audio ){
                 this.convert_file (source_file, target_file, is_video && this.attach_video);
-            } else {
+            } else if( copy_noaudio_files ){
                 this.copy_file (source_file, target_file);
             }
         } else {

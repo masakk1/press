@@ -71,6 +71,12 @@
                             <property name="title" translatable="yes">Replace files on destination</property>
                           </object>
                         </child>
+                        <child>
+                          <object class="AdwSwitchRow" id="copy_noaudio_files_switch">
+                            <property name="title" translatable="yes">Copy non-audio files on destination</property>
+                            <property name="active">true</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>

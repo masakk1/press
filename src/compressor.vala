@@ -187,7 +187,7 @@ public class Press.Compressor : Object {
         bool valid_folder = this.ensure_directory_exists (target_file);
         bool file_exists = target_file.query_exists ();
 
-        if( valid_folder && !(file_exists && !replace_destination_files)){
+        if( valid_folder && (replace_destination_files || !file_exists)){
             if( is_audio ){
                 this.convert_file (source_file, target_file, is_video && this.attach_video);
             } else if( copy_noaudio_files ){
@@ -275,7 +275,7 @@ public class Press.Compressor : Object {
         source_file.copy_async.begin (
             target_file,
             FileCopyFlags.ALL_METADATA,
-            Priority.DEFAULT,
+            Priority.DEFAULT | FileCopyFlags.OVERWRITE,
             null,
             null,
             (obj, res) => {

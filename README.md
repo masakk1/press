@@ -23,8 +23,9 @@ If you're not using devcontainers, these are the dependencies:
 
 > `vala-language-server` and `gdb` are only need for development
 
-- Arch: `pacman -S base-devel meson ninja vala vala-language-server gtk4 libadwaita glib2 gobject-introspection gdb uncrustify libgee`
-- Alpine: `sudo apk add alpine-sdk meson ninja gtk4.0-dev libadwaita-dev desktop-file-utils gobject-introspection-dev adwaita-icon-theme font-dejavu json-glib-dev libgee-dev uncrustify gdb vala vala-language-server`
+- Arch: `pacman -S base-devel meson ninja vala vala-language-server gtk4 libadwaita glib2 gobject-introspection uncrustify libgee`
+    - Development packages: `yay -S --noconfirm vala-language-server gdb`
+- Alpine for devcontainers: `sudo apk add alpine-sdk meson ninja gtk4.0-dev libadwaita-dev desktop-file-utils gobject-introspection-dev adwaita-icon-theme font-dejavu json-glib-dev libgee-dev uncrustify gdb vala vala-language-server`
 
 ### Steps
 

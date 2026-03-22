@@ -103,7 +103,7 @@ public class Press.Window : Adw.ApplicationWindow {
         custom_quality_samplerate.notify["value"].connect (this.select_custom_samplerate);
 
         // Compress button
-        compress_button.clicked.connect (this.open_confirm_dialog);
+        compress_button.clicked.connect (this.compress_button_clicked);
         confirm_dialog.response.connect (this.answer_confirm_dialog);
 
         // In compressing page
@@ -268,6 +268,15 @@ public class Press.Window : Adw.ApplicationWindow {
     private void select_custom_samplerate() {
         int value = (int) this.custom_quality_samplerate.value;
         this.samplerate = value;
+    }
+
+    private void compress_button_clicked() {
+        if( this.replace_destination_files ){
+            this.open_confirm_dialog ();
+        } else {
+            this.begin_compression ();
+        }
+
     }
 
     private void open_confirm_dialog() {

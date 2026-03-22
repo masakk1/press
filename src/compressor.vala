@@ -194,7 +194,7 @@ public class Press.Compressor : Object {
                 this.copy_file (source_file, target_file);
             }
         } else {
-            print (@"Skipping file: $(target_file.get_path())\n");
+            debug (@"Skipping file: $(target_file.get_path())\n");
         }
     }
 
@@ -251,8 +251,7 @@ public class Press.Compressor : Object {
             ? @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar $(this.samplerate) -c:a $(codec) -b:a $(this.bitrate)k -c:v mjpeg -map v:0 -movflags +faststart \"$(target_file.get_path())\" -y"
             : @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar $(this.samplerate) -c:a $(this.codec) -b:a $(this.bitrate)k \"$(target_file.get_path())\" -y";
 
-        print ("------------------------------------------------------------------------------------\n");
-        print (@"Command: $command");
+        debug (@"Command: $command");
         try {
             string standard_output = "";
             string standard_error = "";
@@ -262,9 +261,9 @@ public class Press.Compressor : Object {
                                              out standard_error,
                                              out wait_status);
 
-            print (@"\nOutput: $standard_output\n");
-            print (@"\nError: $standard_error\n");
-            print (@"\nWait status: $wait_status\n");
+            debug (@"\nOutput: $standard_output\n");
+            debug (@"\nError: $standard_error\n");
+            debug (@"\nWait status: $wait_status\n");
         } catch ( Error err ){
             warning (@"Error trying to convert file $(source_file.get_path()). Message: $(err.message)");
         }

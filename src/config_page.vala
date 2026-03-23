@@ -69,6 +69,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     public HashMap<string, Press.FormatConfig> format_list;
     public HashMap<string, Press.QualityConfig> quality_list;
+    public Press.QualityConfig selected_quality { get; private set; } // TODO: check if we need an unowned referece here.
 
     public Press.CompressConfig config;
 
@@ -85,7 +86,6 @@ public class Press.ConfigPage : Adw.NavigationPage {
         // select_quality_preset (); // make sure the default one is chosen
 
         // TODO: use signals instead
-        quality_preset_selection.notify["selected"].connect (this.select_quality_preset);
         custom_quality_format.notify["selected"].connect (this.select_custom_format);
         custom_quality_bitrate.notify["value"].connect (this.select_custom_bitrate);
         custom_quality_samplerate.notify["value"].connect (this.select_custom_samplerate);
@@ -332,6 +332,21 @@ public class Press.ConfigPage : Adw.NavigationPage {
     private void select_custom_samplerate() {
         int value = (int) this.custom_quality_samplerate.value;
         this.samplerate = value;
+    }
+
+    [GtkCallback]
+    private void on_quality_preset_selected(Adw.ComboRow row) {
+        var str_obj = row.selected_item as Gtk.StringObject;
+        string selected_quality_name = str_obj.get_string ();
+
+        // TODO: create a constant
+        custom_quality_group.visible = selected_quality_name == "other";
+
+        selected_quality = quality_list[selected_quality_name];
+
+        if( selected_quality == null ){
+            error (@"Couldn't find quality $(selected_quality_name) from quality list.");
+        }
     }
 
 }

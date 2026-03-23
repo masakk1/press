@@ -55,6 +55,7 @@
                 <child>
                   <object class="AdwComboRow" id="quality_preset_selection">
                     <property name="title" translatable="yes">Quality Preset</property>
+                    <signal name="activated" handle="on_quality_preset_selected" swapped="no"></signal>
                   </object>
                 </child>
                 <child>

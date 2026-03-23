@@ -41,8 +41,8 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     [GtkChild] public unowned Gtk.Button compress_button;
 
-    public HashMap<string, Press.FormatConfig> format_list;
-    public HashMap<string, Press.QualityConfig> quality_list;
+    public HashMap<string, Press.FormatConfig ?> format_list;
+    public HashMap<string, Press.QualityConfig ?> quality_list;
     // FIXME: This doesn't provide enough protection, external code can still
     // create modify the config.
     public Press.CompressConfig config { get; private set; }
@@ -54,9 +54,9 @@ public class Press.ConfigPage : Adw.NavigationPage {
         target_directory_button.clicked.connect (set_target_directory);
 
         // Compress Config
-        config = new Press.CompressConfig ();
-        quality_list = new HashMap<string, Press.QualityConfig>();
-        format_list = new HashMap<string, Press.FormatConfig>();
+        config = Press.CompressConfig ();
+        quality_list = new HashMap<string, Press.QualityConfig ?>();
+        format_list = new HashMap<string, Press.FormatConfig ?>();
         load_presets ();
 
         on_quality_preset_selected (quality_preset_selection); // make sure the default one is chosen
@@ -128,7 +128,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
         foreach(string member in formats_obj.get_members ()){
             Json.Object format_obj = formats_obj.get_object_member (member);
 
-            Press.FormatConfig format = new Press.FormatConfig () {
+            Press.FormatConfig format = Press.FormatConfig () {
                 name = format_obj.get_string_member ("name"),
                 extension = format_obj.get_string_member ("extension"),
                 attach_video = format_obj.get_boolean_member ("video"),
@@ -154,7 +154,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
                     quality_list_obj.get_string_member ("format")
                     );
             } else {
-                Press.QualityConfig quality = new Press.QualityConfig () {
+                Press.QualityConfig quality = Press.QualityConfig () {
                     name = quality_obj.get_string_member ("name"),
                     format = format,
                     bitrate = (int32) quality_obj.get_int_member ("bitrate"),
@@ -189,10 +189,11 @@ public class Press.ConfigPage : Adw.NavigationPage {
         is_custom_config = selected_quality_name == "other";
         custom_quality_group.visible = is_custom_config;
 
-        config.quality_config = quality_list[selected_quality_name];
-
-        if( config.quality_config == null ){
+        if( !quality_list.has_key (selected_quality_name)){
             error (@"Couldn't find quality $(selected_quality_name) from quality list.");
+
+        } else {
+            config.quality_config = quality_list[selected_quality_name];
         }
     }
 

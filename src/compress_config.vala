@@ -23,21 +23,21 @@
  * SPDX-License-Identifier: MIT
  */
 
-public class Press.FormatConfig : Object {
+public struct Press.FormatConfig {
     public string name { get; set; }
     public string extension { get; set; }
     public bool attach_video { get; set; }
     public string codec { get; set; }
 }
 
-public class Press.QualityConfig : Object {
+public struct Press.QualityConfig {
     public string name { get; set; }
     public Press.FormatConfig format { get; set; }
     public int bitrate { get; set; }
     public int samplerate { get; set; }
 }
 
-public class Press.CompressConfig : Object {
+public struct Press.CompressConfig {
     public string source_path { get; set; }
     public string target_path { get; set; }
     public Press.QualityConfig quality_config { get; set; }

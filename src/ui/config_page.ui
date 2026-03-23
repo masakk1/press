@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- TODO: check swapped="no" - whether it's necessary or not -->
-  <template>
+  <template class="PressConfigPage">
     <property name="title" translatable="yes">Press</property>
     <property name="tag">config_page</property>
     <child>
@@ -56,20 +56,20 @@
                 <child>
                   <object class="AdwComboRow" id="quality_preset_selection">
                     <property name="title" translatable="yes">Quality Preset</property>
-                    <signal name="activated" handle="on_quality_preset_selected" swapped="no"></signal>
+                    <signal name="activated" handler="on_quality_preset_selected" swapped="no"></signal>
                   </object>
                 </child>
                 <child>
                   <object class="AdwSwitchRow">
                     <property name="title" translatable="yes">Replace files on destination</property>
-                    <signal name="activated" handle="on_replace_destination_files_activated"></signal>
+                    <signal name="activated" handler="on_replace_destination_files_activated"></signal>
                   </object>
                 </child>
                 <child>
                   <object class="AdwSwitchRow">
                     <property name="title" translatable="yes">Copy non-audio files on destination</property>
                     <property name="active">true</property>
-                    <signal name="activated" handle="on_copy_noaudio_files_activated"></signal>
+                    <signal name="activated" handler="on_copy_noaudio_files_activated"></signal>
                   </object>
                 </child>
               </object>

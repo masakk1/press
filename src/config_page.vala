@@ -181,8 +181,9 @@ public class Press.ConfigPage : Adw.NavigationPage {
     }
 
     [GtkCallback]
-    private void on_quality_preset_selected(Adw.ComboRow row) {
-        var str_obj = row.selected_item as Gtk.StringObject;
+    private void on_quality_preset_selected(Adw.ActionRow row) {
+        var combo_row = row as Adw.ComboRow;
+        var str_obj = combo_row.selected_item as Gtk.StringObject;
         string selected_quality_name = str_obj.get_string ();
 
         // TODO: create a constant
@@ -198,29 +199,33 @@ public class Press.ConfigPage : Adw.NavigationPage {
     }
 
     [GtkCallback]
-    private void on_bitrate_activated(Adw.SpinRow row) {
-        var value = (int) row.value;
+    private void on_bitrate_activated(Adw.ActionRow row) {
+        var spin_row = row as Adw.SpinRow;
+        var value = (int) spin_row.value;
         if( is_custom_config ){
             config.quality_config.bitrate = value;
         }
     }
 
     [GtkCallback]
-    private void on_samplerate_activated(Adw.SpinRow row) {
-        var value = (int) row.value;
+    private void on_samplerate_activated(Adw.ActionRow row) {
+        var spin_row = row as Adw.SpinRow;
+        var value = (int) spin_row.value;
         if( is_custom_config ){
             config.quality_config.samplerate = value;
         }
     }
 
     [GtkCallback]
-    private void on_replace_destination_files_activated(Adw.SwitchRow row) {
-        config.replace_destination_files = row.active;
+    private void on_replace_destination_files_activated(Adw.ActionRow row) {
+        var switch_row = row as Adw.SwitchRow;
+        config.replace_destination_files = switch_row.active;
     }
 
     [GtkCallback]
-    private void on_copy_noaudio_files_activated(Adw.SwitchRow row) {
-        config.copy_noaudio_files = row.active;
+    private void on_copy_noaudio_files_activated(Adw.ActionRow row) {
+        var switch_row = row as Adw.SwitchRow;
+        config.copy_noaudio_files = switch_row.active;
     }
 
 }

@@ -9,7 +9,7 @@
     <property name="content">
       <object class="AdwNavigationView" id="navigation_view">
         <child>
-          <object class="ConfigPage" id="config_page"></object>
+          <object class="PressConfigPage" id="config_page"></object>
         </child>
         <child>
           <object class="AdwNavigationPage">

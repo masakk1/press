@@ -105,22 +105,8 @@ public class Press.Window : Adw.ApplicationWindow {
         if( folders_exist ){
             navigation_view.push_by_tag ("compressing_page");
 
-            string extension = this.selected_format_data_object.get_string_member ("extension");
-            bool attach_video = this.selected_format_data_object.get_boolean_member ("video");
-            string codec = this.selected_format_data_object.get_string_member ("codec");
-
-            this.compressor.format_extension = extension;
-            this.compressor.bitrate = this.bitrate;
-            this.compressor.samplerate = this.samplerate;
-            this.compressor.attach_video = attach_video;
-            this.compressor.codec = codec;
-
             this.compressor.compress_library_async.begin (
-                this.source_directory_path,
-                this.target_directory_path,
-                config_page.replace_destination_files,
-                config_page.copy_noaudio_files,
-                (obj, res) => {
+                config_page.config, (obj, res) => {
                 this.compressor.compress_library_async.end (res);
                 navigation_view.push_by_tag ("done_page");
             });

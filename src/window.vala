@@ -64,7 +64,7 @@ public class Press.Window : Adw.ApplicationWindow {
     }
 
     private void compress_button_clicked() {
-        if( config_page.replace_destination_files ){
+        if( config_page.config.replace_destination_files ){
             this.open_confirm_dialog ();
         } else {
             this.begin_compression ();
@@ -98,8 +98,8 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private void begin_compression() {
 
-        var source_folder = File.new_for_path (this.source_directory_path);
-        var target_folder = File.new_for_path (this.target_directory_path);
+        var source_folder = File.new_for_path (config_page.config.source_path);
+        var target_folder = File.new_for_path (config_page.config.target_path);
         bool folders_exist = source_folder.query_exists (null) && target_folder.query_exists (null);
 
         if( folders_exist ){

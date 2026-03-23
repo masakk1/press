@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <!-- TODO: check swapped="no" - whether it's necessary or not -->
   <template>
     <property name="title" translatable="yes">Press</property>
     <property name="tag">config_page</property>
@@ -59,14 +60,16 @@
                   </object>
                 </child>
                 <child>
-                  <object class="AdwSwitchRow" id="replace_destination_files_switch">
+                  <object class="AdwSwitchRow">
                     <property name="title" translatable="yes">Replace files on destination</property>
+                    <signal name="activated" handle="on_replace_destination_files_activated"></signal>
                   </object>
                 </child>
                 <child>
-                  <object class="AdwSwitchRow" id="copy_noaudio_files_switch">
+                  <object class="AdwSwitchRow">
                     <property name="title" translatable="yes">Copy non-audio files on destination</property>
                     <property name="active">true</property>
+                    <signal name="activated" handle="on_copy_noaudio_files_activated"></signal>
                   </object>
                 </child>
               </object>
@@ -84,7 +87,8 @@
                   </object>
                 </child>
                 <child>
-                  <object class="AdwSpinRow" id="custom_quality_bitrate">
+                  <object class="AdwSpinRow">
+                    <signal name="activated" handler="on_bitrate_activated"></signal>
                     <property name="title" translatable="yes">Bitrate (Kbps)</property>
                     <property name="adjustment">
                       <object class="GtkAdjustment">
@@ -98,7 +102,8 @@
                   </object>
                 </child>
                 <child>
-                  <object class="AdwSpinRow" id="custom_quality_samplerate">
+                  <object class="AdwSpinRow">
+                    <signal name="activated" handler="on_samplerate_activated"></signal>
                     <property name="title" translatable="yes">Sample Rate (Hz)</property>
                     <property name="adjustment">
                       <object class="GtkAdjustment">

@@ -27,11 +27,7 @@ using Gee;
 public class Press.Compressor : Object {
     // note: ^\.?(?<name>\/[^\/\n]+)+(?<ext>\.[A-z0-9\._-]+)$
 
-    public string format_extension;
-    public bool attach_video;
-    public int bitrate;
-    public string codec;
-    public int samplerate;
+    private Press.CompressConfig config;
 
     private File source_folder;
     private File target_folder;
@@ -62,15 +58,14 @@ public class Press.Compressor : Object {
         this.process_running = false;
     }
 
-    public async void compress_library_async(string source_path,
-                                             string target_path,
-                                             bool replace_destination_files,
-                                             bool copy_noaudio_files) {
+    public async void compress_library_async(Press.CompressConfig config) {
         if( this.process_running )return;
         this.start_process ();
 
-        this.source_folder = File.new_for_path (source_path);
-        this.target_folder = File.new_for_path (target_path);
+        this.config = config;
+
+        this.source_folder = File.new_for_path (config.source_path);
+        this.target_folder = File.new_for_path (config.target_path);
 
         assert (this.source_folder.query_exists (null));
         assert (this.target_folder.query_exists (null));
@@ -88,7 +83,7 @@ public class Press.Compressor : Object {
                         this.working_on_file (file.get_basename ());
                         return Source.REMOVE;
                     });
-                    this.process_file (file, replace_destination_files, copy_noaudio_files);
+                    this.process_file (file);
                 }
             }, (int) GLib.get_num_processors (), false);
 
@@ -159,7 +154,7 @@ public class Press.Compressor : Object {
 
     // }
 
-    private void process_file(File source_file, bool replace_destination_files, bool copy_noaudio_files) {
+    private void process_file(File source_file) {
         string source_folder_path = this.source_folder.get_path ();
         string target_folder_path = this.target_folder.get_path ();
         string source_file_path = source_file.get_path ();
@@ -176,7 +171,7 @@ public class Press.Compressor : Object {
                     target_file_path,
                     target_file_path.length,
                     0,
-                    this.format_extension);
+                    config.quality_config.format.extension);
             } catch ( Error err ){
                 error ("Error trying to change extension name. Message: %s\n",
                        err.message);
@@ -187,10 +182,10 @@ public class Press.Compressor : Object {
         bool valid_folder = this.ensure_directory_exists (target_file);
         bool file_exists = target_file.query_exists ();
 
-        if( valid_folder && (replace_destination_files || !file_exists)){
+        if( valid_folder && (config.replace_destination_files || !file_exists)){
             if( is_audio ){
-                this.convert_file (source_file, target_file, is_video && this.attach_video);
-            } else if( copy_noaudio_files ){
+                this.convert_file (source_file, target_file, is_video && config.quality_config.format.attach_video);
+            } else if( config.copy_noaudio_files ){
                 this.copy_file (source_file, target_file);
             }
         } else {
@@ -248,8 +243,9 @@ public class Press.Compressor : Object {
         // TODO: it could error if a sound file had more than 1 video channel...
         // that's an edge case, though.
         string command = attach_video
-            ? @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar $(this.samplerate) -c:a $(codec) -b:a $(this.bitrate)k -c:v mjpeg -map v:0 -movflags +faststart \"$(target_file.get_path())\" -y"
-            : @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar $(this.samplerate) -c:a $(this.codec) -b:a $(this.bitrate)k \"$(target_file.get_path())\" -y";
+            ? @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar $(config.quality_config.samplerate) -c:a $(config.quality_config.format.codec) -b:a $(config.quality_config.bitrate)k -c:v mjpeg -map v:0 -movflags +faststart \"$(target_file.get_path())\" -y"
+            : @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar $(config.quality_config.samplerate) -c:a $(config.quality_config.format.codec) -b:a $(config.quality_config.bitrate)k \"$(target_file.get_path())\" -y";
+        // TODO: reformat into multiple lines
 
         debug (@"Command: $command");
         try {

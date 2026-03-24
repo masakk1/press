@@ -44,7 +44,6 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     public HashMap<string, Press.FormatConfig ?> format_list;
     public HashMap<string, Press.QualityConfig ?> quality_list;
-    // NOTE: The config is cloned every time the getter is called.
     public Press.CompressConfig config { get; private set; }
     public bool is_custom_config { get; private set; }
 
@@ -54,7 +53,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
         target_directory_button.clicked.connect (set_target_directory);
 
         // Compress Config
-        config = Press.CompressConfig ();
+        config = new Press.CompressConfig ();
         quality_list = new HashMap<string, Press.QualityConfig ?>();
         format_list = new HashMap<string, Press.FormatConfig ?>();
 
@@ -69,6 +68,8 @@ public class Press.ConfigPage : Adw.NavigationPage {
             string path = folder != null ? folder.get_path () : "nothing";
 
             config.source_path = path;
+            message (path); ///home/user/Downloads/
+            message (config.source_path); // null
             source_directory_row.subtitle = path;
         });
     }
@@ -78,6 +79,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
             string ? path = folder != null ? folder.get_path () : "nothing";
 
             config.target_path = path;
+            message (config.target_path);
             target_directory_row.subtitle = path;
         });
     }
@@ -124,8 +126,8 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
                 var quality_list_model = new Gtk.StringList (null);
                 var format_list_model = new Gtk.StringList (null);
-                foreach(var format in format_list.values) {
-                    format_list_model.append(format.name);
+                foreach(var format in format_list.values){
+                    format_list_model.append (format.name);
                 }
                 foreach(var quality in quality_list.values){
                     quality_list_model.append (quality.name);
@@ -198,12 +200,11 @@ public class Press.ConfigPage : Adw.NavigationPage {
         var combo_row = obj as Adw.ComboRow;
         var str_obj = combo_row.selected_item as Gtk.StringObject;
         string selected_quality_name = str_obj.get_string ();
-        var selected_quality = quality_list.first_match(x =>
-             x.value.name == selected_quality_name); // TODO: check when null is returned
+        var selected_quality = quality_list.first_match (x =>
+                                                         x.value.name == selected_quality_name); // TODO: check when null is returned
 
         // TODO: create a constant
         is_custom_config = (selected_quality != null && selected_quality.key == "other");
-        message(selected_quality.key);
         custom_quality_group.visible = is_custom_config;
 
 
@@ -221,14 +222,15 @@ public class Press.ConfigPage : Adw.NavigationPage {
         var combo_row = obj as Adw.ComboRow;
         var str_obj = combo_row.selected_item as Gtk.StringObject;
         string selected_format_name = str_obj.get_string ();
-        var selected_format = format_list.first_match(x =>
-            x.value.name == selected_format_name); // TODO: check when null is returned
+        var selected_format = format_list.first_match (x =>
+                                                       x.value.name == selected_format_name);
 
         if( selected_format == null ){
             error (@"Couldn't find quality $(selected_format_name) from quality list.");
 
         } else {
             config.quality_config.format = selected_format.value;
+            message (config.quality_config.format.name);
         }
     }
 
@@ -236,6 +238,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
     private void on_bitrate_activated(Adw.ActionRow row) {
         var spin_row = row as Adw.SpinRow;
         var value = (int) spin_row.value;
+
         if( is_custom_config ){
             config.quality_config.bitrate = value;
         }

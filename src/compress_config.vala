@@ -26,23 +26,35 @@
 // TODO: Create proper constructor
 
 public struct Press.FormatConfig {
-    public string name { get; set; }
-    public string extension { get; set; }
-    public bool attach_video { get; set; }
-    public string codec { get; set; }
+    public string name;
+    public string extension;
+    public bool attach_video;
+    public string codec;
 }
 
 public struct Press.QualityConfig {
-    public string name { get; set; }
-    public Press.FormatConfig format { get; set; }
-    public int bitrate { get; set; }
-    public int samplerate { get; set; }
+    public string name;
+    public Press.FormatConfig format;
+    public int bitrate;
+    public int samplerate;
 }
 
-public struct Press.CompressConfig {
+public class Press.CompressConfig {
     public string source_path { get; set; }
     public string target_path { get; set; }
-    public Press.QualityConfig quality_config { get; set; }
+    public Press.QualityConfig quality_config;
     public bool copy_noaudio_files { get; set; }
     public bool replace_destination_files { get; set; }
+
+    public CompressConfig () {
+    }
+
+    public CompressConfig.copy (Press.CompressConfig other) {
+        this.source_path = other.source_path;
+        this.target_path = other.target_path;
+        this.quality_config = other.quality_config;
+        this.copy_noaudio_files = other.copy_noaudio_files;
+        this._replace_destination_files = other.replace_destination_files;
+    }
+
 }

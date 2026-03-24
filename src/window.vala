@@ -97,16 +97,18 @@ public class Press.Window : Adw.ApplicationWindow {
     }
 
     private void begin_compression() {
+        // Clone the config
+        Press.CompressConfig config = new Press.CompressConfig.copy (config_page.config);
 
-        var source_folder = File.new_for_path (config_page.config.source_path);
-        var target_folder = File.new_for_path (config_page.config.target_path);
+        var source_folder = File.new_for_path (config.source_path);
+        var target_folder = File.new_for_path (config.target_path);
         bool folders_exist = source_folder.query_exists (null) && target_folder.query_exists (null);
 
         if( folders_exist ){
             navigation_view.push_by_tag ("compressing_page");
 
             this.compressor.compress_library_async.begin (
-                config_page.config, (obj, res) => {
+                config, (obj, res) => {
                 this.compressor.compress_library_async.end (res);
                 navigation_view.push_by_tag ("done_page");
             });

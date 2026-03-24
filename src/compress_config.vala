@@ -23,8 +23,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-// TODO: Create proper constructor
-
 /**
  * To create deep copies of itself
  */

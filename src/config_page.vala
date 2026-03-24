@@ -118,7 +118,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
                 parse_presets_file_formats (root_obj);
                 parse_presets_file_quality (root_obj);
 
-                assert (format_list.size > 0); // TODO: test these asserts
+                assert (format_list.size > 0);
                 assert (quality_list.size > 0);
 
                 var quality_list_model = new Gtk.StringList (null);
@@ -158,7 +158,6 @@ public class Press.ConfigPage : Adw.NavigationPage {
         foreach(string member in quality_list_obj.get_members ()){
             Json.Object quality_obj = quality_list_obj.get_object_member (member);
 
-            // TODO: Test if HashMap[index] errors if there's no match.
             Press.FormatConfig ? format = format_list[quality_obj.get_string_member ("format")];
 
             if( format == null ){
@@ -218,7 +217,6 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     [GtkCallback]
     private void on_format_selected(GLib.Object obj, GLib.ParamSpec pspec) {
-        // TODO
         var combo_row = obj as Adw.ComboRow;
         var str_obj = combo_row.selected_item as Gtk.StringObject;
         string selected_format_name = str_obj.get_string ();

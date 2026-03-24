@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <!-- TODO: check swapped="no" - whether it's necessary or not -->
   <template class="PressConfigPage">
     <property name="title" translatable="yes">Press</property>
     <property name="tag">config_page</property>

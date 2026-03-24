@@ -274,8 +274,8 @@ public class Press.Compressor : Object {
     private void copy_file(File source_file, File target_file) {
         source_file.copy_async.begin (
             target_file,
-            FileCopyFlags.ALL_METADATA,
-            Priority.DEFAULT | FileCopyFlags.OVERWRITE,
+            FileCopyFlags.ALL_METADATA | FileCopyFlags.OVERWRITE,
+            Priority.DEFAULT,
             null,
             null,
             (obj, res) => {

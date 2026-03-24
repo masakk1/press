@@ -23,6 +23,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+// TODO: Create proper constructor
+
 public struct Press.FormatConfig {
     public string name { get; set; }
     public string extension { get; set; }

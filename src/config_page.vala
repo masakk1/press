@@ -38,17 +38,17 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     [GtkChild] private unowned Adw.PreferencesGroup custom_quality_group;
     [GtkChild] private unowned Adw.ComboRow quality_preset_selection;
+    [GtkChild] private unowned Adw.ComboRow custom_format_selection;
 
     [GtkChild] public unowned Gtk.Button compress_button;
 
     public HashMap<string, Press.FormatConfig ?> format_list;
     public HashMap<string, Press.QualityConfig ?> quality_list;
-    // FIXME: This doesn't provide enough protection, external code can still
-    // create modify the config.
+    // NOTE: The config is cloned every time the getter is called.
     public Press.CompressConfig config { get; private set; }
     public bool is_custom_config { get; private set; }
 
-    public ConfigPage () {
+    construct {
         // Selecting source/target folders
         source_directory_button.clicked.connect (set_source_directory);
         target_directory_button.clicked.connect (set_target_directory);
@@ -57,9 +57,11 @@ public class Press.ConfigPage : Adw.NavigationPage {
         config = Press.CompressConfig ();
         quality_list = new HashMap<string, Press.QualityConfig ?>();
         format_list = new HashMap<string, Press.FormatConfig ?>();
-        load_presets ();
 
-        on_quality_preset_selected (quality_preset_selection); // make sure the default one is chosen
+        load_presets ();
+        // make sure the default one is chosen
+        // on_quality_preset_selected (quality_preset_selection, null);
+        quality_preset_selection.selected = quality_preset_selection.selected; // Cheap trick to call the notify signal
     }
 
     private void set_source_directory() {
@@ -116,8 +118,21 @@ public class Press.ConfigPage : Adw.NavigationPage {
                 Json.Object root_obj = parser.get_root ().get_object ();
                 parse_presets_file_formats (root_obj);
                 parse_presets_file_quality (root_obj);
+
                 assert (format_list.size > 0); // TODO: test these asserts
                 assert (quality_list.size > 0);
+
+                var quality_list_model = new Gtk.StringList (null);
+                var format_list_model = new Gtk.StringList (null);
+                foreach(var format in format_list.values) {
+                    format_list_model.append(format.name);
+                }
+                foreach(var quality in quality_list.values){
+                    quality_list_model.append (quality.name);
+                }
+
+                quality_preset_selection.model = quality_list_model;
+                custom_format_selection.model = format_list_model;
             }
         }
     }
@@ -128,13 +143,12 @@ public class Press.ConfigPage : Adw.NavigationPage {
         foreach(string member in formats_obj.get_members ()){
             Json.Object format_obj = formats_obj.get_object_member (member);
 
-            Press.FormatConfig format = Press.FormatConfig () {
-                name = format_obj.get_string_member ("name"),
-                extension = format_obj.get_string_member ("extension"),
-                attach_video = format_obj.get_boolean_member ("video"),
-                codec = format_obj.get_string_member ("codec")
-            };
-            format_list[format.name] = format;
+            Press.FormatConfig format = Press.FormatConfig ();
+            format.name = format_obj.get_string_member ("name");
+            format.extension = format_obj.get_string_member ("extension");
+            format.attach_video = format_obj.get_boolean_member ("video");
+            format.codec = format_obj.get_string_member ("codec");
+            format_list[member] = format;
         }
     }
 
@@ -151,16 +165,15 @@ public class Press.ConfigPage : Adw.NavigationPage {
                 warning (
                     "Couldn't load quality preset %s. Format %s doesn't exist.",
                     quality_obj.get_string_member ("name"),
-                    quality_list_obj.get_string_member ("format")
+                    quality_obj.get_string_member ("format")
                     );
             } else {
-                Press.QualityConfig quality = Press.QualityConfig () {
-                    name = quality_obj.get_string_member ("name"),
-                    format = format,
-                    bitrate = (int32) quality_obj.get_int_member ("bitrate"),
-                    samplerate = (int32) quality_obj.get_int_member ("samplerate")
-                };
-                quality_list[quality.name] = quality;
+                Press.QualityConfig quality = Press.QualityConfig ();
+                quality.name = quality_obj.get_string_member ("name");
+                quality.format = format;
+                quality.bitrate = (int32) quality_obj.get_int_member ("bitrate");
+                quality.samplerate = (int32) quality_obj.get_int_member ("samplerate");
+                quality_list[member] = quality;
             }
         }
     }
@@ -181,20 +194,41 @@ public class Press.ConfigPage : Adw.NavigationPage {
     }
 
     [GtkCallback]
-    private void on_quality_preset_selected(Adw.ActionRow row) {
-        var combo_row = row as Adw.ComboRow;
+    private void on_quality_preset_selected(GLib.Object obj, GLib.ParamSpec pspec) {
+        var combo_row = obj as Adw.ComboRow;
         var str_obj = combo_row.selected_item as Gtk.StringObject;
         string selected_quality_name = str_obj.get_string ();
+        var selected_quality = quality_list.first_match(x =>
+             x.value.name == selected_quality_name); // TODO: check when null is returned
 
         // TODO: create a constant
-        is_custom_config = selected_quality_name == "other";
+        is_custom_config = (selected_quality != null && selected_quality.key == "other");
+        message(selected_quality.key);
         custom_quality_group.visible = is_custom_config;
 
-        if( !quality_list.has_key (selected_quality_name)){
+
+        if( selected_quality == null ){
             error (@"Couldn't find quality $(selected_quality_name) from quality list.");
 
         } else {
-            config.quality_config = quality_list[selected_quality_name];
+            config.quality_config = selected_quality.value;
+        }
+    }
+
+    [GtkCallback]
+    private void on_format_selected(GLib.Object obj, GLib.ParamSpec pspec) {
+        // TODO
+        var combo_row = obj as Adw.ComboRow;
+        var str_obj = combo_row.selected_item as Gtk.StringObject;
+        string selected_format_name = str_obj.get_string ();
+        var selected_format = format_list.first_match(x =>
+            x.value.name == selected_format_name); // TODO: check when null is returned
+
+        if( selected_format == null ){
+            error (@"Couldn't find quality $(selected_format_name) from quality list.");
+
+        } else {
+            config.quality_config.format = selected_format.value;
         }
     }
 

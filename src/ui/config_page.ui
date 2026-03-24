@@ -56,7 +56,7 @@
                 <child>
                   <object class="AdwComboRow" id="quality_preset_selection">
                     <property name="title" translatable="yes">Quality Preset</property>
-                    <signal name="activated" handler="on_quality_preset_selected" swapped="no"></signal>
+                    <signal name="notify::selected" handler="on_quality_preset_selected"></signal>
                   </object>
                 </child>
                 <child>
@@ -82,8 +82,9 @@
                   translatable="yes">Manually configure the maximum target quality.</property>
                 <property name="visible">false</property>
                 <child>
-                  <object class="AdwComboRow" id="custom_quality_format">
+                  <object class="AdwComboRow" id="custom_format_selection">
                     <property name="title" translatable="yes">Encoder / Format</property>
+                    <signal name="notify::selected" handler="on_format_selected"></signal>
                   </object>
                 </child>
                 <child>

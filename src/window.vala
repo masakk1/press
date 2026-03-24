@@ -98,7 +98,7 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private void begin_compression() {
         // Clone the config
-        Press.CompressConfig config = new Press.CompressConfig.copy (config_page.config);
+        Press.CompressConfig config = config_page.config.clone ();
 
         var source_folder = File.new_for_path (config.source_path);
         var target_folder = File.new_for_path (config.target_path);

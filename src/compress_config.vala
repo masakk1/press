@@ -25,6 +25,17 @@
 
 // TODO: Create proper constructor
 
+/**
+ * To create deep copies of itself
+ */
+public interface Press.Clonable<T> {
+    /**
+     * Create a deep copy of ``this``
+     */
+    public abstract T clone();
+
+}
+
 public struct Press.FormatConfig {
     public string name;
     public string extension;
@@ -39,7 +50,7 @@ public struct Press.QualityConfig {
     public int samplerate;
 }
 
-public class Press.CompressConfig {
+public class Press.CompressConfig : Press.Clonable<Press.CompressConfig> {
     public string source_path { get; set; }
     public string target_path { get; set; }
     public Press.QualityConfig quality_config;
@@ -49,12 +60,14 @@ public class Press.CompressConfig {
     public CompressConfig () {
     }
 
-    public CompressConfig.copy (Press.CompressConfig other) {
-        this.source_path = other.source_path;
-        this.target_path = other.target_path;
-        this.quality_config = other.quality_config;
-        this.copy_noaudio_files = other.copy_noaudio_files;
-        this._replace_destination_files = other.replace_destination_files;
+    public CompressConfig clone() {
+        var config = new CompressConfig ();
+        config.source_path = this.source_path;
+        config.target_path = this.target_path;
+        config.quality_config = this.quality_config;
+        config.copy_noaudio_files = this.copy_noaudio_files;
+        config.replace_destination_files = this.replace_destination_files;
+        return config;
     }
 
 }

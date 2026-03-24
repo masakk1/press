@@ -62,14 +62,14 @@
                 <child>
                   <object class="AdwSwitchRow">
                     <property name="title" translatable="yes">Replace files on destination</property>
-                    <signal name="activated" handler="on_replace_destination_files_activated"></signal>
+                    <signal name="notify::active" handler="on_replace_destination_files_switched"></signal>
                   </object>
                 </child>
                 <child>
                   <object class="AdwSwitchRow">
                     <property name="title" translatable="yes">Copy non-audio files on destination</property>
                     <property name="active">true</property>
-                    <signal name="activated" handler="on_copy_noaudio_files_activated"></signal>
+                    <signal name="notify::active" handler="on_copy_noaudio_files_switched"></signal>
                   </object>
                 </child>
               </object>
@@ -89,7 +89,7 @@
                 </child>
                 <child>
                   <object class="AdwSpinRow">
-                    <signal name="activated" handler="on_bitrate_activated"></signal>
+                    <signal name="notify::value" handler="on_bitrate_changed"></signal>
                     <property name="title" translatable="yes">Bitrate (Kbps)</property>
                     <property name="adjustment">
                       <object class="GtkAdjustment">
@@ -104,7 +104,7 @@
                 </child>
                 <child>
                   <object class="AdwSpinRow">
-                    <signal name="activated" handler="on_samplerate_activated"></signal>
+                    <signal name="notify::value" handler="on_samplerate_changed"></signal>
                     <property name="title" translatable="yes">Sample Rate (Hz)</property>
                     <property name="adjustment">
                       <object class="GtkAdjustment">

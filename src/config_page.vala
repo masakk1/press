@@ -235,8 +235,8 @@ public class Press.ConfigPage : Adw.NavigationPage {
     }
 
     [GtkCallback]
-    private void on_bitrate_activated(Adw.ActionRow row) {
-        var spin_row = row as Adw.SpinRow;
+    private void on_bitrate_changed(GLib.Object obj, GLib.ParamSpec pspec) {
+        var spin_row = obj as Adw.SpinRow;
         var value = (int) spin_row.value;
 
         if( is_custom_config ){
@@ -245,8 +245,8 @@ public class Press.ConfigPage : Adw.NavigationPage {
     }
 
     [GtkCallback]
-    private void on_samplerate_activated(Adw.ActionRow row) {
-        var spin_row = row as Adw.SpinRow;
+    private void on_samplerate_changed(GLib.Object obj, GLib.ParamSpec pspec) {
+        var spin_row = obj as Adw.SpinRow;
         var value = (int) spin_row.value;
         if( is_custom_config ){
             config.quality_config.samplerate = value;
@@ -254,14 +254,14 @@ public class Press.ConfigPage : Adw.NavigationPage {
     }
 
     [GtkCallback]
-    private void on_replace_destination_files_activated(Adw.ActionRow row) {
-        var switch_row = row as Adw.SwitchRow;
+    private void on_replace_destination_files_switched(GLib.Object obj, GLib.ParamSpec pspec) {
+        var switch_row = obj as Adw.SwitchRow;
         config.replace_destination_files = switch_row.active;
     }
 
     [GtkCallback]
-    private void on_copy_noaudio_files_activated(Adw.ActionRow row) {
-        var switch_row = row as Adw.SwitchRow;
+    private void on_copy_noaudio_files_switched(GLib.Object obj, GLib.ParamSpec pspec) {
+        var switch_row = obj as Adw.SwitchRow;
         config.copy_noaudio_files = switch_row.active;
     }
 

@@ -68,8 +68,6 @@ public class Press.ConfigPage : Adw.NavigationPage {
             string path = folder != null ? folder.get_path () : "nothing";
 
             config.source_path = path;
-            message (path); ///home/user/Downloads/
-            message (config.source_path); // null
             source_directory_row.subtitle = path;
         });
     }
@@ -79,7 +77,6 @@ public class Press.ConfigPage : Adw.NavigationPage {
             string ? path = folder != null ? folder.get_path () : "nothing";
 
             config.target_path = path;
-            message (config.target_path);
             target_directory_row.subtitle = path;
         });
     }
@@ -230,7 +227,6 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
         } else {
             config.quality_config.format = selected_format.value;
-            message (config.quality_config.format.name);
         }
     }
 

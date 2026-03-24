@@ -142,11 +142,12 @@ public class Press.ConfigPage : Adw.NavigationPage {
         foreach(string member in formats_obj.get_members ()){
             Json.Object format_obj = formats_obj.get_object_member (member);
 
-            Press.FormatConfig format = Press.FormatConfig ();
-            format.name = format_obj.get_string_member ("name");
-            format.extension = format_obj.get_string_member ("extension");
-            format.attach_video = format_obj.get_boolean_member ("video");
-            format.codec = format_obj.get_string_member ("codec");
+            Press.FormatConfig format = Press.FormatConfig () {
+                name = format_obj.get_string_member ("name"),
+                extension = format_obj.get_string_member ("extension"),
+                attach_video = format_obj.get_boolean_member ("video"),
+                codec = format_obj.get_string_member ("codec")
+            };
             format_list[member] = format;
         }
     }
@@ -167,11 +168,13 @@ public class Press.ConfigPage : Adw.NavigationPage {
                     quality_obj.get_string_member ("format")
                     );
             } else {
-                Press.QualityConfig quality = Press.QualityConfig ();
-                quality.name = quality_obj.get_string_member ("name");
-                quality.format = format;
-                quality.bitrate = (int32) quality_obj.get_int_member ("bitrate");
-                quality.samplerate = (int32) quality_obj.get_int_member ("samplerate");
+                Press.QualityConfig quality = Press.QualityConfig () {
+                    name = quality_obj.get_string_member ("name"),
+                    format = format,
+                    bitrate = (int32) quality_obj.get_int_member ("bitrate"),
+                    samplerate = (int32) quality_obj.get_int_member ("samplerate")
+                };
+
                 quality_list[member] = quality;
             }
         }

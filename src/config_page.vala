@@ -25,10 +25,6 @@
 using Gee;
 using Json;
 
-// TODO: I remember there being issues when no default bitrate and samplerate were displayed
-// there was a chance to run the thing compression, without having set those things.
-// we should probably do some validation.
-
 [GtkTemplate (ui = "/io/github/masakk1/press/config_page.ui")]
 public class Press.ConfigPage : Adw.NavigationPage {
     [GtkChild] private unowned Adw.ActionRow source_directory_row;
@@ -211,7 +207,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
         var str_obj = combo_row.selected_item as Gtk.StringObject;
         string selected_quality_name = str_obj.get_string ();
         var selected_quality = quality_list.first_match (x =>
-                                                         x.value.name == selected_quality_name); // TODO: check when null is returned
+                                                         x.value.name == selected_quality_name);
 
         is_custom_config = (selected_quality != null && selected_quality.key == CUSTOM_QUALITY_NAME);
         custom_quality_group.visible = is_custom_config;

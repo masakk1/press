@@ -112,7 +112,6 @@ public class Press.ConfigPage : Adw.NavigationPage {
                 warning (@"Couldn't read $(presets_file.get_path()), but file exists.");
 
             } else {
-                // TODO: split into different functions
                 Json.Object root_obj = parser.get_root ().get_object ();
                 parse_presets_file_formats (root_obj);
                 parse_presets_file_quality (root_obj);
@@ -120,23 +119,29 @@ public class Press.ConfigPage : Adw.NavigationPage {
                 assert (format_list.size > 0);
                 assert (quality_list.size > 0);
 
-                // Create a default custom config
-                // Will error unless there's an mp3 format
-                quality_list[CUSTOM_QUALITY_NAME] = { _ ("Other..."), null, 128, 44100 };
-
-                var quality_list_model = new Gtk.StringList (null);
-                var format_list_model = new Gtk.StringList (null);
-                foreach(var format in format_list.values){
-                    format_list_model.append (format.name);
-                }
-                foreach(var quality in quality_list.values){
-                    quality_list_model.append (quality.name);
-                }
-
-                quality_preset_selection.model = quality_list_model;
-                custom_format_selection.model = format_list_model;
+                add_custom_quality ();
+                load_presets_into_ui ();
             }
         }
+    }
+
+    private void add_custom_quality() {
+        // Will error unless there's an mp3 format
+        quality_list[CUSTOM_QUALITY_NAME] = { _ ("Other..."), null, 128, 44100 };
+    }
+
+    private void load_presets_into_ui() {
+        var quality_list_model = new Gtk.StringList (null);
+        var format_list_model = new Gtk.StringList (null);
+        foreach(var format in format_list.values){
+            format_list_model.append (format.name);
+        }
+        foreach(var quality in quality_list.values){
+            quality_list_model.append (quality.name);
+        }
+
+        quality_preset_selection.model = quality_list_model;
+        custom_format_selection.model = format_list_model;
     }
 
     private void parse_presets_file_formats(Json.Object root_obj) {

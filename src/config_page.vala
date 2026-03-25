@@ -28,9 +28,7 @@ using Json;
 [GtkTemplate (ui = "/io/github/masakk1/press/config_page.ui")]
 public class Press.ConfigPage : Adw.NavigationPage {
     [GtkChild] private unowned Adw.ActionRow source_directory_row;
-    [GtkChild] private unowned Gtk.Button source_directory_button;
     [GtkChild] private unowned Adw.ActionRow target_directory_row;
-    [GtkChild] private unowned Gtk.Button target_directory_button;
 
     [GtkChild] private unowned Adw.PreferencesGroup custom_quality_group;
     [GtkChild] private unowned Adw.ComboRow quality_preset_selection;
@@ -48,11 +46,6 @@ public class Press.ConfigPage : Adw.NavigationPage {
     private const string CUSTOM_QUALITY_NAME = "custom";
 
     construct {
-        // Selecting source/target folders
-        // TODO: change to auto-connected signals
-        source_directory_button.clicked.connect (set_source_directory);
-        target_directory_button.clicked.connect (set_target_directory);
-
         // Compress Config
         config = new Press.CompressConfig ();
         config.replace_destination_files = replace_destination_files_switch.active;
@@ -65,7 +58,9 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     }
 
-    private void set_source_directory() {
+
+    [GtkCallback]
+    private void on_source_directory_clicked(Gtk.Button button) {
         this.select_directory ((folder) => {
             string path = folder != null ? folder.get_path () : "nothing";
 
@@ -74,7 +69,8 @@ public class Press.ConfigPage : Adw.NavigationPage {
         });
     }
 
-    private void set_target_directory() {
+    [GtkCallback]
+    private void on_target_directory_clicked(Gtk.Button button) {
         this.select_directory ((folder) => {
             string ? path = folder != null ? folder.get_path () : "nothing";
 

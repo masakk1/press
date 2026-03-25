@@ -221,8 +221,6 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     [GtkCallback]
     private void on_format_selected(GLib.Object obj, GLib.ParamSpec pspec) {
-        return_if_fail (is_custom_config);
-
         var combo_row = obj as Adw.ComboRow;
         var str_obj = combo_row.selected_item as Gtk.StringObject;
         string selected_format_name = str_obj.get_string ();
@@ -232,27 +230,29 @@ public class Press.ConfigPage : Adw.NavigationPage {
         if( selected_format == null )
             error (@"Couldn't find quality $(selected_format_name) from quality list.");
 
-        config.quality_config.format = selected_format.value;
+        var custom_quality = quality_list[CUSTOM_QUALITY_NAME];
+        custom_quality.format = selected_format.value;
+        quality_list[CUSTOM_QUALITY_NAME] = custom_quality;
     }
 
     [GtkCallback]
     private void on_bitrate_changed(GLib.Object obj, GLib.ParamSpec pspec) {
-        return_if_fail (is_custom_config);
-
         var spin_row = obj as Adw.SpinRow;
         var value = (int) spin_row.value;
 
-        config.quality_config.bitrate = value;
+        var custom_quality = quality_list[CUSTOM_QUALITY_NAME];
+        custom_quality.bitrate = value;
+        quality_list[CUSTOM_QUALITY_NAME] = custom_quality;
     }
 
     [GtkCallback]
     private void on_samplerate_changed(GLib.Object obj, GLib.ParamSpec pspec) {
-        return_if_fail (is_custom_config);
-
         var spin_row = obj as Adw.SpinRow;
         var value = (int) spin_row.value;
 
-        config.quality_config.samplerate = value;
+        var custom_quality = quality_list[CUSTOM_QUALITY_NAME];
+        custom_quality.samplerate = value;
+        quality_list[CUSTOM_QUALITY_NAME] = custom_quality;
     }
 
     [GtkCallback]

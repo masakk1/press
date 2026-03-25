@@ -39,6 +39,8 @@ public class Press.ConfigPage : Adw.NavigationPage {
     [GtkChild] private unowned Adw.PreferencesGroup custom_quality_group;
     [GtkChild] private unowned Adw.ComboRow quality_preset_selection;
     [GtkChild] private unowned Adw.ComboRow custom_format_selection;
+    [GtkChild] private unowned Adw.SwitchRow replace_destination_files_switch;
+    [GtkChild] private unowned Adw.SwitchRow copy_noaudio_files_switch;
 
     [GtkChild] public unowned Gtk.Button compress_button;
 
@@ -57,13 +59,14 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
         // Compress Config
         config = new Press.CompressConfig ();
+        config.replace_destination_files = replace_destination_files_switch.active;
+        config.copy_noaudio_files = copy_noaudio_files_switch.active;
+
         quality_list = new HashMap<string, Press.QualityConfig ?>();
         format_list = new HashMap<string, Press.FormatConfig ?>();
 
         load_presets ();
-        // make sure the default one is chosen
-        // on_quality_preset_selected (quality_preset_selection, null);
-        quality_preset_selection.selected = quality_preset_selection.selected; // Cheap trick to call the notify signal
+
     }
 
     private void set_source_directory() {
@@ -127,7 +130,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
                 // Create a default custom config
                 // Will error unless there's an mp3 format
-                quality_list[CUSTOM_QUALITY_NAME] = { _ ("Other..."), format_list["mp3"], 128, 44100 };
+                quality_list[CUSTOM_QUALITY_NAME] = { _ ("Other..."), null, 128, 44100 };
 
                 var quality_list_model = new Gtk.StringList (null);
                 var format_list_model = new Gtk.StringList (null);

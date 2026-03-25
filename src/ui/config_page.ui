@@ -59,13 +59,13 @@
                   </object>
                 </child>
                 <child>
-                  <object class="AdwSwitchRow">
+                  <object class="AdwSwitchRow" id="replace_destination_files_switch">
                     <property name="title" translatable="yes">Replace files on destination</property>
                     <signal name="notify::active" handler="on_replace_destination_files_switched"></signal>
                   </object>
                 </child>
                 <child>
-                  <object class="AdwSwitchRow">
+                  <object class="AdwSwitchRow" id="copy_noaudio_files_switch">
                     <property name="title" translatable="yes">Copy non-audio files on destination</property>
                     <property name="active">true</property>
                     <signal name="notify::active" handler="on_copy_noaudio_files_switched"></signal>

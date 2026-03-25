@@ -45,10 +45,13 @@ public class Press.ConfigPage : Adw.NavigationPage {
     public HashMap<string, Press.FormatConfig ?> format_list;
     public HashMap<string, Press.QualityConfig ?> quality_list;
     public Press.CompressConfig config { get; private set; }
+
     public bool is_custom_config { get; private set; }
+    private const string CUSTOM_QUALITY_NAME = "custom";
 
     construct {
         // Selecting source/target folders
+        // TODO: change to auto-connected signals
         source_directory_button.clicked.connect (set_source_directory);
         target_directory_button.clicked.connect (set_target_directory);
 
@@ -114,12 +117,17 @@ public class Press.ConfigPage : Adw.NavigationPage {
                 warning (@"Couldn't read $(presets_file.get_path()), but file exists.");
 
             } else {
+                // TODO: split into different functions
                 Json.Object root_obj = parser.get_root ().get_object ();
                 parse_presets_file_formats (root_obj);
                 parse_presets_file_quality (root_obj);
 
                 assert (format_list.size > 0);
                 assert (quality_list.size > 0);
+
+                // Create a default custom config
+                // Will error unless there's an mp3 format
+                quality_list[CUSTOM_QUALITY_NAME] = { _ ("Other..."), format_list["mp3"], 128, 44100 };
 
                 var quality_list_model = new Gtk.StringList (null);
                 var format_list_model = new Gtk.StringList (null);
@@ -202,52 +210,49 @@ public class Press.ConfigPage : Adw.NavigationPage {
         var selected_quality = quality_list.first_match (x =>
                                                          x.value.name == selected_quality_name); // TODO: check when null is returned
 
-        // TODO: create a constant
-        is_custom_config = (selected_quality != null && selected_quality.key == "other");
+        is_custom_config = (selected_quality != null && selected_quality.key == CUSTOM_QUALITY_NAME);
         custom_quality_group.visible = is_custom_config;
 
-
-        if( selected_quality == null ){
+        if( selected_quality == null )
             error (@"Couldn't find quality $(selected_quality_name) from quality list.");
 
-        } else {
-            config.quality_config = selected_quality.value;
-        }
+        config.quality_config = selected_quality.value;
     }
 
     [GtkCallback]
     private void on_format_selected(GLib.Object obj, GLib.ParamSpec pspec) {
+        return_if_fail (is_custom_config);
+
         var combo_row = obj as Adw.ComboRow;
         var str_obj = combo_row.selected_item as Gtk.StringObject;
         string selected_format_name = str_obj.get_string ();
         var selected_format = format_list.first_match (x =>
                                                        x.value.name == selected_format_name);
 
-        if( selected_format == null ){
+        if( selected_format == null )
             error (@"Couldn't find quality $(selected_format_name) from quality list.");
 
-        } else {
-            config.quality_config.format = selected_format.value;
-        }
+        config.quality_config.format = selected_format.value;
     }
 
     [GtkCallback]
     private void on_bitrate_changed(GLib.Object obj, GLib.ParamSpec pspec) {
+        return_if_fail (is_custom_config);
+
         var spin_row = obj as Adw.SpinRow;
         var value = (int) spin_row.value;
 
-        if( is_custom_config ){
-            config.quality_config.bitrate = value;
-        }
+        config.quality_config.bitrate = value;
     }
 
     [GtkCallback]
     private void on_samplerate_changed(GLib.Object obj, GLib.ParamSpec pspec) {
+        return_if_fail (is_custom_config);
+
         var spin_row = obj as Adw.SpinRow;
         var value = (int) spin_row.value;
-        if( is_custom_config ){
-            config.quality_config.samplerate = value;
-        }
+
+        config.quality_config.samplerate = value;
     }
 
     [GtkCallback]

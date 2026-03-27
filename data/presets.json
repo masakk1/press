@@ -43,12 +43,6 @@
             "format": "mp3",
             "bitrate": 128,
             "samplerate": 44100
-        },
-        "other": {
-            "name": "Other...",
-            "format": "mp3",
-            "bitrate": 128,
-            "samplerate": 44100
         }
     }
 }

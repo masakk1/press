@@ -25,49 +25,10 @@
 
 [GtkTemplate (ui = "/io/github/masakk1/press/window.ui")]
 public class Press.Window : Adw.ApplicationWindow {
-    [GtkChild]
-    private unowned Adw.ActionRow source_directory_row;
-    [GtkChild]
-    private unowned Gtk.Button source_directory_button;
-    [GtkChild]
-    private unowned Adw.ActionRow target_directory_row;
-    [GtkChild]
-    private unowned Gtk.Button target_directory_button;
-    [GtkChild]
-    private unowned Adw.SwitchRow replace_destination_files_switch;
-    [GtkChild]
-    private unowned Adw.SwitchRow copy_noaudio_files_switch;
-
-    private bool replace_destination_files { get {
-                                                 return replace_destination_files_switch.active;
-                                             } }
-    private bool copy_noaudio_files { get {
-                                          return copy_noaudio_files_switch.active;
-                                      } }
-    private string source_directory_path;
-    private string target_directory_path;
 
     [GtkChild]
-    private unowned Adw.PreferencesGroup custom_quality_group;
-    [GtkChild]
-    private unowned Adw.ComboRow quality_preset_selection;
-    [GtkChild]
-    private unowned Adw.ComboRow custom_quality_format;
-    [GtkChild]
-    private unowned Adw.SpinRow custom_quality_bitrate;
-    [GtkChild]
-    private unowned Adw.SpinRow custom_quality_samplerate;
+    private unowned Press.ConfigPage config_page;
 
-    private Json.Object quality_preset_data_object;
-    private Json.Object selected_quality_preset_data_object;
-    private Json.Object format_data_object;
-    private Json.Object selected_format_data_object;
-    private int bitrate = 128; // default parameter
-    private int samplerate = 44100; // default parameter
-    private string quality_preset_custom_name = "nothing";
-
-    [GtkChild]
-    private unowned Gtk.Button compress_button;
     [GtkChild]
     private unowned Adw.AlertDialog confirm_dialog;
     [GtkChild]
@@ -88,22 +49,9 @@ public class Press.Window : Adw.ApplicationWindow {
         application = app;
         compressor = new Compressor ();
 
-        // Source Directory
-        source_directory_button.clicked.connect (this.set_source_directory);
-
-        // Target Directory
-        target_directory_button.clicked.connect (this.set_target_directory);
-
-        // Presets
-        load_presets ();
-        select_quality_preset (); // make sure the default one is chosen
-        quality_preset_selection.notify["selected"].connect (this.select_quality_preset);
-        custom_quality_format.notify["selected"].connect (this.select_custom_format);
-        custom_quality_bitrate.notify["value"].connect (this.select_custom_bitrate);
-        custom_quality_samplerate.notify["value"].connect (this.select_custom_samplerate);
 
         // Compress button
-        compress_button.clicked.connect (this.compress_button_clicked);
+        config_page.compress_button.clicked.connect (compress_button_clicked);
         confirm_dialog.response.connect (this.answer_confirm_dialog);
 
         // In compressing page
@@ -115,163 +63,8 @@ public class Press.Window : Adw.ApplicationWindow {
         done_page_back_button.clicked.connect (this.return_config_page);
     }
 
-    private void load_presets() {
-        File ? presets_file = null;
-
-        foreach(var dir in GLib.Environment.get_system_data_dirs ()){
-            string search_filename = GLib.Path.build_filename (dir, "presets.json");
-            var search_file = File.new_for_path (search_filename);
-            if( search_file.query_exists ()){
-                presets_file = search_file;
-                break;
-            }
-        }
-
-        if( presets_file == null ){
-            warning ("Could not find presets.json file, which contains the presets.");
-
-        } else {
-
-            bool can_read_file = true;
-            var parser = new Json.Parser ();
-
-            // Try to load the file onto the parser
-            try {
-                parser.load_from_file (presets_file.get_path ());
-            } catch ( Error err ){
-                warning (@"Could not read file from path $(presets_file.get_path ()). File should exists.");
-                can_read_file = false;
-            }
-
-            if( can_read_file ){
-                var format_list = new Gtk.StringList (null);
-                var quality_preset_list = new Gtk.StringList (null);
-                var root_object = parser.get_root ().get_object ();
-
-                var formats_object = root_object.get_object_member ("formats");
-                var format_member_names = formats_object.get_members ();
-
-                foreach(string member_name in format_member_names){
-                    var format = formats_object.get_object_member (member_name);
-                    string name = format.get_string_member ("name");
-                    format_list.append (name);
-                }
-
-                this.format_data_object = formats_object;
-                custom_quality_format.model = format_list;
-
-                var quality_presets_object = root_object.get_object_member ("quality_presets");
-                var quality_presets_member_names = quality_presets_object.get_members ();
-
-                this.quality_preset_custom_name = quality_presets_object
-                                                   .get_object_member ("other")
-                                                   .get_string_member ("name");
-
-                foreach(string member_name in quality_presets_member_names){
-                    var quality_preset = quality_presets_object.get_object_member (member_name);
-                    string name = quality_preset.get_string_member ("name");
-                    quality_preset_list.append (name);
-                }
-
-                this.quality_preset_data_object = quality_presets_object;
-                quality_preset_selection.model = quality_preset_list;
-            }
-        }
-    }
-
-    private void set_source_directory() {
-        this.select_directory ((folder) => {
-            string path = folder != null ? folder.get_path () : "nothing";
-
-            this.source_directory_path = path;
-            source_directory_row.subtitle = path;
-        });
-    }
-
-    private void set_target_directory() {
-        this.select_directory ((folder) => {
-            string ? path = folder != null ? folder.get_path () : "nothing";
-
-            this.target_directory_path = path;
-            target_directory_row.subtitle = path;
-        });
-    }
-
-    private void select_directory(Func<File> callback) {
-        var dialog = new Gtk.FileDialog ();
-        dialog.select_folder.begin (this, null, (obj, res) => {
-            try {
-                File folder = dialog.select_folder.end (res);
-                callback (folder);
-            } catch ( Error err ){
-                warning ("Error trying to open folder. Message: " + err.message);
-            }
-        });
-    }
-
-    private void select_quality_preset() {
-        var selected_item = this.quality_preset_selection.selected_item;
-        var str_obj = selected_item as Gtk.StringObject;
-        var selected_quality_preset_name = str_obj.get_string ();
-
-        if( selected_quality_preset_name == quality_preset_custom_name ){
-            custom_quality_group.visible = true;
-        } else {
-            custom_quality_group.visible = false;
-        }
-
-        this.load_quality_preset (selected_quality_preset_name);
-    }
-
-    private void load_quality_preset(string name) {
-        foreach(string member_name in this.quality_preset_data_object.get_members ()){
-            var quality_preset_object = this.quality_preset_data_object.get_object_member (member_name);
-            string quality_preset_name = quality_preset_object.get_string_member ("name");
-
-            if( name == quality_preset_name ){
-                this.selected_quality_preset_data_object = quality_preset_object;
-
-                string format_name = quality_preset_object.get_string_member ("format");
-                var format_object = this.format_data_object.get_object_member (format_name);
-                this.selected_format_data_object = format_object;
-
-                this.bitrate = (int32) quality_preset_object.get_int_member ("bitrate");
-                this.samplerate = (int32) quality_preset_object.get_int_member ("samplerate");
-            }
-        }
-    }
-
-    private void select_custom_format() {
-        var selected_item = this.custom_quality_format.selected_item;
-        var str_obj = selected_item as Gtk.StringObject;
-        var selected_format_name = str_obj.get_string ();
-
-        this.load_custom_format (selected_format_name);
-    }
-
-    private void load_custom_format(string name) {
-        foreach(string member_name in this.format_data_object.get_members ()){
-            var format_object = this.format_data_object.get_object_member (member_name);
-            string format_name = format_object.get_string_member ("name");
-
-            if( name == format_name ){
-                this.selected_format_data_object = format_object;
-            }
-        }
-    }
-
-    private void select_custom_bitrate() {
-        int value = (int) this.custom_quality_bitrate.value;
-        this.bitrate = value;
-    }
-
-    private void select_custom_samplerate() {
-        int value = (int) this.custom_quality_samplerate.value;
-        this.samplerate = value;
-    }
-
     private void compress_button_clicked() {
-        if( this.replace_destination_files ){
+        if( config_page.config.replace_destination_files ){
             this.open_confirm_dialog ();
         } else {
             this.begin_compression ();
@@ -304,30 +97,18 @@ public class Press.Window : Adw.ApplicationWindow {
     }
 
     private void begin_compression() {
+        // Clone the config
+        Press.CompressConfig config = config_page.config.clone ();
 
-        var source_folder = File.new_for_path (this.source_directory_path);
-        var target_folder = File.new_for_path (this.target_directory_path);
+        var source_folder = File.new_for_path (config.source_path);
+        var target_folder = File.new_for_path (config.target_path);
         bool folders_exist = source_folder.query_exists (null) && target_folder.query_exists (null);
 
         if( folders_exist ){
             navigation_view.push_by_tag ("compressing_page");
 
-            string extension = this.selected_format_data_object.get_string_member ("extension");
-            bool attach_video = this.selected_format_data_object.get_boolean_member ("video");
-            string codec = this.selected_format_data_object.get_string_member ("codec");
-
-            this.compressor.format_extension = extension;
-            this.compressor.bitrate = this.bitrate;
-            this.compressor.samplerate = this.samplerate;
-            this.compressor.attach_video = attach_video;
-            this.compressor.codec = codec;
-
             this.compressor.compress_library_async.begin (
-                this.source_directory_path,
-                this.target_directory_path,
-                this.replace_destination_files,
-                this.copy_noaudio_files,
-                (obj, res) => {
+                config, (obj, res) => {
                 this.compressor.compress_library_async.end (res);
                 navigation_view.push_by_tag ("done_page");
             });

@@ -150,12 +150,20 @@ public class Press.ConfigPage : Adw.NavigationPage {
         foreach(string member in formats_obj.get_members ()){
             Json.Object format_obj = formats_obj.get_object_member (member);
 
+            // Find the filters
+            var filters_obj = format_obj.get_array_member ("filters");
+            var filters = new ArrayList<string>();
+            foreach(var filter_node in filters_obj.get_elements ()){
+                filters.add (filter_node.get_string ());
+            }
+
             Press.FormatConfig format = Press.FormatConfig () {
                 name = format_obj.get_string_member ("name"),
                 extension = format_obj.get_string_member ("extension"),
-                attach_video = format_obj.get_boolean_member ("video"),
-                codec = format_obj.get_string_member ("codec")
+                encoder = format_obj.get_string_member ("encoder"),
+                filters = filters.to_array ()
             };
+
             format_list[member] = format;
         }
     }

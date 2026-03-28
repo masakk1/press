@@ -133,6 +133,30 @@ namespace Press.Compressor{
 
     }
 
+    public class FileDuplicator : FileHandler {
+        public FileDuplicator () {
+        }
+
+        public void process(File source, File target) {
+            source.copy_async.begin (
+                target,
+                FileCopyFlags.ALL_METADATA | FileCopyFlags.OVERWRITE,
+                Priority.DEFAULT,
+                null,
+                null,
+                (obj, res) => {
+                try {
+                    source.copy_async.end (res);
+                } catch ( Error err ){
+                    warning (@"Error trying to copy "
+                             + @"$(source.get_path()) to $(target.get_path()). "
+                             + @"Message: $(err.message)");
+                }
+            });
+        }
+
+    }
+
     public class Compressor : Object {
         // note: ^\.?(?<name>\/[^\/\n]+)+(?<ext>\.[A-z0-9\._-]+)$
 
@@ -297,7 +321,8 @@ namespace Press.Compressor{
                     file_handler = new FileConverter (config.quality_config.format.encoder, config.quality_config.format.filters);
                     file_handler.process (source_file, target_file);
                 } else if( config.copy_noaudio_files ){
-                    this.copy_file (source_file, target_file);
+                    file_handler = new FileDuplicator ();
+                    file_handler.process (source_file, target_file);
                 }
 
             } else {
@@ -349,24 +374,6 @@ namespace Press.Compressor{
                 is_audio = false;
                 is_video = false;
             }
-        }
-
-        private void copy_file(File source_file, File target_file) {
-            source_file.copy_async.begin (
-                target_file,
-                FileCopyFlags.ALL_METADATA | FileCopyFlags.OVERWRITE,
-                Priority.DEFAULT,
-                null,
-                null,
-                (obj, res) => {
-                try {
-                    source_file.copy_async.end (res);
-                } catch ( Error err ){
-                    warning (@"Error trying to copy "
-                             + @"$(source_file.get_path()) to $(target_file.get_path()). "
-                             + @"Message: $(err.message)");
-                }
-            });
         }
 
         public void cancel_process() {

@@ -28,6 +28,8 @@ int main(string[] args) {
     Intl.bind_textdomain_codeset (Config.GETTEXT_PACKAGE, "UTF-8");
     Intl.textdomain (Config.GETTEXT_PACKAGE);
 
+    Gst.init (ref args);
+
     var app = new Press.Application ();
     return app.run (args);
 }

@@ -291,12 +291,15 @@ namespace Press.Compressor{
             bool valid_folder = this.ensure_directory_exists (target_file);
             bool file_exists = target_file.query_exists ();
 
+            FileHandler file_handler;
             if( valid_folder && (config.replace_destination_files || !file_exists)){
                 if( is_audio ){
-                    this.convert_file (source_file, target_file, is_video && config.quality_config.format.attach_video);
+                    file_handler = new FileConverter (config.quality_config.format.encoder, config.quality_config.format.filters);
+                    file_handler.process (source_file, target_file);
                 } else if( config.copy_noaudio_files ){
                     this.copy_file (source_file, target_file);
                 }
+
             } else {
                 debug (@"Skipping file: $(target_file.get_path())\n");
             }

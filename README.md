@@ -26,7 +26,7 @@ If you're not using devcontainers, these are the dependencies:
 - Arch: `pacman -S base-devel meson ninja vala vala-language-server gtk4 libadwaita glib2 gobject-introspection uncrustify libgee`
     - Development packages: `yay -S --noconfirm vala-language-server gdb`
 - Alpine for devcontainers: `sudo apk add alpine-sdk meson ninja gtk4.0-dev libadwaita-dev desktop-file-utils gobject-introspection-dev adwaita-icon-theme font-dejavu json-glib-dev libgee-dev uncrustify gdb vala vala-language-server`
-- Fedora: `dnf install meson ninja vala glib2-devel libgee-devel json-glib-devel msgfmt gtk4-devel libadwaita-devel update-desktop-database`
+- Fedora: `dnf install cmake meson ninja vala glib2-devel libgee-devel json-glib-devel msgfmt gtk4-devel libadwaita-devel update-desktop-database ffmpeg`
     - Development packages: `dnf install vala-language-server uncrustify gdb git`
 
 ### Steps

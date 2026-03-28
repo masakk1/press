@@ -37,6 +37,102 @@ namespace Press.Compressor{
 
     }
 
+    public class FileConverter : FileHandler {
+        private string[] filters;
+        private string encoder_name;
+
+        private Gst.Pipeline pipeline;
+        private Gst.Element source;
+        private Gst.Element sink;
+        private Gst.Element decodebin;
+        private Gst.Element encoder;
+
+        public FileConverter (string encoder, string[] filters) {
+            this.filters = filters;
+            encoder_name = encoder;
+        }
+
+        private void process(File source, File target) {
+            try {
+                pipeline = create_pipeline ("convert-pipeline-" + source.get_basename ());
+
+                add_pipeline_filters (filters);
+
+                decodebin.pad_added.connect (decodebin_pad_added);
+
+                pipeline.set_state (Gst.State.PLAYING);
+                play ();
+                pipeline.set_state (Gst.State.NULL);
+
+            } catch ( CompressError err ){
+                critical (@"Error trying to compress $(source.get_path()) - $(err.code): $(err.message)");
+            }
+
+            pipeline = null;
+        }
+
+        private Gst.Pipeline create_pipeline(string name)
+        throws CompressError.PIPELINE_FAIL, CompressError.ELEMENT_LINK, CompressError.ELEMENT_NULL {
+            Gst.Pipeline ? pipeline = new Gst.Pipeline (name);
+
+            if( pipeline == null )
+                throw new CompressError.PIPELINE_FAIL ("Failed to create a pipeline");
+
+            source = Gst.ElementFactory.make ("filesrc");
+            sink = Gst.ElementFactory.make ("filesink", "sink");
+
+            decodebin = Gst.ElementFactory.make ("decodebin", "decodebin");
+            Gst.Element ? audioconvert = Gst.ElementFactory.make ("audioconvert", "audioconvert");
+            Gst.Element ? audioresample = Gst.ElementFactory.make ("audioresample", "audioresample");
+            Gst.Element ? encoder = Gst.ElementFactory.make (this.encoder_name, "encoder");
+
+            Gst.Element ?[] elements = { source, sink, decodebin, audioconvert, audioresample, encoder };
+            foreach(Gst.Element ? element in elements){
+                if( elements == null )
+                    throw new CompressError.ELEMENT_NULL (@"Failed to create a necessary element of pipeline");
+
+                pipeline.add (element);
+            }
+
+            if( !source.link (decodebin) || !audioconvert.link_many (audioresample, encoder))
+                throw new CompressError.ELEMENT_LINK (@"Failed to link necessary elements of pipeline");
+
+            return pipeline;
+        }
+
+        private void add_pipeline_filters(string[] filters)
+        throws CompressError.ELEMENT_NULL, CompressError.ELEMENT_LINK {
+            Gst.Element last_element = this.encoder;
+
+            foreach(string filter_name in filters){
+                Gst.Element ? filter = Gst.ElementFactory.make (filter_name, null);
+                if( filter == null )
+                    throw new CompressError.ELEMENT_NULL (@"Failed to create $filter_name");
+
+                pipeline.add (filter);
+
+                if( !last_element.link (filter))
+                    throw new CompressError.ELEMENT_LINK (@"Failed to link filter $filter_name with the last element");
+
+                last_element = filter;
+            }
+
+            if( !last_element.link (sink))
+                throw new CompressError.ELEMENT_LINK (@"Failed to link the las element with the sink");
+        }
+
+        private void decodebin_pad_added(Gst.Pad pad) {
+        }
+
+        private void play() {
+            Gst.Bus bus = pipeline.get_bus ();
+            bus.timed_pop_filtered (Gst.CLOCK_TIME_NONE, Gst.MessageType.ERROR | Gst.MessageType.EOS);
+
+            bus = null;
+        }
+
+    }
+
     public class Compressor : Object {
         // note: ^\.?(?<name>\/[^\/\n]+)+(?<ext>\.[A-z0-9\._-]+)$
 
@@ -250,35 +346,6 @@ namespace Press.Compressor{
                 is_audio = false;
                 is_video = false;
             }
-        }
-
-        private void convert_file(File source_file, File target_file, bool attach_video) {
-            // if it's a video, include a -map v:0 (any video channels to 0)
-            // TODO: it could error if a sound file had more than 1 video channel...
-            // that's an edge case, though.
-            string command = attach_video
-            ? @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar $(config.quality_config.samplerate) -c:a $(config.quality_config.format.codec) -b:a $(config.quality_config.bitrate)k -c:v mjpeg -map v:0 -movflags +faststart \"$(target_file.get_path())\" -y"
-            : @"ffmpeg -v warning -i \"$(source_file.get_path())\" -map a:0 -ar $(config.quality_config.samplerate) -c:a $(config.quality_config.format.codec) -b:a $(config.quality_config.bitrate)k \"$(target_file.get_path())\" -y";
-            // TODO: reformat into multiple lines
-
-            debug (@"Command: $command");
-            try {
-                string standard_output = "";
-                string standard_error = "";
-                int wait_status = 0;
-                Process.spawn_command_line_sync (command,
-                                                 out standard_output,
-                                                 out standard_error,
-                                                 out wait_status);
-
-                debug (@"\nOutput: $standard_output\n");
-                debug (@"\nError: $standard_error\n");
-                debug (@"\nWait status: $wait_status\n");
-            } catch ( Error err ){
-                warning (@"Error trying to convert file $(source_file.get_path()). Message: $(err.message)");
-            }
-
-            return;
         }
 
         private void copy_file(File source_file, File target_file) {

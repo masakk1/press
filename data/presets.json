@@ -23,10 +23,10 @@
         "oogg": {
             "name": "Opus / ogg",
             "extension": "ogg",
-            "encoder": "avenc_aac",
+            "encoder": "opusenc",
             "bitrateMult": 1000,
             "filters": [
-                "opusenc"
+                "oggmux"
             ]
         }
     },

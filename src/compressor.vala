@@ -32,24 +32,29 @@ namespace Press.Compressor{
         ELEMENT_LINK
     }
 
-    public interface FileHandler {
+    public interface FileHandler : Object {
         public abstract void process(File source, File target);
 
     }
 
-    public class FileConverter : FileHandler {
+    public class FileConverter : Object, FileHandler {
         private string[] filters;
         private string encoder_name;
+        private Press.QualityConfig quality;
 
         private Gst.Pipeline pipeline;
         private Gst.Element source;
         private Gst.Element sink;
         private Gst.Element decodebin;
         private Gst.Element encoder;
+        private Gst.Element element_after_decodebin;
 
-        public FileConverter (string encoder, string[] filters) {
-            this.filters = filters;
-            encoder_name = encoder;
+        public FileConverter (Press.QualityConfig quality) {
+            assert (quality.format.encoder != null);
+            assert (quality.format.filters != null);
+            filters = quality.format.filters;
+            encoder_name = quality.format.encoder;
+            this.quality = quality;
         }
 
         private void process(File source, File target) {
@@ -133,7 +138,7 @@ namespace Press.Compressor{
 
     }
 
-    public class FileDuplicator : FileHandler {
+    public class FileDuplicator : Object, FileHandler {
         public FileDuplicator () {
         }
 

@@ -47,6 +47,7 @@ namespace Press.Compressor{
         private Gst.Element sink;
         private Gst.Element decodebin;
         private Gst.Element encoder;
+        private Gst.Element samplerate_capsfilter;
         private Gst.Element element_after_decodebin;
 
         public FileConverter (Press.QualityConfig quality) {
@@ -92,9 +93,10 @@ namespace Press.Compressor{
             decodebin = Gst.ElementFactory.make ("decodebin", "decodebin");
             Gst.Element ? audioconvert = Gst.ElementFactory.make ("audioconvert", "audioconvert");
             Gst.Element ? audioresample = Gst.ElementFactory.make ("audioresample", "audioresample");
+            samplerate_capsfilter = Gst.ElementFactory.make ("capsfilter", "samplerate-capsfilter");
             encoder = Gst.ElementFactory.make (this.encoder_name, "encoder");
 
-            Gst.Element ?[] elements = { source, sink, decodebin, audioconvert, audioresample, encoder };
+            Gst.Element ?[] elements = { source, sink, decodebin, audioconvert, audioresample, samplerate_capsfilter, encoder };
             foreach(Gst.Element ? element in elements){
                 if( elements == null )
                     throw new CompressError.ELEMENT_NULL (@"Failed to create a necessary element of pipeline");
@@ -102,7 +104,7 @@ namespace Press.Compressor{
                 pipeline.add (element);
             }
 
-            if( !source.link (decodebin) || !audioconvert.link_many (audioresample, encoder))
+            if( !source.link (decodebin) || !audioconvert.link_many (audioresample, samplerate_capsfilter, encoder))
                 throw new CompressError.ELEMENT_LINK (@"Failed to link necessary elements of pipeline");
 
             this.element_after_decodebin = audioconvert;
@@ -153,7 +155,7 @@ namespace Press.Compressor{
             source.set ("location", source_file.get_path ());
             sink.set ("location", target_file.get_path ());
             encoder.set ("bitrate", quality.bitrate * quality.format.bitrate_multiplier);
-            // TODO: samplerate
+            samplerate_capsfilter.set ("caps", Gst.Caps.from_string (@"audio/x-raw,rate=$(quality.samplerate)"));
         }
 
         private void play() {

@@ -15,6 +15,7 @@ press_deps = [
   dependency('json-glib-1.0', required: true),
   dependency('gee-0.8', required: true),
   dependency('gstreamer-1.0', required: true),
+  dependency('gstreamer-pbutils-1.0', required: true),
 ]
 
 press_sources += gnome.compile_resources(

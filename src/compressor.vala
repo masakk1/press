@@ -61,9 +61,12 @@ namespace Press.Compressor{
             try {
                 pipeline = create_pipeline ("convert-pipeline-" + source.get_basename ());
 
-                add_pipeline_filters (filters);
+                add_pipeline_filters ();
 
+                // TODO: try putting it above configure_elements();
                 decodebin.pad_added.connect (decodebin_pad_added);
+
+                configure_elements (source, target);
 
                 pipeline.set_state (Gst.State.PLAYING);
                 play ();
@@ -89,7 +92,7 @@ namespace Press.Compressor{
             decodebin = Gst.ElementFactory.make ("decodebin", "decodebin");
             Gst.Element ? audioconvert = Gst.ElementFactory.make ("audioconvert", "audioconvert");
             Gst.Element ? audioresample = Gst.ElementFactory.make ("audioresample", "audioresample");
-            Gst.Element ? encoder = Gst.ElementFactory.make (this.encoder_name, "encoder");
+            encoder = Gst.ElementFactory.make (this.encoder_name, "encoder");
 
             Gst.Element ?[] elements = { source, sink, decodebin, audioconvert, audioresample, encoder };
             foreach(Gst.Element ? element in elements){
@@ -102,10 +105,11 @@ namespace Press.Compressor{
             if( !source.link (decodebin) || !audioconvert.link_many (audioresample, encoder))
                 throw new CompressError.ELEMENT_LINK (@"Failed to link necessary elements of pipeline");
 
+            this.element_after_decodebin = audioconvert;
             return pipeline;
         }
 
-        private void add_pipeline_filters(string[] filters)
+        private void add_pipeline_filters()
         throws CompressError.ELEMENT_NULL, CompressError.ELEMENT_LINK {
             Gst.Element last_element = this.encoder;
 
@@ -126,7 +130,30 @@ namespace Press.Compressor{
                 throw new CompressError.ELEMENT_LINK (@"Failed to link the las element with the sink");
         }
 
-        private void decodebin_pad_added(Gst.Pad pad) {
+        private void decodebin_pad_added(Gst.Element src, Gst.Pad pad) {
+            Gst.Pad sink_pad = element_after_decodebin.get_static_pad ("sink");
+
+            if( sink_pad.is_linked ())
+                return;
+
+            Gst.Caps caps = pad.query_caps (null);
+            if( caps == null || caps.is_empty ())
+                return;
+
+            unowned Gst.Structure structure = caps.get_structure (0);
+            string pad_type = structure.get_name ();
+            if( !pad_type.has_prefix ("audio/x-raw"))
+                return;
+
+            if( pad.link (sink_pad) != Gst.PadLinkReturn.OK )
+                return;
+        }
+
+        private void configure_elements(File source_file, File target_file) {
+            source.set ("location", source_file.get_path ());
+            sink.set ("location", target_file.get_path ());
+            encoder.set ("bitrate", quality.bitrate * quality.format.bitrate_multiplier);
+            // TODO: samplerate
         }
 
         private void play() {
@@ -323,7 +350,7 @@ namespace Press.Compressor{
             FileHandler file_handler;
             if( valid_folder && (config.replace_destination_files || !file_exists)){
                 if( is_audio ){
-                    file_handler = new FileConverter (config.quality_config.format.encoder, config.quality_config.format.filters);
+                    file_handler = new FileConverter (config.quality_config);
                     file_handler.process (source_file, target_file);
                 } else if( config.copy_noaudio_files ){
                     file_handler = new FileDuplicator ();

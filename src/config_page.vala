@@ -161,7 +161,8 @@ public class Press.ConfigPage : Adw.NavigationPage {
                 name = format_obj.get_string_member ("name"),
                 extension = format_obj.get_string_member ("extension"),
                 encoder = format_obj.get_string_member ("encoder"),
-                filters = filters.to_array ()
+                filters = filters.to_array (),
+                bitrate_multiplier = (int32) format_obj.get_int_member ("bitrateMult")
             };
 
             format_list[member] = format;

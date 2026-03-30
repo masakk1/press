@@ -206,10 +206,12 @@ namespace Press.Compressor{
         private bool process_running = false;
 
         private Regex file_extension_regex;
+        private int discoverer_timeout;
 
-        public Compressor () {
+        public Compressor (int discoverer_timeout = 3) {
             try {
                 this.file_extension_regex = new Regex ("(?<=\\.)[A-z0-9_-]+$");
+                this.discoverer_timeout = discoverer_timeout;
             } catch ( Error err ){
                 error (@"Error initializing regex for file extensions. Cannot continue.\nMessage: $(err.message)");
             }
@@ -329,9 +331,7 @@ namespace Press.Compressor{
             string relative_path = source_file_path.replace (source_folder_path, "");
             string target_file_path = target_folder_path + relative_path;
 
-            bool is_audio;
-            bool is_video;
-            this.check_streams (source_file, out is_audio, out is_video);
+            bool is_audio = check_streams (source_file);
             if( is_audio ){
                 try {
                     target_file_path = this.file_extension_regex.replace (
@@ -360,7 +360,7 @@ namespace Press.Compressor{
                 }
 
             } else {
-                debug (@"Skipping file: $(target_file.get_path())\n");
+                message (@"Skipping file: $(target_file.get_path())\n");
             }
         }
 
@@ -386,28 +386,22 @@ namespace Press.Compressor{
             return exists;
         }
 
-        private void check_streams(File file, out bool is_audio, out bool is_video) {
-            // TODO (gstreamer): replace
-            string command = @"ffprobe -loglevel error -show_entries stream=codec_type -of default=nw=1 \"$(file.get_path())\"";
-            is_audio = false;
-            is_video = false;
+        private bool check_streams(File file) {
+            bool is_audio = false;
 
             try {
-                string standard_output = "";
-                string standard_error = "";
-                int wait_status = 0;
-                Process.spawn_command_line_sync (command,
-                                                 out standard_output,
-                                                 out standard_error,
-                                                 out wait_status);
-                is_audio = standard_output.contains ("codec_type=audio");
-                is_video = standard_output.contains ("codec_type=video");
+                var discoverer = new Gst.PbUtils.Discoverer (discoverer_timeout * Gst.SECOND);
+                string file_uri = file.get_uri ();
+                Gst.PbUtils.DiscovererInfo info = discoverer.discover_uri (file_uri);
 
+                foreach(var stream_info in info.get_stream_list ()){
+                    is_audio = is_audio || stream_info.get_stream_type_nick () == "audio";
+                }
             } catch ( Error err ){
-                warning (@"Error checking if file is audio/video. $(err.message)");
-                is_audio = false;
-                is_video = false;
+                debug (@"Failed to discover the information of file $(file.get_path()) - Message: $(err.message)");
             }
+
+            return is_audio;
         }
 
         public void cancel_process() {

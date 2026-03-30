@@ -21,9 +21,9 @@
             ]
         },
         "oogg": {
-            "name": "Opus / ogg",
+            "name": "Vorbis / ogg",
             "extension": "ogg",
-            "encoder": "opusenc",
+            "encoder": "vorbisenc",
             "bitrateMult": 1000,
             "filters": [
                 "oggmux"

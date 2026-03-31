@@ -424,7 +424,7 @@ namespace Press.Compressor{
                 if( is_audio ){
                     var audio_info = audio_streams.data as Gst.PbUtils.DiscovererAudioInfo;
 
-                    bitrate = (int) audio_info.get_bitrate ();
+                    bitrate = (int) audio_info.get_bitrate () / 1000;
                     if( bitrate == 0 ){
                         bitrate = calculate_bitrate (file, info);
                     }

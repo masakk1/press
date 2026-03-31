@@ -37,8 +37,9 @@ public interface Press.Clonable<T> {
 public struct Press.FormatConfig {
     public string name;
     public string extension;
-    public bool attach_video;
-    public string codec;
+    public string encoder;
+    public int bitrate_multiplier;
+    public string[] filters;
 }
 
 public struct Press.QualityConfig {

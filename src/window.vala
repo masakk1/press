@@ -43,11 +43,11 @@ public class Press.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Adw.NavigationView navigation_view;
 
-    private Press.Compressor compressor;
+    private Compressor.Compressor compressor;
 
     public Window (Gtk.Application app) {
         application = app;
-        compressor = new Compressor ();
+        compressor = new Compressor.Compressor ();
 
 
         // Compress button

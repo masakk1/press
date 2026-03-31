@@ -3,20 +3,31 @@
         "mp3": {
             "name": "MPEG / mp3",
             "extension": "mp3",
-            "video": true,
-            "codec": "libmp3lame"
+            "encoder": "lamemp3enc",
+            "bitrateMult": 1,
+            "filters": [
+                "mpegaudioparse",
+                "xingmux",
+                "id3v2mux"
+            ]
         },
         "m4a": {
             "name": "AAC / m4a",
             "extension": "m4a",
-            "video": true,
-            "codec": "aac"
+            "encoder": "avenc_aac",
+            "bitrateMult": 1000,
+            "filters": [
+                "mp4mux"
+            ]
         },
-        "vogg": {
+        "oogg": {
             "name": "Vorbis / ogg",
             "extension": "ogg",
-            "video": false,
-            "codec": "libvorbis"
+            "encoder": "vorbisenc",
+            "bitrateMult": 1000,
+            "filters": [
+                "oggmux"
+            ]
         }
     },
     "quality_presets": {
@@ -33,8 +44,8 @@
             "samplerate": 44100
         },
         "libre": {
-            "name": "Libre (Standard w/Vorbis)",
-            "format": "vogg",
+            "name": "Libre (Standard w/Opus)",
+            "format": "oogg",
             "bitrate": 128,
             "samplerate": 44100
         },

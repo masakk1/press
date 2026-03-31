@@ -5,7 +5,7 @@ press_sources = [
 
   'application.vala',
   'config_page.vala',
-  'window.vala'
+  'window.vala',
 ]
 
 press_deps = [
@@ -13,17 +13,22 @@ press_deps = [
   dependency('gtk4'),
   dependency('libadwaita-1', version: '>= 1.4'),
   dependency('json-glib-1.0', required: true),
-  dependency('gee-0.8', required: true)
+  dependency('gee-0.8', required: true),
+  dependency('gstreamer-1.0', required: true),
+  dependency('gstreamer-pbutils-1.0', required: true),
 ]
 
-press_sources += gnome.compile_resources('press-resources',
+press_sources += gnome.compile_resources(
+  'press-resources',
   'ui/press.gresource.xml',
   c_name: 'press',
-  source_dir: ['ui']
+  source_dir: ['ui'],
 )
 
-executable('press', press_sources,
+executable(
+  'press',
+  press_sources,
   dependencies: press_deps,
   include_directories: config_inc,
-       install: true,
+  install: true,
 )

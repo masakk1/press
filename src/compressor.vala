@@ -393,9 +393,8 @@ namespace Press.Compressor{
                 string file_uri = file.get_uri ();
                 Gst.PbUtils.DiscovererInfo info = discoverer.discover_uri (file_uri);
 
-                foreach(var stream_info in info.get_stream_list ()){
-                    is_audio = is_audio || stream_info.get_stream_type_nick () == "audio";
-                }
+                var audio_streams = info.get_audio_streams ();
+                is_audio = audio_streams.length () > 0;
             } catch ( Error err ){
                 debug (@"Failed to discover the information of file $(file.get_path()) - Message: $(err.message)");
             }

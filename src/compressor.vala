@@ -64,7 +64,6 @@ namespace Press.Compressor{
 
                 add_pipeline_filters ();
 
-                // TODO: try putting it above configure_elements();
                 decodebin.pad_added.connect (decodebin_pad_added);
 
                 configure_elements (source, target);

@@ -21,13 +21,22 @@ Checkout [Building](#building) if you need to run commands manually.
 
 If you're not using devcontainers, these are the dependencies:
 
-> `vala-language-server` and `gdb` are only need for development
+> `uncrustify`, `vala-language-server` and `gdb` are only need for development
+>
+> But for regular program use, you **will need** to install gstreamer plugins
 
-- Arch: `pacman -S base-devel meson ninja vala vala-language-server gtk4 libadwaita glib2 gobject-introspection uncrustify libgee`
-    - Development packages: `yay -S --noconfirm vala-language-server gdb`
-- Alpine for devcontainers: `sudo apk add alpine-sdk meson ninja gtk4.0-dev libadwaita-dev desktop-file-utils gobject-introspection-dev adwaita-icon-theme font-dejavu json-glib-dev libgee-dev uncrustify gdb vala vala-language-server`
-- Fedora: `dnf install cmake meson ninja vala glib2-devel libgee-devel json-glib-devel msgfmt gtk4-devel libadwaita-devel update-desktop-database ffmpeg`
+<!-- Outdated - Arch: `pacman -S base-devel meson ninja vala vala-language-server gtk4 libadwaita glib2 gobject-introspection uncrustify libgee`
+    - Development packages: `yay -S --noconfirm vala-language-server gdb` -->
+- Alpine for devcontainers: `sudo apk add alpine-sdk meson ninja gtk4.0-dev libadwaita-dev desktop-file-utils gobject-introspection-dev adwaita-icon-theme font-dejavu json-glib-dev libgee-dev gstreamer-dev gst-plugins-base-dev uncrustify gdb vala vala-language-server`
+- Fedora: `dnf install cmake meson ninja vala glib2-devel libgee-devel json-glib-devel msgfmt gtk4-devel libadwaita-devel update-desktop-database gstreamer1-devel gstreamer1-plugins-base-devel`
     - Development packages: `dnf install vala-language-server uncrustify gdb git`
+    - Basic codecs, for the basic flac/mp3 support: `dnf install gstreamer1-plugins-good`
+    - To install additional codecs, check [how to configure rpmfusion](https://rpmfusion.org/Configuration) and [install multimedia codecs](https://rpmfusion.org/Howto/Multimedia).
+```bash
+# Enable rpmfusion, and install codecs
+sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+sudo dnf group install -y multimedia
+```
 
 ### Steps
 

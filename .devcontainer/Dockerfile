@@ -7,6 +7,7 @@ RUN apk update && apk add --no-cache \
     desktop-file-utils gobject-introspection-dev \
     adwaita-icon-theme font-dejavu \
     json-glib-dev libgee-dev \
+    gstreamer-dev gst-plugins-base-dev \
     uncrustify gdb \
     vala vala-language-server
 

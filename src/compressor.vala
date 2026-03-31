@@ -334,18 +334,33 @@ namespace Press.Compressor{
             int bitrate;
             int samplerate;
             check_streams (source_file, out is_audio, out bitrate, out samplerate);
-            if( samplerate == 0 ){
-                critical (@"Samplerate of file $(source_file.get_path()) is 0. It's likely corrupted.");
-                return;
-            }
+            Press.CompressConfig file_config = config;
 
             if( is_audio ){
+                if( samplerate == 0 ){
+                    critical (@"Samplerate of file $(source_file.get_path()) is 0. It's likely corrupted.");
+                    return;
+                }
+                if( bitrate < config.quality_config.bitrate || samplerate < config.quality_config.samplerate ){
+                    file_config = config.clone ();
+
+                    file_config.quality_config.bitrate =
+                        bitrate < file_config.quality_config.bitrate
+                            ? bitrate
+                            : file_config.quality_config.bitrate;
+
+                    file_config.quality_config.samplerate =
+                        samplerate < file_config.quality_config.samplerate
+                            ? samplerate
+                            : file_config.quality_config.samplerate;
+                }
+
                 try {
                     target_file_path = this.file_extension_regex.replace (
                         target_file_path,
                         target_file_path.length,
                         0,
-                        config.quality_config.format.extension);
+                        file_config.quality_config.format.extension);
                 } catch ( Error err ){
                     critical (@"Error trying to change extension name. Message: $(err.message)");
                     return;
@@ -357,11 +372,11 @@ namespace Press.Compressor{
             bool file_exists = target_file.query_exists ();
 
             FileHandler file_handler;
-            if( valid_folder && (config.replace_destination_files || !file_exists)){
+            if( valid_folder && (file_config.replace_destination_files || !file_exists)){
                 if( is_audio ){
-                    file_handler = new FileConverter (config.quality_config);
+                    file_handler = new FileConverter (file_config.quality_config);
                     file_handler.process (source_file, target_file);
-                } else if( config.copy_noaudio_files ){
+                } else if( file_config.copy_noaudio_files ){
                     file_handler = new FileDuplicator ();
                     file_handler.process (source_file, target_file);
                 }

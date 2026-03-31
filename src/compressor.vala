@@ -153,8 +153,27 @@ namespace Press.Compressor{
         private void configure_elements(File source_file, File target_file) {
             source.set ("location", source_file.get_path ());
             sink.set ("location", target_file.get_path ());
-            encoder.set ("bitrate", quality.bitrate * quality.format.bitrate_multiplier);
             samplerate_capsfilter.set ("caps", Gst.Caps.from_string (@"audio/x-raw,rate=$(quality.samplerate)"));
+            encoder.set ("bitrate", quality.bitrate * quality.format.bitrate_multiplier);
+
+            // Encoder properties
+            foreach( var property in quality.format.encoder_properties ){
+                switch( property.value.type ()){
+                case Type.STRING :
+                    encoder.set (property.key, property.value.get_string ());
+                    break;
+                case Type.INT64 :
+                    encoder.set (property.key, property.value.get_int64 ());
+                    break;
+                case Type.BOOLEAN :
+                    encoder.set (property.key, property.value.get_boolean ());
+                    break;
+
+                    default :
+                    warning (@"Property $(property.key) has an unknown type: $(property.value.type())");
+                    break;
+                }
+            }
         }
 
         private void play() {

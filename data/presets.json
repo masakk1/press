@@ -4,6 +4,9 @@
             "name": "MPEG / mp3",
             "extension": "mp3",
             "encoder": "lamemp3enc",
+            "encoderProperties": {
+                "target": 1
+            },
             "bitrateMult": 1,
             "filters": [
                 "mpegaudioparse",
@@ -15,6 +18,7 @@
             "name": "AAC / m4a",
             "extension": "m4a",
             "encoder": "avenc_aac",
+            "encoderProperties": {},
             "bitrateMult": 1000,
             "filters": [
                 "mp4mux"
@@ -24,6 +28,7 @@
             "name": "Vorbis / ogg",
             "extension": "ogg",
             "encoder": "vorbisenc",
+            "encoderProperties": {},
             "bitrateMult": 1000,
             "filters": [
                 "oggmux"

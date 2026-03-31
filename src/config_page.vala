@@ -157,12 +157,22 @@ public class Press.ConfigPage : Adw.NavigationPage {
                 filters.add (filter_node.get_string ());
             }
 
+            // Load encoder properties
+            Json.Object encoder_properties_obj = format_obj.get_object_member ("encoderProperties");
+            HashMap<string, Value ?> encoder_properties = new HashMap<string, Value ?>();
+            if( encoder_properties_obj != null ){
+                encoder_properties_obj.foreach_member ((obj, key, node) => {
+                    encoder_properties[key] = node.get_value ();
+                });
+            }
+
             Press.FormatConfig format = Press.FormatConfig () {
                 name = format_obj.get_string_member ("name"),
                 extension = format_obj.get_string_member ("extension"),
                 encoder = format_obj.get_string_member ("encoder"),
                 filters = filters.to_array (),
-                bitrate_multiplier = (int32) format_obj.get_int_member ("bitrateMult")
+                bitrate_multiplier = (int32) format_obj.get_int_member ("bitrateMult"),
+                encoder_properties = encoder_properties
             };
 
             format_list[member] = format;

@@ -22,6 +22,7 @@
  *
  * SPDX-License-Identifier: MIT
  */
+using Gee;
 
 /**
  * To create deep copies of itself
@@ -38,6 +39,7 @@ public struct Press.FormatConfig {
     public string name;
     public string extension;
     public string encoder;
+    public HashMap<string, Value ?> encoder_properties;
     public int bitrate_multiplier;
     public string[] filters;
 }

@@ -330,7 +330,15 @@ namespace Press.Compressor{
             string relative_path = source_file_path.replace (source_folder_path, "");
             string target_file_path = target_folder_path + relative_path;
 
-            bool is_audio = check_streams (source_file);
+            bool is_audio;
+            int bitrate;
+            int samplerate;
+            check_streams (source_file, out is_audio, out bitrate, out samplerate);
+            if( samplerate == 0 ){
+                critical (@"Samplerate of file $(source_file.get_path()) is 0. It's likely corrupted.");
+                return;
+            }
+
             if( is_audio ){
                 try {
                     target_file_path = this.file_extension_regex.replace (
@@ -339,8 +347,8 @@ namespace Press.Compressor{
                         0,
                         config.quality_config.format.extension);
                 } catch ( Error err ){
-                    error ("Error trying to change extension name. Message: %s\n",
-                           err.message);
+                    critical (@"Error trying to change extension name. Message: $(err.message)");
+                    return;
                 }
             }
 
@@ -385,8 +393,10 @@ namespace Press.Compressor{
             return exists;
         }
 
-        private bool check_streams(File file) {
-            bool is_audio = false;
+        private void check_streams(File file, out bool is_audio, out int bitrate, out int samplerate) {
+            is_audio = false;
+            bitrate = 0;
+            samplerate = 0;
 
             try {
                 var discoverer = new Gst.PbUtils.Discoverer (discoverer_timeout * Gst.SECOND);
@@ -395,11 +405,48 @@ namespace Press.Compressor{
 
                 var audio_streams = info.get_audio_streams ();
                 is_audio = audio_streams.length () > 0;
+
+                if( is_audio ){
+                    var audio_info = audio_streams.data as Gst.PbUtils.DiscovererAudioInfo;
+
+                    bitrate = (int) audio_info.get_bitrate ();
+                    if( bitrate == 0 ){
+                        bitrate = calculate_bitrate (file, info);
+                    }
+
+                    // NOTE: samplerate of 0 means it's corrupted
+                    samplerate = (int) audio_info.get_sample_rate ();
+                }
+
             } catch ( Error err ){
                 debug (@"Failed to discover the information of file $(file.get_path()) - Message: $(err.message)");
             }
+        }
 
-            return is_audio;
+        private int calculate_bitrate(File file, Gst.PbUtils.DiscovererInfo info) {
+            uint64 file_size = get_file_size (file);
+            uint64 duration_ns = info.get_duration ();
+
+            double duration_s = duration_ns / (double) Gst.SECOND;
+
+            return (int) ((file_size * 8.0) / duration_s / 1000.0);
+        }
+
+        private int64 get_file_size(File file) {
+            int64 size = 0;
+
+            try {
+                FileInfo info = file.query_info (
+                    FileAttribute.STANDARD_SIZE,
+                    FileQueryInfoFlags.NONE,
+                    null);
+
+                size = info.get_size ();
+            } catch ( Error err ){
+
+            }
+
+            return size;
         }
 
         public void cancel_process() {

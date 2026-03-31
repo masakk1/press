@@ -211,6 +211,11 @@ public class Press.ConfigPage : Adw.NavigationPage {
         return presets_file;
     }
 
+    private void update_custom_quality(Press.QualityConfig new_quality) {
+        quality_list[CUSTOM_QUALITY_NAME] = new_quality;
+        config.quality_config = new_quality;
+    }
+
     [GtkCallback]
     private void on_quality_preset_selected(GLib.Object obj, GLib.ParamSpec pspec) {
         var combo_row = obj as Adw.ComboRow;
@@ -237,11 +242,11 @@ public class Press.ConfigPage : Adw.NavigationPage {
                                                        x.value.name == selected_format_name);
 
         if( selected_format == null )
-            error (@"Couldn't find quality $(selected_format_name) from quality list.");
+            error (@"Couldn't find format $(selected_format_name) from format list.");
 
         var custom_quality = quality_list[CUSTOM_QUALITY_NAME];
         custom_quality.format = selected_format.value;
-        quality_list[CUSTOM_QUALITY_NAME] = custom_quality;
+        update_custom_quality (custom_quality);
     }
 
     [GtkCallback]
@@ -251,7 +256,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
         var custom_quality = quality_list[CUSTOM_QUALITY_NAME];
         custom_quality.bitrate = value;
-        quality_list[CUSTOM_QUALITY_NAME] = custom_quality;
+        update_custom_quality (custom_quality);
     }
 
     [GtkCallback]
@@ -261,7 +266,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
         var custom_quality = quality_list[CUSTOM_QUALITY_NAME];
         custom_quality.samplerate = value;
-        quality_list[CUSTOM_QUALITY_NAME] = custom_quality;
+        update_custom_quality (custom_quality);
     }
 
     [GtkCallback]

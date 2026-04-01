@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: press\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-01 21:53+0200\n"
+"POT-Creation-Date: 2026-04-01 22:22+0200\n"
 "PO-Revision-Date: 2026-04-01 20:25+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -46,6 +46,11 @@ msgstr "Masakk1"
 #: data/io.github.masakk1.press.metainfo.xml.in:56
 msgid "A caption"
 msgstr "test test"
+
+#: src/window.vala:99
+#, c-format
+msgid "Working on %s"
+msgstr "Trabajando con %s"
 
 #: src/window.vala:119
 msgid "Selected folders don't exist"
@@ -94,6 +99,11 @@ msgstr "translator-credits"
 msgid "Compress"
 msgstr "Comprimir"
 
+#: src/ui/window.ui:27
+#, fuzzy
+msgid "Cancel"
+msgstr "Cancelar"
+
 #: src/ui/window.ui:37
 msgid "Compressing"
 msgstr "Comprimiendo"
@@ -140,7 +150,8 @@ msgstr "Cancelar compresión?"
 msgid ""
 "This will stop the compression, but wont remove the changes already made."
 msgstr ""
-"Esta acción parará la compresión, pero no va a eliminar los cambios ya hechos."
+"Esta acción parará la compresión, pero no va a eliminar los cambios ya "
+"hechos."
 
 #: src/ui/window.ui:108
 msgid "_Continue"

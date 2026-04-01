@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: press\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-01 20:25+0200\n"
+"POT-Creation-Date: 2026-04-01 21:53+0200\n"
 "PO-Revision-Date: 2026-04-01 20:25+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -51,8 +51,38 @@ msgstr "test test"
 msgid "Selected folders don't exist"
 msgstr "Carpetas selecciondas no existen"
 
+#. Current preset names
+#. They must match the existing names on data/presets.json
+#: src/config_page.vala:32
+msgid "MPEG / mp3"
+msgstr "MPEG / mp3"
+
+#: src/config_page.vala:33
+msgid "AAC / m4a"
+msgstr "AAC / m4a"
+
+#: src/config_page.vala:34
+msgid "Vorbis / ogg"
+msgstr "Vorbis / ogg"
+
+#: src/config_page.vala:35
+msgid "High Quality"
+msgstr "Alta"
+
+#: src/config_page.vala:36
+msgid "Standard Quality"
+msgstr "Normal"
+
+#: src/config_page.vala:37
+msgid "Libre (Standard w/Opus)"
+msgstr "Libre (Normal con Opus)"
+
+#: src/config_page.vala:38
+msgid "Compatibility"
+msgstr "Compatibilidad"
+
 #. Will error unless there's an mp3 format
-#: src/config_page.vala:131
+#: src/config_page.vala:145
 msgid "Other..."
 msgstr "Otros..."
 
@@ -180,4 +210,5 @@ msgstr "Tasa de muestreo (Hz)"
 
 #: src/ui/config_page.ui:125
 msgid "Samplerates other than 44100 or 48000 won't work well"
-msgstr "Excepto 44100 y 48000, el resto de tasas de frecuencia no funcionan bien."
+msgstr ""
+"Excepto 44100 y 48000, el resto de tasas de frecuencia no funcionan bien."

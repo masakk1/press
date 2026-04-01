@@ -25,6 +25,20 @@
 using Gee;
 using Json;
 
+namespace Press{
+    // Current preset names
+    // They must match the existing names on data/presets.json
+    const string[] TRANSLATABLE_PRESET_NAMES = {
+        N_ ("MPEG / mp3"),
+        N_ ("AAC / m4a"),
+        N_ ("Vorbis / ogg"),
+        N_ ("High Quality"),
+        N_ ("Standard Quality"),
+        N_ ("Libre (Standard w/Opus)"),
+        N_ ("Compatibility"),
+    };
+}
+
 [GtkTemplate (ui = "/io/github/masakk1/press/config_page.ui")]
 public class Press.ConfigPage : Adw.NavigationPage {
     [GtkChild] private unowned Adw.ActionRow source_directory_row;
@@ -168,7 +182,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
             }
 
             Press.FormatConfig format = Press.FormatConfig () {
-                name = format_obj.get_string_member ("name"),
+                name = _ (format_obj.get_string_member ("name")),
                 extension = format_obj.get_string_member ("extension"),
                 encoder = format_obj.get_string_member ("encoder"),
                 filters = filters.to_array (),
@@ -196,7 +210,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
                     );
             } else {
                 Press.QualityConfig quality = Press.QualityConfig () {
-                    name = quality_obj.get_string_member ("name"),
+                    name = _ (quality_obj.get_string_member ("name")),
                     format = format,
                     bitrate = (int32) quality_obj.get_int_member ("bitrate"),
                     samplerate = (int32) quality_obj.get_int_member ("samplerate")

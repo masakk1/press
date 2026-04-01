@@ -24,7 +24,7 @@
                       <object class="AdwHeaderBar">
                         <child type="start">
                           <object class="GtkButton" id="cancel_compressing_button">
-                            <property name="label">Cancel</property>
+                            <property name="label" translatable="yes">Cancel</property>
                             <style>
                               <class name="destructive-action" />
                             </style>

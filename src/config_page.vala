@@ -35,6 +35,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
     [GtkChild] private unowned Adw.ComboRow custom_format_selection;
     [GtkChild] private unowned Adw.SwitchRow replace_destination_files_switch;
     [GtkChild] private unowned Adw.SwitchRow copy_noaudio_files_switch;
+    [GtkChild] private unowned Gtk.Image samplerate_tooltip;
 
     [GtkChild] public unowned Gtk.Button compress_button;
 
@@ -277,6 +278,9 @@ public class Press.ConfigPage : Adw.NavigationPage {
         var custom_quality = quality_list[CUSTOM_QUALITY_NAME];
         custom_quality.samplerate = value;
         update_custom_quality (custom_quality);
+
+        // Not a common samplerate
+        samplerate_tooltip.visible = !(value == 44100 || value == 48000);
     }
 
     [GtkCallback]

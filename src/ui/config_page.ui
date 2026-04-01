@@ -116,6 +116,15 @@
                         <property name="step-increment">1000</property>
                       </object>
                     </property>
+                    <child type="suffix">
+                      <object class="GtkImage" id="samplerate_tooltip">
+                        <property name="visible">true</property>
+                        <property name="icon-name">dialog-warning-symbolic</property>
+                        <property name="has-tooltip">true</property>
+                        <property name="tooltip-text"
+                          translatable="yes">Samplerates other than 44100 or 48000 won't work well</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

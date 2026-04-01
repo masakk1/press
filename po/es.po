@@ -49,7 +49,7 @@ msgstr "test test"
 
 #: src/window.vala:119
 msgid "Selected folders don't exist"
-msgstr "Carpetas selecciondas no existen"
+msgstr "Las carpetas selecciondas no existen"
 
 #. Current preset names
 #. They must match the existing names on data/presets.json
@@ -71,11 +71,11 @@ msgstr "Alta"
 
 #: src/config_page.vala:36
 msgid "Standard Quality"
-msgstr "Normal"
+msgstr "Tradicional"
 
 #: src/config_page.vala:37
 msgid "Libre (Standard w/Opus)"
-msgstr "Libre (Normal con Opus)"
+msgstr "Libre (Tradicional con Opus)"
 
 #: src/config_page.vala:38
 msgid "Compatibility"
@@ -84,7 +84,7 @@ msgstr "Compatibilidad"
 #. Will error unless there's an mp3 format
 #: src/config_page.vala:145
 msgid "Other..."
-msgstr "Otros..."
+msgstr "Otra..."
 
 #: src/application.vala:53
 msgid "translator-credits"
@@ -92,7 +92,7 @@ msgstr "translator-credits"
 
 #: src/ui/window.ui:18 src/ui/config_page.ui:136
 msgid "Compress"
-msgstr "Comprime"
+msgstr "Comprimir"
 
 #: src/ui/window.ui:37
 msgid "Compressing"
@@ -104,7 +104,7 @@ msgstr "Hecho"
 
 #: src/ui/window.ui:65
 msgid "Back"
-msgstr "Vuelve"
+msgstr "Volver"
 
 #: src/ui/window.ui:74
 msgid "All done!"
@@ -122,7 +122,7 @@ msgstr "¿Comprimir y reemplazar todos los archivos?"
 msgid ""
 "This will replace files with the same name at the destination directory."
 msgstr ""
-"Esto va a reemplazar los archivos con el mismo nombre que la carpeta destino."
+"Esta acción reemplazará los archivos con el mismo nombre en el destino."
 
 #: src/ui/window.ui:96 src/ui/window.ui:109
 msgid "_Cancel"
@@ -140,7 +140,7 @@ msgstr "Cancelar compresión?"
 msgid ""
 "This will stop the compression, but wont remove the changes already made."
 msgstr ""
-"Esto parará la compresión, pero no va a eliminar los cambios ya hechos."
+"Esta acción parará la compresión, pero no va a eliminar los cambios ya hechos."
 
 #: src/ui/window.ui:108
 msgid "_Continue"
@@ -158,7 +158,7 @@ msgstr "Muestra atajos"
 #: src/ui/shortcuts-dialog.ui:15
 msgctxt "shortcut window"
 msgid "Quit"
-msgstr "Cierra"
+msgstr "Cerrar"
 
 #: src/ui/config_page.ui:16
 msgid "Configure"
@@ -166,7 +166,7 @@ msgstr "Configuración"
 
 #: src/ui/config_page.ui:19
 msgid "Source Directory"
-msgstr "Carpeta origen"
+msgstr "Carpeta Origen"
 
 #: src/ui/config_page.ui:20 src/ui/config_page.ui:40
 msgid "/path/to/directory"
@@ -174,7 +174,7 @@ msgstr "/destino/a/carpeta"
 
 #: src/ui/config_page.ui:39
 msgid "Target Directory"
-msgstr "Carpeta destino"
+msgstr "Carpeta Destino"
 
 #: src/ui/config_page.ui:59
 msgid "Quality Preset"
@@ -182,11 +182,11 @@ msgstr "Calidad"
 
 #: src/ui/config_page.ui:65
 msgid "Replace files on destination"
-msgstr "Reemplaza archivos en el destino"
+msgstr "Reemplazar archivos en el destino"
 
 #: src/ui/config_page.ui:71
 msgid "Copy non-audio files on destination"
-msgstr "Copia archivos sin audio en el destino"
+msgstr "Copiar archivos sin audio en el destino"
 
 #: src/ui/config_page.ui:80
 msgid "Custom Target Quality"
@@ -210,5 +210,4 @@ msgstr "Tasa de muestreo (Hz)"
 
 #: src/ui/config_page.ui:125
 msgid "Samplerates other than 44100 or 48000 won't work well"
-msgstr ""
-"Excepto 44100 y 48000, el resto de tasas de frecuencia no funcionan bien."
+msgstr "Excepto 44100 y 48000, otras tasas de frecuencia no funcionan bien."

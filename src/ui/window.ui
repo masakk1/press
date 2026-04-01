@@ -7,74 +7,78 @@
     <property name="default-width">800</property>
     <property name="default-height">600</property>
     <property name="content">
-      <object class="AdwNavigationView" id="navigation_view">
+      <object class="AdwToastOverlay" id="toast_overlay">
         <child>
-          <object class="PressConfigPage" id="config_page"></object>
-        </child>
-        <child>
-          <object class="AdwNavigationPage">
-            <property name="title" translatable="yes">Compress</property>
-            <property name="tag">compressing_page</property>
-            <property name="can-pop">false</property>
+          <object class="AdwNavigationView" id="navigation_view">
             <child>
-              <object class="AdwToolbarView">
-                <child type="top">
-                  <object class="AdwHeaderBar">
-                    <child type="start">
-                      <object class="GtkButton" id="cancel_compressing_button">
-                        <property name="label">Cancel</property>
-                        <style>
-                          <class name="destructive-action" />
-                        </style>
+              <object class="PressConfigPage" id="config_page"></object>
+            </child>
+            <child>
+              <object class="AdwNavigationPage">
+                <property name="title" translatable="yes">Compress</property>
+                <property name="tag">compressing_page</property>
+                <property name="can-pop">false</property>
+                <child>
+                  <object class="AdwToolbarView">
+                    <child type="top">
+                      <object class="AdwHeaderBar">
+                        <child type="start">
+                          <object class="GtkButton" id="cancel_compressing_button">
+                            <property name="label">Cancel</property>
+                            <style>
+                              <class name="destructive-action" />
+                            </style>
+                          </object>
+                        </child>
                       </object>
                     </child>
-                  </object>
-                </child>
-                <property name="content">
-                  <object class="AdwStatusPage" id="compressing_status_page">
-                    <property name="title" translatable="yes">Compressing</property>
-                    <property name="description">...</property>
-                    <property name="paintable">
-                      <object class="AdwSpinnerPaintable">
-                        <property name="widget">compressing_status_page</property>
-                      </object>
-                    </property>
-                  </object>
-                </property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="AdwNavigationPage">
-            <property name="title" translatable="yes">Done</property>
-            <property name="tag">done_page</property>
-            <!-- <property name="can-pop">false</property> -->
-            <child>
-              <object class="AdwToolbarView">
-                <child type="top">
-                  <object class="AdwHeaderBar">
-                    <property name="show-back-button">false</property>
-                    <child type="start">
-                      <object class="GtkButton" id="done_page_back_button">
-                        <property name="child">
-                          <object class="AdwButtonContent">
-                            <property name="icon-name">go-previous-symbolic</property>
-                            <property name="label" translatable="yes">Back</property>
+                    <property name="content">
+                      <object class="AdwStatusPage" id="compressing_status_page">
+                        <property name="title" translatable="yes">Compressing</property>
+                        <property name="description">...</property>
+                        <property name="paintable">
+                          <object class="AdwSpinnerPaintable">
+                            <property name="widget">compressing_status_page</property>
                           </object>
                         </property>
                       </object>
-                    </child>
+                    </property>
                   </object>
                 </child>
-                <property name="content">
-                  <object class="AdwStatusPage">
-                    <property name="title" translatable="yes">All done!</property>
-                    <property
-                      name="description"
-                      translatable="yes">Your files are now compressed at the target directory.</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwNavigationPage">
+                <property name="title" translatable="yes">Done</property>
+                <property name="tag">done_page</property>
+                <!-- <property name="can-pop">false</property> -->
+                <child>
+                  <object class="AdwToolbarView">
+                    <child type="top">
+                      <object class="AdwHeaderBar">
+                        <property name="show-back-button">false</property>
+                        <child type="start">
+                          <object class="GtkButton" id="done_page_back_button">
+                            <property name="child">
+                              <object class="AdwButtonContent">
+                                <property name="icon-name">go-previous-symbolic</property>
+                                <property name="label" translatable="yes">Back</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <property name="content">
+                      <object class="AdwStatusPage">
+                        <property name="title" translatable="yes">All done!</property>
+                        <property
+                          name="description"
+                          translatable="yes">Your files are now compressed at the target directory.</property>
+                      </object>
+                    </property>
                   </object>
-                </property>
+                </child>
               </object>
             </child>
           </object>

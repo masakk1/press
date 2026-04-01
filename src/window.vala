@@ -43,6 +43,9 @@ public class Press.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Adw.NavigationView navigation_view;
 
+    [GtkChild]
+    private unowned Adw.ToastOverlay toast_overlay;
+
     private Compressor.Compressor compressor;
 
     public Window (Gtk.Application app) {
@@ -113,8 +116,7 @@ public class Press.Window : Adw.ApplicationWindow {
                 navigation_view.push_by_tag ("done_page");
             });
         } else {
-            // TODO: show a warning toast
-            warning (_ ("Configured folders don't exist"));
+            toast_overlay.add_toast (new Adw.Toast (_ ("Selected folders don't exist")));
         }
     }
 

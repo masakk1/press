@@ -5,4 +5,8 @@ data/io.github.masakk1.press.metainfo.xml.in
 data/io.github.masakk1.press.gschema.xml
 src/main.vala
 src/window.vala
+src/config_page.vala
+src/application.vala
 src/ui/window.ui
+src/ui/shortcuts-dialog.ui
+src/ui/config_page.ui

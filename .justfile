@@ -30,6 +30,11 @@ run lang="": compile
 run-debug lang="": compile
     G_MESSAGES_DEBUG=all just run {{lang}}
 
+# == Installing ==
+
+install: setup-wipe compile
+    meson install -C _build
+
 # == Translation macros ==
 
 # Recreate pot file

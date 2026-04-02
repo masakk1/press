@@ -34,7 +34,7 @@ namespace Press{
         N_ ("Vorbis / ogg"),
         N_ ("High Quality"),
         N_ ("Standard Quality"),
-        N_ ("Libre (Standard w/Opus)"),
+        N_ ("Libre (ogg)"),
         N_ ("Compatibility"),
     };
 }
@@ -142,7 +142,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     private void add_custom_quality() {
         // Will error unless there's an mp3 format
-        quality_list[CUSTOM_QUALITY_NAME] = { _ ("Other..."), null, 128, 44100 };
+        quality_list[CUSTOM_QUALITY_NAME] = { _ ("Custom"), null, 128, 44100 };
     }
 
     private void load_presets_into_ui() {

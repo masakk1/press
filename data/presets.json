@@ -24,7 +24,7 @@
                 "mp4mux"
             ]
         },
-        "oogg": {
+        "vogg": {
             "name": "Vorbis / ogg",
             "extension": "ogg",
             "encoder": "vorbisenc",
@@ -49,8 +49,8 @@
             "samplerate": 44100
         },
         "libre": {
-            "name": "Libre (Standard w/Opus)",
-            "format": "oogg",
+            "name": "Libre (ogg)",
+            "format": "vogg",
             "bitrate": 128,
             "samplerate": 44100
         },

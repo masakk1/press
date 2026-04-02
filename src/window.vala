@@ -113,7 +113,8 @@ public class Press.Window : Adw.ApplicationWindow {
             this.compressor.compress_library_async.begin (
                 config, (obj, res) => {
                 this.compressor.compress_library_async.end (res);
-                navigation_view.push_by_tag ("done_page");
+                if( !compressor.cancelled )
+                    navigation_view.push_by_tag ("done_page");
             });
         } else {
             toast_overlay.add_toast (new Adw.Toast (_ ("Selected folders don't exist")));

@@ -218,10 +218,14 @@ namespace Press.Compressor{
         private File target_folder;
 
         public signal void working_on_file(string path);
-        public signal void cancelled();
 
         private bool process_cancel = false;
         private bool process_running = false;
+        public bool cancelled {
+            get {
+                return this.process_cancel;
+            }
+        }
 
         private Regex file_extension_regex;
         private int discoverer_timeout;
@@ -241,7 +245,7 @@ namespace Press.Compressor{
         }
 
         private void stop_process() {
-            this.process_cancel = false;
+            // this.process_cancel = false;
             this.process_running = false;
         }
 
@@ -293,7 +297,7 @@ namespace Press.Compressor{
 
             // if we are continuing because the process has been cancelled
             if( this.process_cancel ){
-                this.cancelled ();
+
             }
 
             this.stop_process ();

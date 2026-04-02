@@ -13,7 +13,7 @@
         //     }
         // },
         {
-            "name": "Build and Run press",
+            "name": "Debug",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/_build/src/press",
@@ -21,13 +21,17 @@
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
-            "preLaunchTask": "meson-compile",
+            "preLaunchTask": "Compile",
             "environment": [
                 {
                     "name": "XDG_DATA_DIRS",
                     "value": "${workspaceFolder}/data:${env:XDG_DATA_DIRS}:/usr/local/share:/usr/share"
+                },
+                {
+                    "name": "G_MESSAGES_DEBUG",
+                    "value": "all"
                 }
             ]
-        }
+        },
     ]
 }

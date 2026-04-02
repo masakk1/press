@@ -2,33 +2,67 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "meson-setup",
+            "label": "Setup",
             "type": "shell",
-            "command": "meson setup _build",
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
+            "command": "just setup",
+            "problemMatcher": [],
+            "icon": {
+                "id": "folder"
             }
         },
         {
-            "label": "meson-compile",
+            "label": "Setup & Reconfigure",
             "type": "shell",
-            "command": "meson compile -C _build",
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": "$gcc"
-        }
+            "command": "just setup-reconfigure",
+            "problemMatcher": [],
+            "icon": {
+                "id": "folder-library"
+            }
+        },
+        {
+            "label": "Setup & Wipe",
+            "type": "shell",
+            "command": "just setup-wipe",
+            "problemMatcher": [],
+            "icon": {
+                "id": "new-folder"
+            }
+        },
+        {
+            "label": "Compile",
+            "type": "shell",
+            "command": "just compile",
+            "problemMatcher": [],
+            "icon": {
+                "id": "build"
+            }
+        },
+        {
+            "label": "Run",
+            "type": "shell",
+            "command": "just run",
+            "problemMatcher": [],
+            "icon": {
+                "id": "run"
+            }
+        },
+        {
+            "label": "Run & Debug",
+            "type": "shell",
+            "command": "just run-debug",
+            "problemMatcher": [],
+            "icon": {
+                "id": "debug-alt"
+            }
+        },
+        {
+            "label": "Update PO files",
+            "type": "shell",
+            "command": "just update-po",
+            "problemMatcher": [],
+            "icon": {
+                "id": "book"
+            }
+        },
     ]
 }

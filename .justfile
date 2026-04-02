@@ -1,3 +1,5 @@
+prefix := "/usr"
+
 # Default recipe
 default:
     @just --list
@@ -6,15 +8,15 @@ default:
 
 # Regular setup
 setup:
-    meson setup _build --prefix=/usr
+    meson setup _build --prefix={{prefix}}
 
 # Setup with --reconfigure
 setup-reconfigure:
-    meson setup --reconfigure _build --prefix=/usr
+    meson setup --reconfigure _build --prefix={{prefix}}
 
 # Setup with --wipe
 setup-wipe:
-    meson setup --wipe _build --prefix=/usr
+    meson setup --wipe _build --prefix={{prefix}}
 
 compile:
     meson compile -C _build
@@ -23,7 +25,9 @@ compile:
 
 # Compile and run the binary - Optionally with a language
 run lang="": compile
-    LANGUAGE={{lang}} XDG_DATA_DIRS=data:$XDG_DATA_DIRS _build/src/press
+    LANGUAGE={{lang}} \
+    XDG_DATA_DIRS=data:${XDG_DATA_DIRS:-/usr/local/share:/usr/share} \
+    _build/src/press
 
 # "run" with debugging on
 run-debug lang="": compile

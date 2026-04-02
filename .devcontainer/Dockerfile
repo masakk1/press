@@ -9,7 +9,10 @@ RUN apk update && apk add --no-cache \
     json-glib-dev libgee-dev \
     gstreamer-dev gst-plugins-base-dev \
     uncrustify gdb \
-    vala vala-language-server
+    vala vala-language-server \
+    cargo just
+
+RUN cargo install just-lsp
 
 # Create user adw, grant root access, remove password
 RUN useradd -m -s /bin/bash adw && \

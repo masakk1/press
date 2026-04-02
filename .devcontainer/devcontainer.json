@@ -16,7 +16,8 @@
                 "zachflower.uncrustify",
                 "prince781.vala",
                 "redhat.vscode-xml",
-                "EditorConfig.EditorConfig"
+                "EditorConfig.EditorConfig",
+                "nefrob.vscode-just-syntax"
                 // "vscodevim.vim"
             ],
             "settings": {

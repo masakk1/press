@@ -1,90 +1,40 @@
-# press
+<h1 align="center">
+    <img src="data/icons/hicolor/scalable/apps/io.github.masakk1.press.svg" />
+    <br />
+    Press
+</h1>
 
-A description of this project.
+<p align="center">Music library compressor</p>
 
-## Devcontainers
-
-This project has a `devcontainer/devcontainer.json` file.
-
-For VSCode
-
-1. Get VSCode, Docker and the devcontainer VSCode extension
-2. Open the project and run Dev Containers : Rebuild Container
-3. You can Run and Debug the app by pressing F5, or in Run and Debug.
-
-Checkout [Building](#building) if you need to run commands manually.
-
-
-## Building
-
-### Dependencies
-
-If you're not using devcontainers, these are the dependencies:
-
-> `uncrustify`, `vala-language-server` and `gdb` are only need for development
+> [!NOTE]
+> Want to contribute? [CONTRIBUTING](CONTRIBUTING.md).
 >
-> But for regular program use, you **will need** to install gstreamer plugins
+> Want to help translate? [Translating docs](/docs/translate.md).
 
-<!-- Outdated - Arch: `pacman -S base-devel meson ninja vala vala-language-server gtk4 libadwaita glib2 gobject-introspection uncrustify libgee`
-    - Development packages: `yay -S --noconfirm vala-language-server gdb` -->
-- Alpine for devcontainers: `sudo apk add alpine-sdk meson ninja gtk4.0-dev libadwaita-dev desktop-file-utils gobject-introspection-dev adwaita-icon-theme font-dejavu json-glib-dev libgee-dev gstreamer-dev gst-plugins-base-dev uncrustify gdb vala vala-language-server just cargo`
-- Fedora: `dnf install cmake meson ninja vala glib2-devel libgee-devel json-glib-devel msgfmt gtk4-devel libadwaita-devel update-desktop-database gstreamer1-devel gstreamer1-plugins-base-devel just`
-    - Development packages: `dnf install vala-language-server uncrustify gdb git`
-    - For just: `dnf install cargo` & `cargo install just-lsp`
-    - Basic codecs, for the basic flac/mp3 support: `dnf install gstreamer1-plugins-good`
-    - To install additional codecs, check [how to configure rpmfusion](https://rpmfusion.org/Configuration) and [install multimedia codecs](https://rpmfusion.org/Howto/Multimedia).
-```bash
-# Enable rpmfusion, and install codecs
-sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
-sudo dnf group install -y multimedia
-```
+Compress your whole music library with pre-made quality presets, in a few clicks.
 
-### Steps
+- Easy to use interface
+- Select you whole library
+- Copy non-audio files over
+- Merge or replace existing files
+- Select from some pre-made quality presets
+- Create your custom quality of choice
+- Read from counless formats with GStreamer
 
-This project uses `just` to handle commands, since it abstracts the complicated commands away. Type `just` to get a list of available commands.
+## Installing
 
-**Setup**:
+> :construction: TODO
+>
+> in the mean time: you can [manually compile it](/docs/developers.md)
 
-> The build directory name is `_build`.
+## Integrating custom formats and presets
 
-```bash
-just setup
-```
+Currently, only a few formats are supported out of the box.
 
-**Compile**:
+If you'd like to add more, checkout [Advanced presets](/docs/advanced_presets.md).
 
-```bash
-just compile
-```
+When you're done, make sure to [contribute your configuration](CONTRIBUTING.md)!
 
-**Run**:
+## Supporting
 
-> Automatically compiles
-
-```bash
-just run
-
-# With a specific language
-just run es
-
-# With debugging enabled, and a language
-just run-debug es
-```
-
-**Install**:
-
-```bash
-just install
-```
-
-# Contributing
-
-### Formatting
-This project uses a `.editorconfig` for spacing basics, and `uncrustify.cfg` for code formatting.
-
-The `uncrustify.cfg` is mostly from https://github.com/PerfectCarl/elementary-uncrustify, with some adjustments
-
-Then, there are some guidelines:
-1. Don't use GObject's construction system. Like `construct {}` and `Object(...)`.
-
-
+If you wish to support my work, lmk by opening an issue.

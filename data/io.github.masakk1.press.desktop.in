@@ -1,10 +1,11 @@
 [Desktop Entry]
-Name=press
+Name=Press
+GenericName=Audio Compressor
 Exec=press
 Icon=io.github.masakk1.press
 Terminal=false
 Type=Application
-Categories=Utility;
-Keywords=GTK;
+Categories=Utility;AudioVideo;Audio;GNOME;GTK;
+Keywords=Compress;Song;Music;Audio;Library;Bulk;
 StartupNotify=true
 DBusActivatable=true

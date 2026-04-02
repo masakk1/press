@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: press\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-01 22:22+0200\n"
+"POT-Creation-Date: 2026-04-02 19:04+0200\n"
 "PO-Revision-Date: 2026-04-01 20:25+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,28 +18,63 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: data/io.github.masakk1.press.desktop.in:2
-msgid "press"
-msgstr "press"
-
-#: data/io.github.masakk1.press.desktop.in:8
-msgid "GTK;"
-msgstr "GTK;"
-
 #: data/io.github.masakk1.press.metainfo.xml.in:7 src/ui/window.ui:6
 #: src/ui/config_page.ui:4
 msgid "Press"
 msgstr "Press"
 
+#: data/io.github.masakk1.press.desktop.in:3
+#, fuzzy
+msgid "Audio Compressor"
+msgstr "Comprimir"
+
+#: data/io.github.masakk1.press.desktop.in:9
+msgid "Compress;Song;Music;Audio;Library;Bulk;"
+msgstr "Comprimir;Canción;Música;Audio;Librería;Masa"
+
 #: data/io.github.masakk1.press.metainfo.xml.in:8
-msgid "Keep the summary shorter, between 10 and 35 characters"
-msgstr "test test"
+msgid "Music library compressor"
+msgstr "Compresor de librerías de música"
 
 #: data/io.github.masakk1.press.metainfo.xml.in:10
-msgid "No description"
-msgstr "test test"
+msgid ""
+"Compress your whole music library with pre-made quality presets, in a few "
+"clicks."
+msgstr ""
+"Comprime tu librería de música con prefiles de calidades predeterminados, en "
+"unos pocos clics."
+
+#: data/io.github.masakk1.press.metainfo.xml.in:12
+msgid "Easy to use interface"
+msgstr "Interfaz fácil de usar"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:13
+msgid "Select you whole library"
+msgstr "Usa tu librería entera"
 
 #: data/io.github.masakk1.press.metainfo.xml.in:14
-msgid "Developer name"
+#, fuzzy
+msgid "Copy non-audio files over"
+msgstr "Copiar archivos sin audio en el destino"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:15
+msgid "Merge or replace existing files"
+msgstr "Combina o reemplaza archivos existentes"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:16
+msgid "Select from some pre-made quality presets"
+msgstr "Elige entre perfiles de calidad preestablecidas "
+
+#: data/io.github.masakk1.press.metainfo.xml.in:17
+msgid "Create your custom quality of choice"
+msgstr "Crea tu propio perfil de calidad"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:18
+msgid "Read from counless formats with GStreamer"
+msgstr "Importa entre miles de formatos con GStreamer"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:23
+msgid "Masakk1"
 msgstr "Masakk1"
 
 #: data/io.github.masakk1.press.metainfo.xml.in:52
@@ -52,7 +87,7 @@ msgstr "test test"
 msgid "Working on %s"
 msgstr "Trabajando con %s"
 
-#: src/window.vala:119
+#: src/window.vala:120
 msgid "Selected folders don't exist"
 msgstr "Las carpetas selecciondas no existen"
 
@@ -79,8 +114,8 @@ msgid "Standard Quality"
 msgstr "Tradicional"
 
 #: src/config_page.vala:37
-msgid "Libre (Standard w/Opus)"
-msgstr "Libre (Tradicional con Opus)"
+msgid "Libre (ogg)"
+msgstr "Libre (ogg)"
 
 #: src/config_page.vala:38
 msgid "Compatibility"
@@ -88,12 +123,12 @@ msgstr "Compatibilidad"
 
 #. Will error unless there's an mp3 format
 #: src/config_page.vala:145
-msgid "Other..."
-msgstr "Otra..."
+msgid "Custom"
+msgstr "Personalizado"
 
 #: src/application.vala:53
 msgid "translator-credits"
-msgstr "translator-credits"
+msgstr "Masakk1"
 
 #: src/ui/window.ui:18 src/ui/config_page.ui:136
 msgid "Compress"
@@ -189,7 +224,7 @@ msgstr "Carpeta Destino"
 
 #: src/ui/config_page.ui:59
 msgid "Quality Preset"
-msgstr "Calidad"
+msgstr "Perfil de Calidad"
 
 #: src/ui/config_page.ui:65
 msgid "Replace files on destination"
@@ -201,7 +236,7 @@ msgstr "Copiar archivos sin audio en el destino"
 
 #: src/ui/config_page.ui:80
 msgid "Custom Target Quality"
-msgstr "Calidad Deseada Personalizada"
+msgstr "Perfil de Calidad Personalizada"
 
 #: src/ui/config_page.ui:83
 msgid "Manually configure the maximum target quality."
@@ -222,3 +257,9 @@ msgstr "Tasa de muestreo (Hz)"
 #: src/ui/config_page.ui:125
 msgid "Samplerates other than 44100 or 48000 won't work well"
 msgstr "Excepto 44100 y 48000, otras tasas de frecuencia no funcionan bien."
+
+#~ msgid "Other..."
+#~ msgstr "Otra..."
+
+#~ msgid "Libre (Standard w/Opus)"
+#~ msgstr "Libre (Tradicional con ogg)"

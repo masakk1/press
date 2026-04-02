@@ -1,4 +1,3 @@
-
 # Default recipe
 default:
     @just --list
@@ -7,15 +6,15 @@ default:
 
 # Regular setup
 setup:
-    meson setup _build --prefix=/home/$USER/.local
+    meson setup _build --prefix=/usr
 
 # Setup with --reconfigure
 setup-reconfigure:
-    meson setup --reconfigure _build --prefix=/home/$USER/.local
+    meson setup --reconfigure _build --prefix=/usr
 
 # Setup with --wipe
 setup-wipe:
-    meson setup --wipe _build --prefix=/home/$USER/.local
+    meson setup --wipe _build --prefix=/usr
 
 compile:
     meson compile -C _build

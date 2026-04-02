@@ -7,15 +7,15 @@ default:
 
 # Regular setup
 setup:
-    meson setup _build
+    meson setup _build --prefix=/home/$USER/.local
 
 # Setup with --reconfigure
 setup-reconfigure:
-    meson setup --reconfigure _build
+    meson setup --reconfigure _build --prefix=/home/$USER/.local
 
 # Setup with --wipe
 setup-wipe:
-    meson setup --wipe _build
+    meson setup --wipe _build --prefix=/home/$USER/.local
 
 compile:
     meson compile -C _build

@@ -63,17 +63,12 @@
   </screenshots>
 
   <releases>
-    <!-- TODO: Create a release and link to metainfo -->
-    <!-- <release version="1.0.1" date="2024-01-18">
-      <url type="details">https://example.org/changelog.html#version_1.0.1</url>
+    <release version="0.1.0" date="2026-04-3">
+      <url type="details">https://github.com/masakk1/press/releases/v0.1.0</url>
       <description translate="no">
-        <p>Release description</p>
-        <ul>
-          <li>List of changes</li>
-          <li>List of changes</li>
-        </ul>
+        <p>Initial release!</p>
       </description>
-    </release> -->
+    </release>
   </releases>
 
 </component>

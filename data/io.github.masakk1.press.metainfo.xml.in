@@ -48,12 +48,19 @@
   <!-- TODO: Screenshots -->
   <screenshots>
     <screenshot type="default">
-      <image>https://example.org/example1.png</image>
-      <caption>A caption</caption>
+      <image>
+        https://github.com/masakk1/press/blob/master/screenshots/dark_desktop_landing_page.png?raw=true</image>
+      <caption>Landing page in a desktop, in a dark theme</caption>
     </screenshot>
     <screenshot>
-      <image>https://example.org/example2.png</image>
-      <caption>A caption</caption>
+      <image>
+        https://github.com/masakk1/press/blob/master/screenshots/dark_desktop_loading.png?raw=true</image>
+      <caption>Files are being compressed in a dark desktop window</caption>
+    </screenshot>
+    <screenshot>
+      <image>
+        https://github.com/masakk1/press/blob/master/screenshots/light_phone_landing_page.png?raw=true</image>
+      <caption>Landing page in white, in phone format</caption>
     </screenshot>
   </screenshots>
 

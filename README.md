@@ -21,6 +21,14 @@ Compress your whole music library with pre-made quality presets, in a few clicks
 - Create your custom quality of choice
 - Read from counless formats with GStreamer
 
+### Showcase
+
+![Dark desktop landing page](screenshots/dark_desktop_landing_page.png)
+
+![Dark desktop loading page](screenshots/dark_desktop_loading.png)
+
+![White phone landing page](screenshots/light_phone_landing_page.png)
+
 ## Installing
 
 > :construction: TODO

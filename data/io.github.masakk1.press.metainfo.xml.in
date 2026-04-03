@@ -39,10 +39,9 @@
   <!-- (https://hughsie.github.io/oars/generate.html) - use oars-1.1 -->
   <content_rating type="oars-1.1" />
 
-  <!-- TODO: brand colors in metainfo -->
   <branding>
-    <color type="primary" scheme_preference="light">#ff00ff</color>
-    <color type="primary" scheme_preference="dark">#993d3d</color>
+    <color type="primary" scheme_preference="light">#2ec27e</color>
+    <color type="primary" scheme_preference="dark">#57e389</color>
   </branding>
 
   <!-- TODO: Screenshots -->

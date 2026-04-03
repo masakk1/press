@@ -1,6 +1,6 @@
 /* MIT License
  *
- * Copyright (c) 2025 Masakk1
+ * Copyright (c) 2026 Masakk1
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,7 +53,7 @@ public class Press.Application : Adw.Application {
             translator_credits = _ ("translator-credits"),
             version = "0.1.0",
             developers = developers,
-            copyright = "© 2025 Masakk1",
+            copyright = "© 2026 Masakk1",
         };
 
         about.present (this.active_window);

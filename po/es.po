@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: press\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-02 19:04+0200\n"
+"POT-Creation-Date: 2026-04-09 14:01+0000\n"
 "PO-Revision-Date: 2026-04-01 20:25+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -24,7 +24,6 @@ msgid "Press"
 msgstr "Press"
 
 #: data/io.github.masakk1.press.desktop.in:3
-#, fuzzy
 msgid "Audio Compressor"
 msgstr "Comprimir"
 
@@ -53,7 +52,6 @@ msgid "Select you whole library"
 msgstr "Usa tu librería entera"
 
 #: data/io.github.masakk1.press.metainfo.xml.in:14
-#, fuzzy
 msgid "Copy non-audio files over"
 msgstr "Copiar archivos sin audio en el destino"
 
@@ -78,9 +76,20 @@ msgid "Masakk1"
 msgstr "Masakk1"
 
 #: data/io.github.masakk1.press.metainfo.xml.in:52
-#: data/io.github.masakk1.press.metainfo.xml.in:56
-msgid "A caption"
-msgstr "test test"
+msgid "Landing page in desktop, with a light theme"
+msgstr "Página de inicio en el escritorio, en blanco"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:57
+msgid "Landing page in a desktop, in a dark theme"
+msgstr "Página de inicio en el escripotior, en negro"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:62
+msgid "Files are being compressed in a dark desktop window"
+msgstr "Archivos siendo comprimidos en una ventana de escritorio oscura"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:67
+msgid "Landing page in white, in phone format"
+msgstr "Página de inicio en blanco, en formato móvil"
 
 #: src/window.vala:99
 #, c-format
@@ -135,7 +144,6 @@ msgid "Compress"
 msgstr "Comprimir"
 
 #: src/ui/window.ui:27
-#, fuzzy
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -257,6 +265,9 @@ msgstr "Tasa de muestreo (Hz)"
 #: src/ui/config_page.ui:125
 msgid "Samplerates other than 44100 or 48000 won't work well"
 msgstr "Excepto 44100 y 48000, otras tasas de frecuencia no funcionan bien."
+
+#~ msgid "A caption"
+#~ msgstr "test test"
 
 #~ msgid "Other..."
 #~ msgstr "Otra..."

@@ -33,9 +33,9 @@ Compress your whole music library with pre-made quality presets, in a few clicks
 
 ## Installing
 
-> :construction: TODO
->
-> in the mean time: you can [manually compile it](/docs/developers.md)
+<a href='https://flathub.org/en/apps/io.github.masakk1.press'>
+    <img width='240' alt='Get it on Flathub' src='https://flathub.org/api/badge?locale=en'/>
+  </a>
 
 ## Integrating custom formats and presets
 

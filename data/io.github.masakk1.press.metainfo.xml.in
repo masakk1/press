@@ -47,6 +47,12 @@
   <screenshots>
     <screenshot type="default">
       <image>
+        https://github.com/masakk1/press/blob/master/screenshots/light_desktop_main.png?raw=true
+      </image>
+      <caption>Landing page in desktop, with a light theme</caption>
+    </screenshot>
+    <screenshot>
+      <image>
         https://github.com/masakk1/press/blob/master/screenshots/dark_desktop_landing_page.png?raw=true</image>
       <caption>Landing page in a desktop, in a dark theme</caption>
     </screenshot>

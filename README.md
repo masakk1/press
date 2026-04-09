@@ -23,6 +23,8 @@ Compress your whole music library with pre-made quality presets, in a few clicks
 
 ### Showcase
 
+![White desktop landing page](screenshots/light_desktop_main.png)
+
 ![Dark desktop landing page](screenshots/dark_desktop_landing_page.png)
 
 ![Dark desktop loading page](screenshots/dark_desktop_loading.png)

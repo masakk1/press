@@ -113,7 +113,10 @@ public class Press.Window : Adw.ApplicationWindow {
             this.compressor.compress_library_async.begin (
                 config, (obj, res) => {
                 this.compressor.compress_library_async.end (res);
-                if( !compressor.cancelled )
+
+                if( compressor.cancelled )
+                    navigation_view.pop_to_tag ("config_page");
+                else
                     navigation_view.push_by_tag ("done_page");
             });
         } else {
@@ -123,7 +126,7 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private void cancel_compression() {
         compressor.cancel_process ();
-        navigation_view.pop_to_tag ("config_page");
+        change_working_on (_ ("cancelling"));
     }
 
     private void return_config_page() {

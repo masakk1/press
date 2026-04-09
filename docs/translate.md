@@ -2,8 +2,6 @@
 
 <!-- Thanks bazaar. Pretty much copy-paste from their TRANSLATORS.md file. :) -->
 
-> :construction: TODO
-
 # Instructions for Translators
 
 Thank you for your interest in translating Press!

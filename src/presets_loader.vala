@@ -22,31 +22,54 @@
  *
  * SPDX-License-Identifier: MIT
  */
+using Gee;
 
 public class Press.PresetsLoader {
+    public HashMap<string, Press.QualityConfig ?> quality_list;
+    public HashMap<string, Press.FormatConfig ?> format_list;
 
-    public PresetLoader () {
+    private string custom_quality_name;
+
+    public PresetsLoader (string custom_quality_name) {
+        this.custom_quality_name = custom_quality_name;
+
+        quality_list = new HashMap<string, Press.QualityConfig ?>();
+        format_list = new HashMap<string, Press.FormatConfig ?>();
 
     }
 
-
-    private void add_custom_quality() {
+    /**
+     * Adds the custom quality using the custom_quality_name given on
+     * the constructor.
+     *
+     * @param name should be sent already translated
+     */
+    public void add_custom_quality(string name) {
         // Will error unless there's an mp3 format
-        quality_list[CUSTOM_QUALITY_NAME] = { _ ("Custom"), null, 128, 44100 };
+        quality_list[custom_quality_name] = { name, null, 128, 44100 };
     }
 
-    private void load_presets_into_ui() {
+    /**
+     * Returns the quality_list as a {@link Gtk.StringList} for models
+     */
+    public Gtk.StringList get_quality_list_model() {
         var quality_list_model = new Gtk.StringList (null);
+        foreach(var quality in quality_list.values){
+            quality_list_model.append (quality.name);
+        }
+        return quality_list_model;
+    }
+
+    /**
+     * Returns the format_list as a {@link Gtk.StringList} for models
+     */
+    public Gtk.StringList get_format_list_model() {
         var format_list_model = new Gtk.StringList (null);
         foreach(var format in format_list.values){
             format_list_model.append (format.name);
         }
-        foreach(var quality in quality_list.values){
-            quality_list_model.append (quality.name);
-        }
 
-        quality_preset_selection.model = quality_list_model;
-        custom_format_selection.model = format_list_model;
+        return format_list_model;
     }
 
     private void parse_presets_file_formats(Json.Object root_obj) {
@@ -126,4 +149,5 @@ public class Press.PresetsLoader {
         return presets_file;
     }
 
+}
 }

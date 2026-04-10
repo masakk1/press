@@ -47,13 +47,9 @@ namespace Press{
         public HashMap<string, Press.QualityConfig ?> quality_list;
         public HashMap<string, Press.FormatConfig ?> format_list;
 
-        private string custom_quality_name;
-
         private const string PRESETS_FILENAME = "presets.json";
 
-        public PresetsLoader (string custom_quality_name) {
-            this.custom_quality_name = custom_quality_name;
-
+        public PresetsLoader () {
             quality_list = new HashMap<string, Press.QualityConfig ?>();
             format_list = new HashMap<string, Press.FormatConfig ?>();
         }
@@ -88,11 +84,12 @@ namespace Press{
          * Adds the custom quality using the custom_quality_name given on
          * the constructor.
          *
-         * @param name should be sent already translated
+         * @param name the keyword name
+         * @param display_name should be sent already translated
          */
-        public void add_custom_quality(string name) {
+        public void add_custom_quality(string name, string display_name) {
             // Will error unless there's an mp3 format
-            quality_list[custom_quality_name] = { name, null, 128, 44100 };
+            quality_list[name] = { display_name, null, 128, 44100 };
         }
 
         /**

@@ -108,10 +108,10 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     private void load_presets() {
         try {
-            PresetsLoader loader = new Press.PresetsLoader (CUSTOM_QUALITY_NAME);
+            PresetsLoader loader = new Press.PresetsLoader ();
 
             loader.load ();
-            loader.add_custom_quality (_ ("Custom"));
+            loader.add_custom_quality (CUSTOM_QUALITY_NAME, _ ("Custom"));
 
             quality_list = loader.quality_list;
             format_list = loader.format_list;

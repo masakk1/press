@@ -188,7 +188,7 @@ namespace Press{
         /**
          * Tries to look for the presets JSON file in XDG_DATA_DIRS and returns it
          */
-        private File ? search_presets_file()
+        public File ? search_presets_file()
         throws PresetsLoaderError.FILE_MISSING {
             File ? presets_file = null;
 

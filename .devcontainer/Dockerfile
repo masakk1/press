@@ -8,9 +8,9 @@ RUN apk update && apk add --no-cache \
     adwaita-icon-theme font-dejavu nautilus \
     json-glib-dev libgee-dev \
     gstreamer-dev gst-plugins-base-dev \
-    uncrustify gdb \
+    uncrustify gdb just \
     vala vala-language-server \
-    just
+    gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
 
 # Create user adw, grant root access, remove password
 RUN useradd -m -s /bin/bash adw && \

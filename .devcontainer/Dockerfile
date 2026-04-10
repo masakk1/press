@@ -5,7 +5,7 @@ RUN apk update && apk add --no-cache \
     alpine-sdk meson ninja \
     gtk4.0-dev libadwaita-dev \
     desktop-file-utils gobject-introspection-dev \
-    adwaita-icon-theme font-dejavu \
+    adwaita-icon-theme font-dejavu nautilus \
     json-glib-dev libgee-dev \
     gstreamer-dev gst-plugins-base-dev \
     uncrustify gdb \

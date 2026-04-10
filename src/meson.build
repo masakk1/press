@@ -12,7 +12,7 @@ press_sources = [
 press_deps = [
   config_dep,
   dependency('gtk4'),
-  dependency('libadwaita-1', version: '>= 1.4'),
+  dependency('libadwaita-1', version: '>= 1.8'),
   dependency('json-glib-1.0', required: true),
   dependency('gee-0.8', required: true),
   dependency('gstreamer-1.0', required: true),

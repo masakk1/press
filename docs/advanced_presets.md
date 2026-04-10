@@ -4,9 +4,15 @@
 
 There's a file called `presets.json`, located in the data directory of your installation process.
 
-Common locations:
+You can access it by opening the _Main Menu_ > Open Presets Location
+
+<details>
+<summary>Flatpak locations</summary>
+If that didn't work, here are common flatpak locations:
+
 - `/var/lib/flatpak/app/io.github.masakk1.press/current/active/files/share/presets.json`
 - `~/.local/share/flatpak/app/io.github.masakk1.press/current/active/files/extra/share/presets.json`
+</details>
 
 ## Presets
 

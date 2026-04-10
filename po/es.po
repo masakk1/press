@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: press\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-09 14:01+0000\n"
+"POT-Creation-Date: 2026-04-10 18:00+0000\n"
 "PO-Revision-Date: 2026-04-01 20:25+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -96,9 +96,14 @@ msgstr "Página de inicio en blanco, en formato móvil"
 msgid "Working on %s"
 msgstr "Trabajando con %s"
 
-#: src/window.vala:120
+#: src/window.vala:123
 msgid "Selected folders don't exist"
 msgstr "Las carpetas selecciondas no existen"
+
+#: src/window.vala:129
+#, fuzzy
+msgid "cancelling"
+msgstr "Cancelar"
 
 #. Current preset names
 #. They must match the existing names on data/presets.json
@@ -130,16 +135,16 @@ msgstr "Libre (ogg)"
 msgid "Compatibility"
 msgstr "Compatibilidad"
 
-#. Will error unless there's an mp3 format
-#: src/config_page.vala:145
+#: src/config_page.vala:114
 msgid "Custom"
 msgstr "Personalizado"
 
-#: src/application.vala:53
+#. Note to Translators: Add your name here
+#: src/application.vala:55
 msgid "translator-credits"
 msgstr "Masakk1"
 
-#: src/ui/window.ui:18 src/ui/config_page.ui:136
+#: src/ui/window.ui:18 src/ui/config_page.ui:144
 msgid "Compress"
 msgstr "Comprimir"
 
@@ -214,57 +219,73 @@ msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Cerrar"
 
-#: src/ui/config_page.ui:16
+#: src/ui/config_page.ui:14
+msgid "Main Menu"
+msgstr "Menú Principal"
+
+#: src/ui/config_page.ui:24
 msgid "Configure"
 msgstr "Configuración"
 
-#: src/ui/config_page.ui:19
+#: src/ui/config_page.ui:27
 msgid "Source Directory"
 msgstr "Carpeta Origen"
 
-#: src/ui/config_page.ui:20 src/ui/config_page.ui:40
+#: src/ui/config_page.ui:28 src/ui/config_page.ui:48
 msgid "/path/to/directory"
 msgstr "/destino/a/carpeta"
 
-#: src/ui/config_page.ui:39
+#: src/ui/config_page.ui:47
 msgid "Target Directory"
 msgstr "Carpeta Destino"
 
-#: src/ui/config_page.ui:59
+#: src/ui/config_page.ui:67
 msgid "Quality Preset"
 msgstr "Perfil de Calidad"
 
-#: src/ui/config_page.ui:65
+#: src/ui/config_page.ui:73
 msgid "Replace files on destination"
 msgstr "Reemplazar archivos en el destino"
 
-#: src/ui/config_page.ui:71
+#: src/ui/config_page.ui:79
 msgid "Copy non-audio files on destination"
 msgstr "Copiar archivos sin audio en el destino"
 
-#: src/ui/config_page.ui:80
+#: src/ui/config_page.ui:88
 msgid "Custom Target Quality"
 msgstr "Perfil de Calidad Personalizada"
 
-#: src/ui/config_page.ui:83
+#: src/ui/config_page.ui:91
 msgid "Manually configure the maximum target quality."
 msgstr "Configura manualmente la mayor calidad deseada posible."
 
-#: src/ui/config_page.ui:87
+#: src/ui/config_page.ui:95
 msgid "Encoder / Format"
 msgstr "Codificador / Formato"
 
-#: src/ui/config_page.ui:94
+#: src/ui/config_page.ui:102
 msgid "Bitrate (Kbps)"
 msgstr "Tasa de bits (Kbps)"
 
-#: src/ui/config_page.ui:109
+#: src/ui/config_page.ui:117
 msgid "Sample Rate (Hz)"
 msgstr "Tasa de muestreo (Hz)"
 
-#: src/ui/config_page.ui:125
+#: src/ui/config_page.ui:133
 msgid "Samplerates other than 44100 or 48000 won't work well"
 msgstr "Excepto 44100 y 48000, otras tasas de frecuencia no funcionan bien."
+
+#: src/ui/config_page.ui:166
+msgid "_Open Presets Location"
+msgstr "_Localizar Perfiles"
+
+#: src/ui/config_page.ui:170
+msgid "_Keyboard Shortcuts"
+msgstr "_Muestra atajos"
+
+#: src/ui/config_page.ui:174
+msgid "_About Press"
+msgstr "_Sobre Press"
 
 #~ msgid "A caption"
 #~ msgstr "test test"

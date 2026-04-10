@@ -21,6 +21,12 @@ setup-wipe:
 compile:
     meson compile -C _build
 
+lint:
+    io.elementary.vala-lint src -c vala-lint.conf
+
+lint-fix:
+    io.elementary.vala-lint src -c vala-lint.conf --fix
+
 # == Running ==
 
 # Compile and run the binary - Optionally with a language

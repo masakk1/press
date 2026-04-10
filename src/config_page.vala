@@ -107,133 +107,22 @@ public class Press.ConfigPage : Adw.NavigationPage {
     }
 
     private void load_presets() {
-        File ? presets_file = search_presets_file ();
-        if( presets_file == null ){
-            warning (@"Couldn't find presets.json file.");
+        try {
+            PresetsLoader loader = new Press.PresetsLoader ();
 
-        } else {
-            bool can_read_file = true;
-            Json.Parser parser = new Json.Parser ();
+            loader.load ();
+            loader.add_custom_quality (CUSTOM_QUALITY_NAME, _ ("Custom"));
 
-            // Try to load the file onto the parser
-            try {
-                parser.load_from_file (presets_file.get_path ());
-            } catch ( Error err ){
-                warning (@"Could not read file from path $(presets_file.get_path ()). File should exists.");
-                can_read_file = false;
-            }
+            quality_list = loader.quality_list;
+            format_list = loader.format_list;
 
-            if( !can_read_file ){
-                warning (@"Couldn't read $(presets_file.get_path()), but file exists.");
+            quality_preset_selection.model = loader.get_quality_list_model ();
+            custom_format_selection.model = loader.get_format_list_model ();
 
-            } else {
-                Json.Object root_obj = parser.get_root ().get_object ();
-                parse_presets_file_formats (root_obj);
-                parse_presets_file_quality (root_obj);
+        } catch ( Press.PresetsLoaderError err ){
+            critical (@"Could not load presets. Error: $(err.message)");
 
-                assert (format_list.size > 0);
-                assert (quality_list.size > 0);
-
-                add_custom_quality ();
-                load_presets_into_ui ();
-            }
         }
-    }
-
-    private void add_custom_quality() {
-        // Will error unless there's an mp3 format
-        quality_list[CUSTOM_QUALITY_NAME] = { _ ("Custom"), null, 128, 44100 };
-    }
-
-    private void load_presets_into_ui() {
-        var quality_list_model = new Gtk.StringList (null);
-        var format_list_model = new Gtk.StringList (null);
-        foreach(var format in format_list.values){
-            format_list_model.append (format.name);
-        }
-        foreach(var quality in quality_list.values){
-            quality_list_model.append (quality.name);
-        }
-
-        quality_preset_selection.model = quality_list_model;
-        custom_format_selection.model = format_list_model;
-    }
-
-    private void parse_presets_file_formats(Json.Object root_obj) {
-        Json.Object formats_obj = root_obj.get_object_member ("formats");
-
-        foreach(string member in formats_obj.get_members ()){
-            Json.Object format_obj = formats_obj.get_object_member (member);
-
-            // Find the filters
-            var filters_obj = format_obj.get_array_member ("filters");
-            var filters = new ArrayList<string>();
-            foreach(var filter_node in filters_obj.get_elements ()){
-                filters.add (filter_node.get_string ());
-            }
-
-            // Load encoder properties
-            Json.Object encoder_properties_obj = format_obj.get_object_member ("encoderProperties");
-            HashMap<string, Value ?> encoder_properties = new HashMap<string, Value ?>();
-            if( encoder_properties_obj != null ){
-                encoder_properties_obj.foreach_member ((obj, key, node) => {
-                    encoder_properties[key] = node.get_value ();
-                });
-            }
-
-            Press.FormatConfig format = Press.FormatConfig () {
-                name = _ (format_obj.get_string_member ("name")),
-                extension = format_obj.get_string_member ("extension"),
-                encoder = format_obj.get_string_member ("encoder"),
-                filters = filters.to_array (),
-                bitrate_multiplier = (int32) format_obj.get_int_member ("bitrateMult"),
-                encoder_properties = encoder_properties
-            };
-
-            format_list[member] = format;
-        }
-    }
-
-    private void parse_presets_file_quality(Json.Object root_obj) {
-        Json.Object quality_list_obj = root_obj.get_object_member ("quality_presets");
-
-        foreach(string member in quality_list_obj.get_members ()){
-            Json.Object quality_obj = quality_list_obj.get_object_member (member);
-
-            Press.FormatConfig ? format = format_list[quality_obj.get_string_member ("format")];
-
-            if( format == null ){
-                warning (
-                    "Couldn't load quality preset %s. Format %s doesn't exist.",
-                    quality_obj.get_string_member ("name"),
-                    quality_obj.get_string_member ("format")
-                    );
-            } else {
-                Press.QualityConfig quality = Press.QualityConfig () {
-                    name = _ (quality_obj.get_string_member ("name")),
-                    format = format,
-                    bitrate = (int32) quality_obj.get_int_member ("bitrate"),
-                    samplerate = (int32) quality_obj.get_int_member ("samplerate")
-                };
-
-                quality_list[member] = quality;
-            }
-        }
-    }
-
-    private File ? search_presets_file() {
-        File ? presets_file = null;
-
-        foreach(var dir in GLib.Environment.get_system_data_dirs ()){
-            string search_filename = GLib.Path.build_filename (dir, "presets.json");
-            var search_file = File.new_for_path (search_filename);
-            if( search_file.query_exists ()){
-                presets_file = search_file;
-                break;
-            }
-        }
-
-        return presets_file;
     }
 
     private void update_custom_quality(Press.QualityConfig new_quality) {

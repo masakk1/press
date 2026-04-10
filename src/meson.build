@@ -2,6 +2,7 @@ press_sources = [
   'main.vala',
   'compress_config.vala',
   'compressor.vala',
+  'presets_loader.vala',
 
   'application.vala',
   'config_page.vala',

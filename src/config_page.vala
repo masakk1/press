@@ -107,36 +107,22 @@ public class Press.ConfigPage : Adw.NavigationPage {
     }
 
     private void load_presets() {
-        File ? presets_file = search_presets_file ();
-        if( presets_file == null ){
-            warning (@"Couldn't find presets.json file.");
+        try {
+            PresetsLoader loader = new Press.PresetsLoader (CUSTOM_QUALITY_NAME);
 
-        } else {
-            bool can_read_file = true;
-            Json.Parser parser = new Json.Parser ();
+            loader.load ();
+            loader.add_custom_quality (_ ("Custom"));
 
-            // Try to load the file onto the parser
-            try {
-                parser.load_from_file (presets_file.get_path ());
-            } catch ( Error err ){
-                warning (@"Could not read file from path $(presets_file.get_path ()). File should exists.");
-                can_read_file = false;
-            }
+            quality_list = loader.quality_list;
+            format_list = loader.format_list;
 
-            if( !can_read_file ){
-                warning (@"Couldn't read $(presets_file.get_path()), but file exists.");
+            quality_preset_selection.model = loader.get_quality_list_model ();
+            custom_format_selection.model = loader.get_format_list_model ();
 
-            } else {
-                Json.Object root_obj = parser.get_root ().get_object ();
-                parse_presets_file_formats (root_obj);
-                parse_presets_file_quality (root_obj);
+        } catch ( Press.PresetsLoaderError err ){
 
-                assert (format_list.size > 0);
-                assert (quality_list.size > 0);
+            critical (@"Could not load presets. Error: $(err.message)");
 
-                add_custom_quality ();
-                load_presets_into_ui ();
-            }
         }
     }
 

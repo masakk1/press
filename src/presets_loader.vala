@@ -27,10 +27,22 @@ using Gee;
 namespace Press{
 
     public errordomain PresetsLoaderError {
-        FILE_MISSING
+        FILE_MISSING,
+        ERROR_LOADING_FILE
     }
 
-    public class PresetsLoader {
+    /**
+     * A helper class to load the presets file info workable HashMaps.
+     *
+     * Use ``.load()`` to load the presets. It will look for presets file in
+     * ``$XDG_DATA_DIRS``.
+     *
+     * Grab the results by accessing ``PresetsLoader.quality_list`` and
+     * ``PresetsLoader.format_list``
+     *
+     * You can also get them as Gtk.StringList, for ComboBox's model.
+     */
+    public class PresetsLoader : Object {
 
         public HashMap<string, Press.QualityConfig ?> quality_list;
         public HashMap<string, Press.FormatConfig ?> format_list;
@@ -47,9 +59,9 @@ namespace Press{
         }
 
         /**
-         * TODO
+         * Loads the presets into public attributes: quality_list and format_list.
          */
-        public void load_presets()
+        public void load()
         throws PresetsLoaderError {
             File ? presets_file = search_presets_file ();
 
@@ -57,19 +69,19 @@ namespace Press{
 
             try {
                 parser.load_from_file (presets_file.get_path ());
-
-                Json.Object root_obj = parser.get_root ().get_object ();
-                parse_presets_file_formats (root_obj);
-                parse_presets_file_quality (root_obj);
-
-                assert (format_list.size > 0);
-                assert (quality_list.size > 0);
-
-                add_custom_quality ();
-                load_presets_into_ui ();
             } catch ( Error err ){
-                warning (@"Could not read file from path $(presets_file.get_path ()). File should exists.");
+                throw new PresetsLoaderError.ERROR_LOADING_FILE (
+                          @"Could not read file from path " +
+                          @"$(presets_file.get_path ()). File should exists.");
             }
+
+            Json.Object root_obj = parser.get_root ().get_object ();
+            parse_presets_file_formats (root_obj);
+            parse_presets_file_quality (root_obj);
+
+            assert (format_list.size > 0);
+            assert (quality_list.size > 0);
+
         }
 
         /**

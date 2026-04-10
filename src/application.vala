@@ -50,10 +50,11 @@ public class Press.Application : Adw.Application {
             application_name = "press",
             application_icon = "io.github.masakk1.press",
             developer_name = "Masakk1",
+            // Note to Translators: Add your name here
             translator_credits = _ ("translator-credits"),
             version = "0.1.0",
             developers = developers,
-            copyright = "© 2026 Masakk1",
+            copyright = "MIT © 2026 Masakk1",
         };
 
         about.present (this.active_window);

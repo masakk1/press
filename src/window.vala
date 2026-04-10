@@ -66,40 +66,39 @@ public class Press.Window : Adw.ApplicationWindow {
         done_page_back_button.clicked.connect (this.return_config_page);
     }
 
-    private void compress_button_clicked() {
-        if( config_page.config.replace_destination_files ){
+    private void compress_button_clicked () {
+        if (config_page.config.replace_destination_files) {
             this.open_confirm_dialog ();
         } else {
             this.begin_compression ();
         }
-
     }
 
-    private void open_confirm_dialog() {
+    private void open_confirm_dialog () {
         confirm_dialog.present (this);
     }
 
-    private void answer_confirm_dialog(string response) {
-        if( response == "compress" ){
+    private void answer_confirm_dialog (string response) {
+        if (response == "compress") {
             this.begin_compression ();
         }
     }
 
-    private void open_cancel_dialog() {
+    private void open_cancel_dialog () {
         cancel_dialog.present (this);
     }
 
-    private void answer_cancel_dialog(string response) {
-        if( response == "cancel" ){
+    private void answer_cancel_dialog (string response) {
+        if (response == "cancel") {
             this.cancel_compression ();
         }
     }
 
-    private void change_working_on(string job) {
-        this.compressing_status_page.description = _ ("Working on %s").printf (job);
-    }
+    private void change_working_on (string job) {
+        this.compressing_status_page.description = _("Working on %s").printf (job);
+}
 
-    private void begin_compression() {
+    private void begin_compression () {
         // Clone the config
         Press.CompressConfig config = config_page.config.clone ();
 
@@ -107,30 +106,29 @@ public class Press.Window : Adw.ApplicationWindow {
         var target_folder = File.new_for_path (config.target_path);
         bool folders_exist = source_folder.query_exists (null) && target_folder.query_exists (null);
 
-        if( folders_exist ){
+        if (folders_exist) {
             navigation_view.push_by_tag ("compressing_page");
 
             this.compressor.compress_library_async.begin (
-                config, (obj, res) => {
+                                                          config, (obj, res) => {
                 this.compressor.compress_library_async.end (res);
 
-                if( compressor.cancelled )
+                if (compressor.cancelled)
                     navigation_view.pop_to_tag ("config_page");
                 else
                     navigation_view.push_by_tag ("done_page");
             });
         } else {
-            toast_overlay.add_toast (new Adw.Toast (_ ("Selected folders don't exist")));
+            toast_overlay.add_toast (new Adw.Toast (_("Selected folders don't exist")));
         }
     }
 
-    private void cancel_compression() {
+    private void cancel_compression () {
         compressor.cancel_process ();
-        change_working_on (_ ("cancelling"));
+        change_working_on (_("cancelling"));
     }
 
-    private void return_config_page() {
+    private void return_config_page () {
         navigation_view.pop_to_tag ("config_page");
     }
-
 }

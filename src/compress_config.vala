@@ -31,7 +31,7 @@ public interface Press.Clonable<T> {
     /**
      * Create a deep copy of ``this``
      */
-    public abstract T clone();
+    public abstract T clone ();
 
 }
 
@@ -61,7 +61,7 @@ public class Press.CompressConfig : Press.Clonable<Press.CompressConfig> {
     public CompressConfig () {
     }
 
-    public CompressConfig clone() {
+    public CompressConfig clone () {
         var config = new CompressConfig ();
         config.source_path = this.source_path;
         config.target_path = this.target_path;

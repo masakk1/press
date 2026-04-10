@@ -120,7 +120,6 @@ public class Press.ConfigPage : Adw.NavigationPage {
             custom_format_selection.model = loader.get_format_list_model ();
 
         } catch ( Press.PresetsLoaderError err ){
-
             critical (@"Could not load presets. Error: $(err.message)");
 
         }

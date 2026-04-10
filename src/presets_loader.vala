@@ -72,6 +72,10 @@ public class Press.PresetsLoader {
         return format_list_model;
     }
 
+    /**
+     * Takes the {@link Json.Object} root object of the presets.json file
+     * and parses the formats into ``format_list``
+     */
     private void parse_presets_file_formats(Json.Object root_obj) {
         Json.Object formats_obj = root_obj.get_object_member ("formats");
 
@@ -107,6 +111,10 @@ public class Press.PresetsLoader {
         }
     }
 
+    /**
+     * Takes the {@link Json.Object} root object of the presets.json file
+     * and parses the quality presets into ``quality_list``
+     */
     private void parse_presets_file_quality(Json.Object root_obj) {
         Json.Object quality_list_obj = root_obj.get_object_member ("quality_presets");
 
@@ -134,6 +142,9 @@ public class Press.PresetsLoader {
         }
     }
 
+    /**
+     * Tries to look for the presets JSON file in XDG_DATA_DIRS and returns it
+     */
     private File ? search_presets_file() {
         File ? presets_file = null;
 
@@ -149,5 +160,4 @@ public class Press.PresetsLoader {
         return presets_file;
     }
 
-}
 }

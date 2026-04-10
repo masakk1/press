@@ -9,7 +9,7 @@ RUN apk update && apk add --no-cache \
     json-glib-dev libgee-dev \
     gstreamer-dev gst-plugins-base-dev \
     uncrustify gdb just \
-    vala vala-language-server \
+    vala vala-language-server vala-lint \
     gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
 
 # Create user adw, grant root access, remove password

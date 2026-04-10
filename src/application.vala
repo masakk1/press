@@ -30,6 +30,7 @@ public class Press.Application : Adw.Application {
         resource_base_path = "/io/github/masakk1/press";
 
         ActionEntry[] action_entries = {
+            { "presets-location", this.open_presets_location },
             { "about", this.on_about_action },
             { "preferences", this.on_preferences_action },
             { "quit", this.quit }
@@ -62,6 +63,22 @@ public class Press.Application : Adw.Application {
 
     private void on_preferences_action() {
         message ("app.preferences action activated");
+    }
+
+    private void open_presets_location() {
+        PresetsLoader loader = new Press.PresetsLoader ();
+
+        try {
+            File presets_file = loader.search_presets_file ();
+
+            Gtk.FileLauncher launcher = new Gtk.FileLauncher (presets_file.get_parent ());
+
+            launcher.launch.begin (this.active_window, null, () => {});
+
+        } catch ( Press.PresetsLoaderError err ){
+            // TODO: show a toast
+            critical (@"Failed to find the presets file. Error: $(err.message)");
+        }
     }
 
 }

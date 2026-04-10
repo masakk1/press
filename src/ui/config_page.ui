@@ -163,6 +163,10 @@
         <attribute name="action">app.preferences</attribute>
       </item> -->
       <item>
+        <attribute name="label" translatable="yes">_Open Presets Location</attribute>
+        <attribute name="action">app.presets-location</attribute>
+      </item>
+      <item>
         <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
         <attribute name="action">app.shortcuts</attribute>
       </item>

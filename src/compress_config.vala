@@ -35,6 +35,9 @@ public interface Press.Clonable<T> {
 
 }
 
+/**
+ * Static data for a Format.
+ */
 public struct Press.FormatConfig {
     public string name;
     public string extension;
@@ -44,6 +47,11 @@ public struct Press.FormatConfig {
     public string[] filters;
 }
 
+/**
+ * Static data for a Quality Preset.
+ *
+ * Except for a custom config, it should never be changed.
+ */
 public struct Press.QualityConfig {
     public string name;
     public Press.FormatConfig format;
@@ -51,6 +59,15 @@ public struct Press.QualityConfig {
     public int samplerate;
 }
 
+/**
+ * A modifiable object that holds configurations for compression
+ *
+ * To share the configuration object between files, one could make a deep clone of it with ``.clone``.
+ * {{{
+ *   var cloned = config.clone();
+ *   method(cloned);
+ * }}}
+ */
 public class Press.CompressConfig : Press.Clonable<Press.CompressConfig> {
     public string source_path { get; set; }
     public string target_path { get; set; }
@@ -58,9 +75,15 @@ public class Press.CompressConfig : Press.Clonable<Press.CompressConfig> {
     public bool copy_noaudio_files { get; set; }
     public bool replace_destination_files { get; set; }
 
+    /**
+     * {@inheritDoc}
+     */
     public CompressConfig () {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public CompressConfig clone () {
         var config = new CompressConfig ();
         config.source_path = this.source_path;

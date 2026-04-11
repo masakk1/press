@@ -1,3 +1,10 @@
+---
+name: Feature Request
+about: Suggest features you want to see added
+title: '[FEATURE]: '
+labels: enhancement
+---
+
 <!--
 Thank you for suggesting an idea to make Press better.
 

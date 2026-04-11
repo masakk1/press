@@ -1,3 +1,10 @@
+---
+name: Bug Report
+about: Report problems with the program
+title: '[BUG]: '
+labels: bug
+---
+
 <!--
 Thank you for reporting an issue to make Press better.
 

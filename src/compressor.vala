@@ -32,10 +32,25 @@ namespace Press.Compressor {
         ELEMENT_LINK
     }
 
+    /**
+     * A utility class that processes files and writes to a destination
+     */
     public interface FileHandler : Object {
+        /**
+         * Grab the source file, process it, and output to the target
+         *
+         * The target file doesn't have to exist already. It will be created or
+         * overwritten.
+         *
+         * @param source An existing file to process
+         * @param target The file to write to
+         */
         public abstract void process (File source, File target);
     }
 
+    /**
+     * A utility class that converts files and writes to a destination
+     */
     public class FileConverter : Object, FileHandler {
         private string[] filters;
         private string encoder_name;
@@ -57,6 +72,9 @@ namespace Press.Compressor {
             this.quality = quality;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         private void process (File source, File target) {
             try {
                 pipeline = create_pipeline ("convert-pipeline-" + source.get_basename ());
@@ -77,6 +95,14 @@ namespace Press.Compressor {
             pipeline = null;
         }
 
+        /**
+         * Builds a {@link Gst.Pipeline}, creates the necessary {@link Gst.Element}s, and links them together.
+         *
+         * ``sink`` and ``decodebin`` haven't been linked yet.
+         *
+         * @param name The name of the pipeline. Used for debugging purposes only.
+         * @return The resulting pipeline
+         */
         private Gst.Pipeline create_pipeline (string name)
         throws CompressError.PIPELINE_FAIL, CompressError.ELEMENT_LINK, CompressError.ELEMENT_NULL {
             Gst.Pipeline? pipeline = new Gst.Pipeline (name);
@@ -108,6 +134,9 @@ namespace Press.Compressor {
             return pipeline;
         }
 
+        /**
+         * Adds the parametrized filters to the pipleine, and links them along the sink.
+         */
         private void add_pipeline_filters ()
         throws CompressError.ELEMENT_NULL, CompressError.ELEMENT_LINK {
             Gst.Element last_element = this.encoder;
@@ -129,6 +158,9 @@ namespace Press.Compressor {
                 throw new CompressError.ELEMENT_LINK (@"Failed to link the las element with the sink");
         }
 
+        /**
+         * Checks added pads, if it has capability ``audio/x-raw``, link it to the next item in-line.
+         */
         private void decodebin_pad_added (Gst.Element src, Gst.Pad pad) {
             Gst.Pad sink_pad = element_after_decodebin.get_static_pad ("sink");
 
@@ -148,6 +180,9 @@ namespace Press.Compressor {
                 return;
         }
 
+        /**
+         * Configures the created elements. Adds encoder properties, links the samplerate caps filter.
+         */
         private void configure_elements (File source_file, File target_file) {
             source.set ("location", source_file.get_path ());
             sink.set ("location", target_file.get_path ());
@@ -174,6 +209,11 @@ namespace Press.Compressor {
             }
         }
 
+        /**
+         * Starts the conversion process
+         *
+         * It is called play, because the pipeline says this is the "PLAYING" state.
+         */
         private void play () {
             Gst.Bus bus = pipeline.get_bus ();
             bus.timed_pop_filtered (Gst.CLOCK_TIME_NONE, Gst.MessageType.ERROR | Gst.MessageType.EOS);
@@ -182,10 +222,16 @@ namespace Press.Compressor {
         }
     }
 
+    /**
+     * A utility class that copies files and writes to a destination
+     */
     public class FileDuplicator : Object, FileHandler {
         public FileDuplicator () {
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public void process (File source, File target) {
             source.copy_async.begin (
                                      target,
@@ -205,6 +251,9 @@ namespace Press.Compressor {
         }
     }
 
+    /**
+     * Compresses files on a directory, given the target quality
+     */
     public class Compressor : Object {
         // note: ^\.?(?<name>\/[^\/\n]+)+(?<ext>\.[A-z0-9\._-]+)$
 
@@ -213,6 +262,9 @@ namespace Press.Compressor {
         private File source_folder;
         private File target_folder;
 
+        /**
+         * Called when a file is about to be processed.
+         */
         public signal void working_on_file (string path);
 
         private bool process_cancel = false;
@@ -226,6 +278,11 @@ namespace Press.Compressor {
         private Regex file_extension_regex;
         private int discoverer_timeout;
 
+        /**
+         * Initializes a Compressor object
+         *
+         * @param discoverer_timeout The maximum time given to check whether a file has audio
+         */
         public Compressor (int discoverer_timeout = 3) {
             try {
                 this.file_extension_regex = new Regex ("(?<=\\.)[A-z0-9_-]+$");
@@ -245,6 +302,16 @@ namespace Press.Compressor {
             this.process_running = false;
         }
 
+        /**
+         * Begins compressing a library. The source and target folders must exist.
+         *
+         * This is the main entry point. A callback will be sent once it has completed. Once it's done, you can check
+         * if it was cancelled using the public property ``cancelled``.
+         *
+         * Only a single compression can run at a time, although many files can be processed simultaneously
+         *
+         * It uses multi threading to speed the process time.
+         */
         public async void compress_library_async (Press.CompressConfig config) {
             if (this.process_running)return;
             this.start_process ();
@@ -298,6 +365,9 @@ namespace Press.Compressor {
             this.stop_process ();
         }
 
+        /**
+         * Returns the children in a given folder.
+         */
         private ArrayList<File> get_children (File folder) {
             var children = new ArrayList<File> ();
             this._get_children (folder, children);
@@ -335,10 +405,22 @@ namespace Press.Compressor {
             }
         }
 
-        // public async void compress_file_async(string source_file_path, string target_file_path) {
-
-        // }
-
+        /**
+         * Processes a {@link GLib.File}. Uses {@link Press.Compressor.FileConverter} for conversions,
+         * and {@link Press.Compressor.FileDuplicator} for file copies.
+         *
+         * The duplicator will be called for files that don't have audio, and  only if ``copy_noaudio_files`` is
+         * enabled in the ``config``.
+         *
+         * The target bitrate and samplerate, are limited to the existing properties for each file. If bitrate is
+         * configured to be 192 kbps, but the file is actually 96 kbps, it will stay with the lower 96 kbps for that
+         * File.
+         *
+         * If the detected samplerate is 0, the file will be ignored, as it's likely corrupted in some way.
+         *
+         * For the reasons above, a message may be printed saying "Skipping file". Unless it's followed by an error 
+         * message, it's likely fine.
+         */
         private void process_file (File source_file) {
             string source_folder_path = this.source_folder.get_path ();
             string target_folder_path = this.target_folder.get_path ();
@@ -402,6 +484,13 @@ namespace Press.Compressor {
             }
         }
 
+        /**
+         * Makes sure the directory for a target file exists. Will create folders as necessary.
+         *
+         * Will return whether the operation was successful or not.
+         *
+         * @return Whether the operation was successful.
+         */
         private bool ensure_directory_exists (File target_file) {
             File? target_parent = target_file.get_parent ();
 
@@ -424,6 +513,15 @@ namespace Press.Compressor {
             return exists;
         }
 
+        /**
+         * Creates a {@link Gst.PbUtils.Discoverer} and tries to look for audio properties in a {@link GLib.File}.
+         *
+         * If a samplerate is 0, this means the file is //likely corrupted//, or there was an issue parsing it.
+         * 
+         * The Discoverer will look for it for as long as ``discoverer_timeout``.
+         *
+         * NOTE: A new Discoverer is created each time this method is called.
+         */
         private void check_streams (File file, out bool is_audio, out int bitrate, out int samplerate) {
             is_audio = false;
             bitrate = 0;
@@ -453,6 +551,11 @@ namespace Press.Compressor {
             }
         }
 
+        /**
+         * Tries to estimate the bitrate, based on length and size.
+         *
+         * It's not very precise, since it doesn't account for the size of metadata, such as attached images.
+         */
         private int calculate_bitrate (File file, Gst.PbUtils.DiscovererInfo info) {
             uint64 file_size = get_file_size (file);
             uint64 duration_ns = info.get_duration ();
@@ -462,6 +565,9 @@ namespace Press.Compressor {
             return (int) ((file_size * 8.0) / duration_s / 1000.0);
         }
 
+        /**
+         * Gets the file's size, in bytes.
+         */
         private int64 get_file_size (File file) {
             int64 size = 0;
 
@@ -478,6 +584,11 @@ namespace Press.Compressor {
             return size;
         }
 
+        /**
+         * Cancel a running process.
+         *
+         * The running processes will gracefully finish, and not stopped mid-way.
+         */
         public void cancel_process () {
             this.process_cancel = true;
         }

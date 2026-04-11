@@ -23,6 +23,9 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * The main window. It's in charge of orchestrating between pages and the Compressor.
+ */
 [GtkTemplate (ui = "/io/github/masakk1/press/window.ui")]
 public class Press.Window : Adw.ApplicationWindow {
 
@@ -48,6 +51,9 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private Compressor.Compressor compressor;
 
+    /**
+     * Creates the main Window
+     */
     public Window (Gtk.Application app) {
         application = app;
         compressor = new Compressor.Compressor ();
@@ -98,6 +104,11 @@ public class Press.Window : Adw.ApplicationWindow {
         this.compressing_status_page.description = _("Working on %s").printf (job);
 }
 
+    /**
+     * Begins the compression.
+     *
+     * It clones the configuration, and feeds it to the compressor.
+     */
     private void begin_compression () {
         // Clone the config
         Press.CompressConfig config = config_page.config.clone ();

@@ -98,6 +98,10 @@ just install
 ## Contributors Guide
 
 ### Formatting
-This project uses a `.editorconfig` for spacing basics, and `uncrustify.cfg` for code formatting.
+This project uses _EditorConfig_ and `vala-lint`.
 
-The `uncrustify.cfg` is mostly from https://github.com/PerfectCarl/elementary-uncrustify, with some adjustments
+1. Use an automatic formatter
+    - The official vala VS Code extension has a decent formatter.
+2. Run `vala-lint` to check your code
+    - `just lint` will say the errors you have
+    - `just lint-fix` will try to fix some issues

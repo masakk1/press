@@ -27,12 +27,12 @@
   <url type="homepage">https://github.com/masakk1/press</url>
   <url type="vcs-browser">https://github.com/masakk1/press</url>
   <url type="bugtracker">https://github.com/masakk1/press/issues</url>
-  <!-- <url type="translate">https://github.com/masakk1/press/blob/master/docs/translate.md</url>-->
+  <url type="translate">https://github.com/masakk1/press/blob/master/docs/translate.md</url>
   <!-- <url type="faq">https://example.org/faq</url> -->
   <!-- <url type="help">https://example.org/help</url> -->
   <!-- <url type="donation">https://example.org/donate</url> -->
   <!-- <url type="contact">https://github.com/masakk1</url> -->
-  <!-- <url type="contribute">https://github.com/masakk1/press/blob/master/CONTRIBUTING.md</url> -->
+  <url type="contribute">https://github.com/masakk1/press/blob/master/CONTRIBUTING.md</url>
 
   <translation type="gettext">press</translation>
   <launchable type="desktop-id">io.github.masakk1.press.desktop</launchable>

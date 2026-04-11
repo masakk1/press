@@ -49,7 +49,7 @@ namespace Press {
 public class Press.ConfigPage : Adw.NavigationPage {
     [GtkChild] private unowned Adw.ActionRow source_directory_row;
     [GtkChild] private unowned Adw.ActionRow target_directory_row;
- 
+
     [GtkChild] private unowned Adw.PreferencesGroup custom_quality_group;
     [GtkChild] private unowned Adw.ComboRow quality_preset_selection;
     [GtkChild] private unowned Adw.ComboRow custom_format_selection;

@@ -23,6 +23,10 @@
  * SPDX-License-Identifier: MIT
  */
 
+/**
+ * Application object. In charge of anything that isn't related to the interface. Such as shortcuts, or creating the
+ * window in {@link Press.Window}.
+ */
 public class Press.Application : Adw.Application {
     public Application () {
         application_id = "io.github.masakk1.press";
@@ -39,6 +43,9 @@ public class Press.Application : Adw.Application {
         this.set_accels_for_action ("app.quit", { "<control>q" });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public override void activate () {
         base.activate ();
         var win = this.active_window ?? new Press.Window (this);
@@ -61,10 +68,18 @@ public class Press.Application : Adw.Application {
         about.present (this.active_window);
     }
 
+    /**
+     * Currently, there are no preferences. This function does nothing.
+     * 
+     * The menu entry is commented, too.
+     */
     private void on_preferences_action () {
         message ("app.preferences action activated");
     }
 
+    /**
+     * Open the system's file explorer where the presets file is located in.
+     */
     private void open_presets_location () {
         PresetsLoader loader = new Press.PresetsLoader ();
 

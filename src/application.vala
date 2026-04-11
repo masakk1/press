@@ -39,20 +39,20 @@ public class Press.Application : Adw.Application {
         this.set_accels_for_action ("app.quit", { "<control>q" });
     }
 
-    public override void activate() {
+    public override void activate () {
         base.activate ();
         var win = this.active_window ?? new Press.Window (this);
         win.present ();
     }
 
-    private void on_about_action() {
+    private void on_about_action () {
         string[] developers = { "Masakk1" };
         var about = new Adw.AboutDialog () {
             application_name = "press",
             application_icon = "io.github.masakk1.press",
             developer_name = "Masakk1",
             // Note to Translators: Add your name here
-            translator_credits = _ ("translator-credits"),
+            translator_credits = _("translator-credits"),
             version = "0.1.0",
             developers = developers,
             copyright = "MIT © 2026 Masakk1",
@@ -61,11 +61,11 @@ public class Press.Application : Adw.Application {
         about.present (this.active_window);
     }
 
-    private void on_preferences_action() {
+    private void on_preferences_action () {
         message ("app.preferences action activated");
     }
 
-    private void open_presets_location() {
+    private void open_presets_location () {
         PresetsLoader loader = new Press.PresetsLoader ();
 
         try {
@@ -74,11 +74,9 @@ public class Press.Application : Adw.Application {
             Gtk.FileLauncher launcher = new Gtk.FileLauncher (presets_file.get_parent ());
 
             launcher.launch.begin (this.active_window, null, () => {});
-
-        } catch ( Press.PresetsLoaderError err ){
+        } catch (Press.PresetsLoaderError err) {
             // TODO: show a toast
             critical (@"Failed to find the presets file. Error: $(err.message)");
         }
     }
-
 }

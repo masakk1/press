@@ -46,7 +46,7 @@ From here on, duplicate that snippet, and change whatever parameter you'd like.
 
 ### Formats
 
-If you need a specific format and aren't familiar with [GStreamer](https://gstreamer.freedesktop.org/), feel free to request it by [opening an issue](https://github.com/masakk1/press/issues/new). Otherwise, welcome aboard!
+If you need a specific format and aren't familiar with [GStreamer](https://gstreamer.freedesktop.org/), feel free to request it by [opening an issue](https://github.com/masakk1/press/issues/new?template=2-feature-request). Otherwise, welcome aboard!
 
 This is an example for AAC, that outputs to m4a. It's quite simple at the moment.
 ```json

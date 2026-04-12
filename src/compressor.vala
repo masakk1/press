@@ -255,8 +255,6 @@ namespace Press.Compressor {
      * Compresses files on a directory, given the target quality
      */
     public class Compressor : Object {
-        // note: ^\.?(?<name>\/[^\/\n]+)+(?<ext>\.[A-z0-9\._-]+)$
-
         private Press.CompressConfig config;
 
         private File source_folder;
@@ -298,7 +296,6 @@ namespace Press.Compressor {
         }
 
         private void stop_process () {
-            // this.process_cancel = false;
             this.process_running = false;
         }
 
@@ -326,9 +323,6 @@ namespace Press.Compressor {
 
             var children = this.get_children (this.source_folder);
 
-
-            // Inside the try, every thread is added to the pool
-            // When the try {} block is done, it starts running them.
             try {
                 // TODO: if ThreadPool throws an error, it might not allow the yield to ever continue
                 var pool = new ThreadPool<File>.with_owned_data ((file) => {
@@ -341,7 +335,7 @@ namespace Press.Compressor {
                     }
                 }, (int) GLib.get_num_processors (), false);
 
-                foreach ( File file in children ) {
+                foreach (File file in children) {
                     pool.add (file);
                 }
 
@@ -379,8 +373,7 @@ namespace Press.Compressor {
             return_if_fail (folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY);
 
             try {
-                var enumerator = folder.enumerate_children (
-                                                            FileAttribute.STANDARD_NAME + ","
+                var enumerator = folder.enumerate_children (FileAttribute.STANDARD_NAME + ","
                                                             + FileAttribute.STANDARD_TYPE,
                                                             FileQueryInfoFlags.NONE,
                                                             null);
@@ -520,7 +513,7 @@ namespace Press.Compressor {
          *
          * The Discoverer will look for it for as long as ``discoverer_timeout``.
          *
-         * NOTE: A new Discoverer is created each time this method is called.
+         * A new Discoverer is created each time this method is called.
          */
         private void check_streams (File file, out bool is_audio, out int bitrate, out int samplerate) {
             is_audio = false;

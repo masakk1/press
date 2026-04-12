@@ -318,8 +318,8 @@ namespace Press.Compressor {
             this.source_folder = File.new_for_path (config.source_path);
             this.target_folder = File.new_for_path (config.target_path);
 
-            return_if_fail (this.source_folder.query_exists ());
-            return_if_fail (this.target_folder.query_exists ());
+            if (!source_folder.query_exists () || !this.target_folder.query_exists ())
+                return;
 
             this.start_process ();
 

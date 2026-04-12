@@ -135,7 +135,7 @@ namespace Press.Compressor {
         }
 
         /**
-         * Adds the parametrized filters to the pipleine, and links them along the sink.
+         * Adds the parametrized filters to the pipeline, and links them along the sink.
          */
         private void add_pipeline_filters ()
         throws CompressError.ELEMENT_NULL, CompressError.ELEMENT_LINK {

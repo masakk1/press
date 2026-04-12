@@ -446,8 +446,7 @@ namespace Press.Compressor {
                 }
 
                 try {
-                    target_file_path = this.file_extension_regex.replace (
-                                                                          target_file_path,
+                    target_file_path = this.file_extension_regex.replace (target_file_path,
                                                                           target_file_path.length,
                                                                           0,
                                                                           file_config.quality_config.format.extension);

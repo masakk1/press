@@ -522,8 +522,7 @@ namespace Press.Compressor {
 
             try {
                 var discoverer = new Gst.PbUtils.Discoverer (discoverer_timeout * Gst.SECOND);
-                string file_uri = file.get_uri ();
-                Gst.PbUtils.DiscovererInfo info = discoverer.discover_uri (file_uri);
+                Gst.PbUtils.DiscovererInfo info = discoverer.discover_uri (file.get_uri ());
 
                 var audio_streams = info.get_audio_streams ();
                 is_audio = audio_streams.length () > 0;

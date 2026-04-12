@@ -119,7 +119,9 @@ namespace Press.Compressor {
             samplerate_capsfilter = Gst.ElementFactory.make ("capsfilter", "samplerate-capsfilter");
             encoder = Gst.ElementFactory.make (this.encoder_name, "encoder");
 
-            Gst.Element?[] elements = { source, sink, decodebin, audioconvert, audioresample, samplerate_capsfilter, encoder };
+            Gst.Element?[] elements = {
+                source, sink, decodebin, audioconvert, audioresample, samplerate_capsfilter, encoder
+            };
             foreach (Gst.Element ? element in elements) {
                 if (elements == null)
                     throw new CompressError.ELEMENT_NULL (@"Failed to create a necessary element of pipeline");
@@ -243,8 +245,7 @@ namespace Press.Compressor {
                 try {
                     source.copy_async.end (res);
                 } catch (Error err) {
-                    warning (@"Error trying to copy "
-                             + @"$(source.get_path()) to $(target.get_path()). "
+                    warning (@"Error trying to copy $(source.get_path()) to $(target.get_path()). "
                              + @"Message: $(err.message)");
                 }
             });

@@ -286,7 +286,7 @@ namespace Press.Compressor {
                 this.file_extension_regex = new Regex ("(?<=\\.)[A-z0-9_-]+$");
                 this.discoverer_timeout = discoverer_timeout;
             } catch (Error err) {
-                error (@"Error initializing regex for file extensions. Cannot continue.\nMessage: $(err.message)");
+                error (@"Error initializing regex for file extensions. Cannot continue. - Message: $(err.message)");
             }
         }
 
@@ -571,6 +571,7 @@ namespace Press.Compressor {
 
                 size = info.get_size ();
             } catch (Error err) {
+                debug (@"Failed to get file size for $(file.get_path ()). Message: $(err.message)");
             }
 
             return size;

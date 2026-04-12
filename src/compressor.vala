@@ -235,8 +235,7 @@ namespace Press.Compressor {
          * {@inheritDoc}
          */
         public void process (File source, File target) {
-            source.copy_async.begin (
-                                     target,
+            source.copy_async.begin (target,
                                      FileCopyFlags.ALL_METADATA | FileCopyFlags.OVERWRITE,
                                      Priority.DEFAULT,
                                      null,
@@ -419,7 +418,7 @@ namespace Press.Compressor {
          *
          * If the detected samplerate is 0, the file will be ignored, as it's likely corrupted in some way.
          *
-         * For the reasons above, a message may be printed saying "Skipping file". Unless it's followed by an error 
+         * For the reasons above, a message may be printed saying "Skipping file". Unless it's followed by an error
          * message, it's likely fine.
          */
         private void process_file (File source_file) {
@@ -518,7 +517,7 @@ namespace Press.Compressor {
          * Creates a {@link Gst.PbUtils.Discoverer} and tries to look for audio properties in a {@link GLib.File}.
          *
          * If a samplerate is 0, this means the file is //likely corrupted//, or there was an issue parsing it.
-         * 
+         *
          * The Discoverer will look for it for as long as ``discoverer_timeout``.
          *
          * NOTE: A new Discoverer is created each time this method is called.
@@ -573,8 +572,7 @@ namespace Press.Compressor {
             int64 size = 0;
 
             try {
-                FileInfo info = file.query_info (
-                                                 FileAttribute.STANDARD_SIZE,
+                FileInfo info = file.query_info (FileAttribute.STANDARD_SIZE,
                                                  FileQueryInfoFlags.NONE,
                                                  null);
 

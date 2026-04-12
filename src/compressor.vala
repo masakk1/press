@@ -352,10 +352,6 @@ namespace Press.Compressor {
                 critical ("Error creating thread pool in compressor. %s", err.message);
             }
 
-            // if we are continuing because the process has been cancelled
-            if (this.process_cancel) {
-            }
-
             this.stop_process ();
         }
 

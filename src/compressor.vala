@@ -265,13 +265,8 @@ namespace Press {
          */
         public signal void working_on_file (string path);
 
-        private bool process_cancel = false;
-        private bool process_running = false;
-        public bool cancelled {
-            get {
-                return this.process_cancel;
-            }
-        }
+        private bool running = false;
+        public bool cancelled { get; private set; }
 
         private Regex file_extension_regex;
         private int discoverer_timeout;
@@ -285,18 +280,11 @@ namespace Press {
             try {
                 this.file_extension_regex = new Regex ("(?<=\\.)[A-z0-9_-]+$");
                 this.discoverer_timeout = discoverer_timeout;
+                running = false;
+                cancelled = false;
             } catch (Error err) {
                 error (@"Error initializing regex for file extensions. Cannot continue. - Message: $(err.message)");
             }
-        }
-
-        private void start_process () {
-            this.process_cancel = false;
-            this.process_running = true;
-        }
-
-        private void stop_process () {
-            this.process_running = false;
         }
 
         /**
@@ -310,7 +298,7 @@ namespace Press {
          * It uses multi threading to speed the process time.
          */
         public async void compress_library_async (Press.CompressConfig config) {
-            if (this.process_running)
+            if (running)
                 return;
 
             this.config = config;
@@ -321,14 +309,15 @@ namespace Press {
             if (!source_folder.query_exists () || !this.target_folder.query_exists ())
                 return;
 
-            this.start_process ();
+            running = true;
+            cancelled = false;
 
             var children = this.get_children (this.source_folder);
 
             try {
                 // TODO: if ThreadPool throws an error, it might not allow the yield to ever continue
                 var pool = new ThreadPool<File>.with_owned_data ((file) => {
-                    if (!this.process_cancel) {
+                    if (!cancelled) {
                         Idle.add (() => {
                             this.working_on_file (file.get_basename ());
                             return Source.REMOVE;
@@ -354,7 +343,7 @@ namespace Press {
                 critical ("Error creating thread pool in compressor. %s", err.message);
             }
 
-            this.stop_process ();
+            running = false;
         }
 
         /**
@@ -578,8 +567,8 @@ namespace Press {
          *
          * The running processes will gracefully finish, and not stopped mid-way.
          */
-        public void cancel_process () {
-            this.process_cancel = true;
+        public void cancel () {
+            cancelled = true;
         }
     }
 }

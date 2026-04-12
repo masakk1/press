@@ -135,7 +135,7 @@ public class Press.Window : Adw.ApplicationWindow {
     }
 
     private void cancel_compression () {
-        compressor.cancel_process ();
+        compressor.cancel ();
         change_working_on (_("cancelling"));
     }
 

@@ -39,6 +39,12 @@ namespace Press {
     };
 }
 
+/**
+ * The main configuration page. It actively updates a {@link Press.CompressConfig} as ``config``.
+ *
+ * There's an accessible {@link Gtk.Button} called ``compress_button``, which isn't hooked to anything. A third party
+ * should be in charge of adding the button logic.
+ */
 [GtkTemplate (ui = "/io/github/masakk1/press/config_page.ui")]
 public class Press.ConfigPage : Adw.NavigationPage {
     [GtkChild] private unowned Adw.ActionRow source_directory_row;
@@ -51,15 +57,40 @@ public class Press.ConfigPage : Adw.NavigationPage {
     [GtkChild] private unowned Adw.SwitchRow copy_noaudio_files_switch;
     [GtkChild] private unowned Gtk.Image samplerate_tooltip;
 
+    /**
+     * The button that should initialize the compression.
+     */
     [GtkChild] public unowned Gtk.Button compress_button;
 
+    /**
+     * A HashMap of formats with their keywords, as in the presets file. They keywords aren't the display names.
+     */
     public HashMap<string, Press.FormatConfig?> format_list;
+
+    /**
+     * A HashMap of Quality with their keywords, as in the presets file. They keywords aren't the display names.
+     */
     public HashMap<string, Press.QualityConfig?> quality_list;
+
+    /**
+     * The current configuration. ''Do not modify this object directly'', clone it (``.clone()``) if needed.
+     * 
+     * This property is updated as things are selected on the {@link Press.ConfigPage}.
+     */
     public Press.CompressConfig config { get; private set; }
 
+    /**
+     * Whether the selected {@link Press.QualityConfig} is a custom one.
+     */
     public bool is_custom_config { get; private set; }
+    /**
+     * The //keyword// of the custom {@link Press.QualityConfig}.
+     */
     private const string CUSTOM_QUALITY_NAME = "custom";
 
+    /**
+     * {@inheritDoc}
+     */
     construct {
         // Compress Config
         config = new Press.CompressConfig ();
@@ -93,6 +124,11 @@ public class Press.ConfigPage : Adw.NavigationPage {
         });
     }
 
+    /**
+     * Opens a {@link Gtk.FileDialog} to choose a folder from. Once done, calls ``callback``.
+     *
+     * The ``callback`` must take a {@link GLib.File}, the selected folder.
+     */
     private void select_directory (Func<File> callback) {
         var dialog = new Gtk.FileDialog ();
         dialog.select_folder.begin (null, null, (obj, res) => {
@@ -105,6 +141,11 @@ public class Press.ConfigPage : Adw.NavigationPage {
         });
     }
 
+    /**
+     * Use {@link Press.PresetsLoader} to load the presets.
+     *
+     * Sets the model for ``quality_preset_selection`` and ``custom_format_selection``.
+     */
     private void load_presets () {
         try {
             PresetsLoader loader = new Press.PresetsLoader ();
@@ -122,6 +163,11 @@ public class Press.ConfigPage : Adw.NavigationPage {
         }
     }
 
+    /**
+     * Update the custom quality with a modified quality.
+     *
+     * This is a helper function to modify the quality, since it's a struct.
+     */
     private void update_custom_quality (Press.QualityConfig new_quality) {
         quality_list[CUSTOM_QUALITY_NAME] = new_quality;
         config.quality_config = new_quality;

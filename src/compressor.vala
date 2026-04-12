@@ -24,7 +24,7 @@
  */
 using Gee;
 
-namespace Press.Compressor {
+namespace Press {
 
     errordomain CompressError {
         PIPELINE_FAIL,

@@ -49,14 +49,14 @@ public class Press.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Adw.ToastOverlay toast_overlay;
 
-    private Compressor.Compressor compressor;
+    private Compressor compressor;
 
     /**
      * Creates the main Window
      */
     public Window (Gtk.Application app) {
         application = app;
-        compressor = new Compressor.Compressor ();
+        compressor = new Compressor ();
 
 
         // Compress button
@@ -102,7 +102,7 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private void change_working_on (string job) {
         this.compressing_status_page.description = _("Working on %s").printf (job);
-}
+    }
 
     /**
      * Begins the compression.

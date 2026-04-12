@@ -69,6 +69,12 @@
   </screenshots>
 
   <releases>
+    <release version="0.2.0" date="2026-04-12">
+      <url type="details">https://github.com/masakk1/press/releases/v0.2.0</url>
+      <description translate="no">
+        <p>New Main Menu! - This update focused more on technical details.</p>
+      </description>
+    </release>
     <release version="0.1.0" date="2026-04-3">
       <url type="details">https://github.com/masakk1/press/releases/v0.1.0</url>
       <description translate="no">

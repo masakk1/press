@@ -60,7 +60,7 @@ public class Press.Application : Adw.Application {
             developer_name = "Masakk1",
             // Note to Translators: Add your name here
             translator_credits = _("translator-credits"),
-            version = "0.1.0",
+            version = "0.2.0",
             developers = developers,
             copyright = "MIT © 2026 Masakk1",
         };

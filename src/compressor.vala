@@ -312,7 +312,7 @@ namespace Press {
             running = true;
             cancelled = false;
 
-            var children = this.get_children (this.source_folder);
+            var children = get_children (this.source_folder);
 
             try {
                 // TODO: if ThreadPool throws an error, it might not allow the yield to ever continue
@@ -348,17 +348,12 @@ namespace Press {
 
         /**
          * Returns the children in a given folder.
+         *
+         * The children parameter is internal.
          */
-        private ArrayList<File> get_children (File folder) {
-            var children = new ArrayList<File> ();
-            this._get_children (folder, children);
-
-            return children;
-        }
-
-        private void _get_children (File folder, ArrayList<File> children = new ArrayList<File>()) {
-            return_if_fail (folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY);
-
+        private ArrayList<File> get_children (File folder, ArrayList<File> _children = new ArrayList<File>()) 
+        requires (folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY)
+        {
             try {
                 var enumerator = folder.enumerate_children (FileAttribute.STANDARD_NAME + ","
                                                             + FileAttribute.STANDARD_TYPE,
@@ -373,9 +368,9 @@ namespace Press {
                     bool is_folder = info.get_file_type () == FileType.DIRECTORY;
 
                     if (is_folder) {
-                        this._get_children (file, children);
+                        this.get_children (file, _children);
                     } else {
-                        children.add (file);
+                        _children.add (file);
                     }
 
                     info = enumerator.next_file ();
@@ -385,6 +380,8 @@ namespace Press {
             } catch (Error err) {
                 message ("Error: %s\n", err.message);
             }
+
+            return _children;
         }
 
         /**

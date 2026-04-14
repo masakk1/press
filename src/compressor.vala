@@ -422,15 +422,8 @@ namespace Press {
                 if (bitrate < config.quality_config.bitrate || samplerate < config.quality_config.samplerate) {
                     file_config = config.clone ();
 
-                    file_config.quality_config.bitrate =
-                        bitrate < file_config.quality_config.bitrate
-                            ? bitrate
-                            : file_config.quality_config.bitrate;
-
-                    file_config.quality_config.samplerate =
-                        samplerate < file_config.quality_config.samplerate
-                            ? samplerate
-                            : file_config.quality_config.samplerate;
+                    file_config.quality_config.bitrate = min (bitrate, file_config.quality_config.bitrate);
+                    file_config.quality_config.samplerate = min (samplerate, file_config.quality_config.samplerate);
                 }
 
                 try {
@@ -460,6 +453,13 @@ namespace Press {
             } else {
                 message (@"Skipping file: $(target_file.get_path())\n");
             }
+        }
+
+        /**
+         * Returns the lesser number of the two
+         */
+        private int min (int a, int b) {
+            return a < b ? a : b;
         }
 
         /**

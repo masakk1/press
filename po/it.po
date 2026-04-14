@@ -141,7 +141,7 @@ msgstr "Personalizzato"
 #. Note to Translators: Add your name here
 #: src/application.vala:55
 msgid "translator-credits"
-msgstr "translator-credits"
+msgstr "Albano Battistella"
 
 #: src/ui/window.ui:18 src/ui/config_page.ui:144
 msgid "Compress"

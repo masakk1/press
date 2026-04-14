@@ -356,7 +356,7 @@ namespace Press {
             return children;
         }
 
-        private void _get_children (File folder, ArrayList<File> children) {
+        private void _get_children (File folder, ArrayList<File> children = new ArrayList<File>()) {
             return_if_fail (folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY);
 
             try {
@@ -365,8 +365,8 @@ namespace Press {
                                                             FileQueryInfoFlags.NONE,
                                                             null);
 
-                FileInfo info;
-                while ((info = enumerator.next_file ()) != null) {
+                FileInfo info = enumerator.next_file ();
+                while (info != null) {
                     string name = info.get_name ();
                     File file = folder.get_child (name);
 
@@ -377,6 +377,8 @@ namespace Press {
                     } else {
                         children.add (file);
                     }
+
+                    info = enumerator.next_file ();
                 }
 
                 enumerator.close ();

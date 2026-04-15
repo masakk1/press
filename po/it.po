@@ -1,0 +1,296 @@
+# Italian translations for press package.
+# Copyright (C) 2026 THE press'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the press package.
+# Albano Battistella <albanobattistella@gmail.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: press\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-10 18:00+0000\n"
+"PO-Revision-Date: 2026-04-12 13:48+0200\n"
+"Last-Translator: Albano Battistella\n"
+"Language-Team: Italian\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: data/io.github.masakk1.press.desktop.in:2
+#: data/io.github.masakk1.press.metainfo.xml.in:7 src/ui/window.ui:6
+#: src/ui/config_page.ui:4
+msgid "Press"
+msgstr "Press"
+
+#: data/io.github.masakk1.press.desktop.in:3
+msgid "Audio Compressor"
+msgstr "Compressore audio"
+
+#: data/io.github.masakk1.press.desktop.in:9
+msgid "Compress;Song;Music;Audio;Library;Bulk;"
+msgstr "Comprimi;Canzone;Musica;Audio;Libreria;Massa;"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:8
+msgid "Music library compressor"
+msgstr "Compressore di librerie musicali"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:10
+msgid ""
+"Compress your whole music library with pre-made quality presets, in a few "
+"clicks."
+msgstr ""
+"Comprimi l'intera tua libreria musicale con preset di qualità predefiniti, in "
+"pochi clic."
+
+#: data/io.github.masakk1.press.metainfo.xml.in:12
+msgid "Easy to use interface"
+msgstr "Interfaccia facile da usare"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:13
+msgid "Select you whole library"
+msgstr "Seleziona la tua intera libreria"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:14
+msgid "Copy non-audio files over"
+msgstr "Copia file non audio nella destinazione"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:15
+msgid "Merge or replace existing files"
+msgstr "Unisci o sostituisci file esistenti"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:16
+msgid "Select from some pre-made quality presets"
+msgstr "Seleziona tra alcuni preset di qualità predefiniti"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:17
+msgid "Create your custom quality of choice"
+msgstr "Crea la tua qualità personalizzata preferita"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:18
+msgid "Read from counless formats with GStreamer"
+msgstr "Leggi da innumerevoli formati con GStreamer"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:23
+msgid "Masakk1"
+msgstr "Masakk1"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:52
+msgid "Landing page in desktop, with a light theme"
+msgstr "Pagina iniziale sul desktop, con tema chiaro"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:57
+msgid "Landing page in a desktop, in a dark theme"
+msgstr "Pagina iniziale sul desktop, con tema scuro"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:62
+msgid "Files are being compressed in a dark desktop window"
+msgstr "I file vengono compressi in una finestra desktop scura"
+
+#: data/io.github.masakk1.press.metainfo.xml.in:67
+msgid "Landing page in white, in phone format"
+msgstr "Pagina iniziale in bianco, in formato telefono"
+
+#: src/window.vala:99
+#, c-format
+msgid "Working on %s"
+msgstr "Lavoro su %s in corso"
+
+#: src/window.vala:123
+msgid "Selected folders don't exist"
+msgstr "Le cartelle selezionate non esistono"
+
+#: src/window.vala:129
+msgid "cancelling"
+msgstr "annullamento"
+
+#. Current preset names
+#. They must match the existing names on data/presets.json
+#: src/config_page.vala:32
+msgid "MPEG / mp3"
+msgstr "MPEG / mp3"
+
+#: src/config_page.vala:33
+msgid "AAC / m4a"
+msgstr "AAC / m4a"
+
+#: src/config_page.vala:34
+msgid "Vorbis / ogg"
+msgstr "Vorbis / ogg"
+
+#: src/config_page.vala:35
+msgid "High Quality"
+msgstr "Alta qualità"
+
+#: src/config_page.vala:36
+msgid "Standard Quality"
+msgstr "Qualità standard"
+
+#: src/config_page.vala:37
+msgid "Libre (ogg)"
+msgstr "Libre (ogg)"
+
+#: src/config_page.vala:38
+msgid "Compatibility"
+msgstr "Compatibilità"
+
+#: src/config_page.vala:114
+msgid "Custom"
+msgstr "Personalizzato"
+
+#. Note to Translators: Add your name here
+#: src/application.vala:55
+msgid "translator-credits"
+msgstr "Albano Battistella"
+
+#: src/ui/window.ui:18 src/ui/config_page.ui:144
+msgid "Compress"
+msgstr "Comprimi"
+
+#: src/ui/window.ui:27
+msgid "Cancel"
+msgstr "Annulla"
+
+#: src/ui/window.ui:37
+msgid "Compressing"
+msgstr "Compressione in corso"
+
+#: src/ui/window.ui:52
+msgid "Done"
+msgstr "Completato"
+
+#: src/ui/window.ui:65
+msgid "Back"
+msgstr "Indietro"
+
+#: src/ui/window.ui:74
+msgid "All done!"
+msgstr "Tutto fatto!"
+
+#: src/ui/window.ui:77
+msgid "Your files are now compressed at the target directory."
+msgstr "I tuoi file sono ora compressi nella cartella di destinazione."
+
+#: src/ui/window.ui:89
+msgid "Compress and replace all files?"
+msgstr "Comprimere e sostituire tutti i file?"
+
+#: src/ui/window.ui:92
+msgid ""
+"This will replace files with the same name at the destination directory."
+msgstr ""
+"Questo sostituirà i file con lo stesso nome nella cartella di destinazione."
+
+#: src/ui/window.ui:96 src/ui/window.ui:109
+msgid "_Cancel"
+msgstr "_Annulla"
+
+#: src/ui/window.ui:97
+msgid "_Compress"
+msgstr "_Comprimi"
+
+#: src/ui/window.ui:101
+msgid "Cancel compression?"
+msgstr "Annullare la compressione?"
+
+#: src/ui/window.ui:104
+msgid ""
+"This will stop the compression, but wont remove the changes already made."
+msgstr ""
+"Questo interromperà la compressione, ma non rimuoverà le modifiche già "
+"apportate."
+
+#: src/ui/window.ui:108
+msgid "_Continue"
+msgstr "_Continua"
+
+#: src/ui/shortcuts-dialog.ui:6
+msgid "Shortcuts"
+msgstr "Scorciatoie"
+
+#: src/ui/shortcuts-dialog.ui:9
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Mostra scorciatoie"
+
+#: src/ui/shortcuts-dialog.ui:15
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Esci"
+
+#: src/ui/config_page.ui:14
+msgid "Main Menu"
+msgstr "Menu principale"
+
+#: src/ui/config_page.ui:24
+msgid "Configure"
+msgstr "Configura"
+
+#: src/ui/config_page.ui:27
+msgid "Source Directory"
+msgstr "Cartella di origine"
+
+#: src/ui/config_page.ui:28 src/ui/config_page.ui:48
+msgid "/path/to/directory"
+msgstr "/percorso/della/cartella"
+
+#: src/ui/config_page.ui:47
+msgid "Target Directory"
+msgstr "Cartella di destinazione"
+
+#: src/ui/config_page.ui:67
+msgid "Quality Preset"
+msgstr "Preset di qualità"
+
+#: src/ui/config_page.ui:73
+msgid "Replace files on destination"
+msgstr "Sostituisci file nella destinazione"
+
+#: src/ui/config_page.ui:79
+msgid "Copy non-audio files on destination"
+msgstr "Copia file non audio nella destinazione"
+
+#: src/ui/config_page.ui:88
+msgid "Custom Target Quality"
+msgstr "Qualità di destinazione personalizzata"
+
+#: src/ui/config_page.ui:91
+msgid "Manually configure the maximum target quality."
+msgstr "Configura manualmente la qualità massima di destinazione."
+
+#: src/ui/config_page.ui:95
+msgid "Encoder / Format"
+msgstr "Codificatore / Formato"
+
+#: src/ui/config_page.ui:102
+msgid "Bitrate (Kbps)"
+msgstr "Bitrate (Kbps)"
+
+#: src/ui/config_page.ui:117
+msgid "Sample Rate (Hz)"
+msgstr "Frequenza di campionamento (Hz)"
+
+#: src/ui/config_page.ui:133
+msgid "Samplerates other than 44100 or 48000 won't work well"
+msgstr "Frequenze di campionamento diverse da 44100 o 48000 non funzionano bene"
+
+#: src/ui/config_page.ui:166
+msgid "_Open Presets Location"
+msgstr "_Apri posizione preset"
+
+#: src/ui/config_page.ui:170
+msgid "_Keyboard Shortcuts"
+msgstr "_Scorciatoie da tastiera"
+
+#: src/ui/config_page.ui:174
+msgid "_About Press"
+msgstr "_Informazioni su Press"
+
+#~ msgid "A caption"
+#~ msgstr "Una didascalia"
+
+#~ msgid "Other..."
+#~ msgstr "Altro..."
+
+#~ msgid "Libre (Standard w/Opus)"
+#~ msgstr "Libre (Standard con Ogg)"

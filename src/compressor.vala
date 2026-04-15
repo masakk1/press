@@ -26,7 +26,7 @@ using Gee;
 
 namespace Press {
 
-    errordomain CompressError {
+    public errordomain CompressError {
         PIPELINE_FAIL,
         ELEMENT_NULL,
         ELEMENT_LINK,
@@ -48,7 +48,7 @@ namespace Press {
          * @param source An existing file to process
          * @param target The file to write to
          */
-        public abstract void process (File source, File target);
+        public abstract void process (File source, File target) throws CompressError.PROCESS;
     }
 
     /**
@@ -78,7 +78,8 @@ namespace Press {
         /**
          * {@inheritDoc}
          */
-        private void process (File source, File target) {
+        private void process (File source, File target)
+        throws CompressError.PROCESS {
             try {
                 pipeline = create_pipeline ("convert-pipeline-" + source.get_basename ());
 
@@ -92,7 +93,7 @@ namespace Press {
                 play ();
                 pipeline.set_state (Gst.State.NULL);
             } catch (CompressError err) {
-                critical (@"Error trying to compress $(source.get_path()) - $(err.code): $(err.message)");
+                throw new CompressError.PROCESS (@"Failed to process file: $(err.message)");
             }
 
             pipeline = null;
@@ -237,7 +238,8 @@ namespace Press {
         /**
          * {@inheritDoc}
          */
-        public void process (File source, File target) {
+        public void process (File source, File target)
+        throws CompressError.PROCESS {
             source.copy_async.begin (target,
                                      FileCopyFlags.ALL_METADATA | FileCopyFlags.OVERWRITE,
                                      Priority.DEFAULT,
@@ -247,8 +249,7 @@ namespace Press {
                 try {
                     source.copy_async.end (res);
                 } catch (Error err) {
-                    warning (@"Error trying to copy $(source.get_path()) to $(target.get_path()). "
-                             + @"Message: $(err.message)");
+                    throw new CompressError.PROCESS (@"Failed to copy: $(err.message)");
                 }
             });
         }
@@ -332,6 +333,8 @@ namespace Press {
                             process_file (file);
                         } catch (CompressError.IGNORED_FILE err) {
                             debug (@"Skipping $(file.get_path ()). Reason: $(err.message)");
+                        } catch (CompressError.PROCESS err) {
+                            warning (@"Failed during processing on $(file.get_path ()). Error: $(err.message)");
                         } catch (Error err) {
                             warning (@"Failed to process $(file.get_path ()). Error: $(err.message)");
                         }

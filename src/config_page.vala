@@ -92,7 +92,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     [GtkCallback]
     private void on_source_directory_clicked (Gtk.Button button) {
-        this.select_directory ((folder) => {
+        select_directory ((folder) => {
             string path = folder != null ? folder.get_path () : "nothing";
 
             config.source_path = path;
@@ -102,7 +102,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     [GtkCallback]
     private void on_target_directory_clicked (Gtk.Button button) {
-        this.select_directory ((folder) => {
+        select_directory ((folder) => {
             string? path = folder != null ? folder.get_path () : "nothing";
 
             config.target_path = path;

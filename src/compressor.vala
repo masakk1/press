@@ -220,9 +220,21 @@ namespace Press {
          *
          * It is called play, because the pipeline says this is the "PLAYING" state.
          */
-        private void play () {
+        private void play ()
+        throws CompressError.PROCESS {
             Gst.Bus bus = pipeline.get_bus ();
-            bus.timed_pop_filtered (Gst.CLOCK_TIME_NONE, Gst.MessageType.ERROR | Gst.MessageType.EOS);
+            Gst.Message msg = bus.timed_pop_filtered (Gst.CLOCK_TIME_NONE, Gst.MessageType.ERROR | Gst.MessageType.EOS);
+
+            if (msg != null && msg.type == Gst.MessageType.ERROR) {
+                GLib.Error err;
+                string debug_info;
+                msg.parse_error (out err, out debug_info);
+
+                throw new CompressError.PROCESS (@"Failed to convert. "
+                                                 + @" - Element: $(msg.src.name)."
+                                                 + @" - Error: $(err.message)"
+                                                 + @" - Debug info: $debug_info");
+            }
 
             bus = null;
         }

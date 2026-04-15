@@ -240,18 +240,11 @@ namespace Press {
          */
         public void process (File source, File target)
         throws CompressError.PROCESS {
-            source.copy_async.begin (target,
-                                     FileCopyFlags.ALL_METADATA | FileCopyFlags.OVERWRITE,
-                                     Priority.DEFAULT,
-                                     null,
-                                     null,
-                                     (obj, res) => {
-                try {
-                    source.copy_async.end (res);
-                } catch (Error err) {
-                    throw new CompressError.PROCESS (@"Failed to copy: $(err.message)");
-                }
-            });
+            try {
+                source.copy (target, FileCopyFlags.ALL_METADATA | FileCopyFlags.OVERWRITE);
+            } catch (Error err) {
+                throw new CompressError.PROCESS (@"Failed to copy: $(err.message)");
+            }
         }
     }
 

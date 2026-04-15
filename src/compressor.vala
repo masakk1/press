@@ -29,7 +29,10 @@ namespace Press {
     errordomain CompressError {
         PIPELINE_FAIL,
         ELEMENT_NULL,
-        ELEMENT_LINK
+        ELEMENT_LINK,
+        IGNORED_FILE,
+        PRE_PROCESS,
+        PROCESS
     }
 
     /**
@@ -322,7 +325,16 @@ namespace Press {
                             this.working_on_file (file.get_basename ());
                             return Source.REMOVE;
                         });
-                        this.process_file (file);
+
+                        debug (@"Processing file $(file.get_path ())");
+
+                        try {
+                            process_file (file);
+                        } catch (CompressError.IGNORED_FILE err) {
+                            debug (@"Skipping $(file.get_path ()). Reason: $(err.message)");
+                        } catch (Error err) {
+                            warning (@"Failed to process $(file.get_path ()). Error: $(err.message)");
+                        }
                     }
                 }, (int) GLib.get_num_processors (), false);
 
@@ -351,8 +363,8 @@ namespace Press {
          *
          * The children parameter is internal.
          */
-        private ArrayList<File> get_children (File folder, ArrayList<File> _children = new ArrayList<File>()) 
-        requires (folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY)
+        private ArrayList<File> get_children (File folder, ArrayList<File> _children = new ArrayList<File> ())
+        requires (folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY) // vala-lint:block-opening-brace-space-before
         {
             try {
                 var enumerator = folder.enumerate_children (FileAttribute.STANDARD_NAME + ","
@@ -388,7 +400,10 @@ namespace Press {
          * Processes a {@link GLib.File}. Uses {@link Press.Compressor.FileConverter} for conversions,
          * and {@link Press.Compressor.FileDuplicator} for file copies.
          *
-         * The duplicator will be called for files that don't have audio, and  only if ``copy_noaudio_files`` is
+         * Will throw ``CompressError.IGNORED_FILE`` if the file didn't meet the criteria, or other
+         * {@link Press.CompressError} if the operation finished unsuccessfully.
+         *
+         * The duplicator will be called for files that don't have audio, and only if ``copy_noaudio_files`` is
          * enabled in the ``config``.
          *
          * The target bitrate and samplerate, are limited to the existing properties for each file. If bitrate is
@@ -396,11 +411,9 @@ namespace Press {
          * File.
          *
          * If the detected samplerate is 0, the file will be ignored, as it's likely corrupted in some way.
-         *
-         * For the reasons above, a message may be printed saying "Skipping file". Unless it's followed by an error
-         * message, it's likely fine.
          */
-        private void process_file (File source_file) {
+        private void process_file (File source_file)
+        throws Error, RegexError, CompressError {
             string source_folder_path = this.source_folder.get_path ();
             string target_folder_path = this.target_folder.get_path ();
             string source_file_path = source_file.get_path ();
@@ -412,46 +425,38 @@ namespace Press {
             int bitrate;
             int samplerate;
             check_streams (source_file, out is_audio, out bitrate, out samplerate);
-            Press.CompressConfig file_config = config;
+            Press.CompressConfig file_config = config.clone ();
 
             if (is_audio) {
-                if (samplerate == 0) {
-                    critical (@"Samplerate of file $(source_file.get_path()) is 0. It's likely corrupted.");
-                    return;
-                }
-                if (bitrate < config.quality_config.bitrate || samplerate < config.quality_config.samplerate) {
-                    file_config = config.clone ();
+                if (samplerate == 0)
+                    throw new CompressError.PRE_PROCESS (@"Samplerate of file $(source_file.get_path()) is 0. "
+                                                         + "It's likely corrupted.");
 
+                if (bitrate < config.quality_config.bitrate || samplerate < config.quality_config.samplerate) {
                     file_config.quality_config.bitrate = min (bitrate, file_config.quality_config.bitrate);
                     file_config.quality_config.samplerate = min (samplerate, file_config.quality_config.samplerate);
                 }
 
-                try {
-                    target_file_path = this.file_extension_regex.replace (target_file_path,
-                                                                          target_file_path.length,
-                                                                          0,
-                                                                          file_config.quality_config.format.extension);
-                } catch (Error err) {
-                    critical (@"Error trying to change extension name. Message: $(err.message)");
-                    return;
-                }
+                target_file_path = this.file_extension_regex.replace (target_file_path,
+                                                                      target_file_path.length,
+                                                                      0,
+                                                                      file_config.quality_config.format.extension);
             }
 
             File target_file = File.new_for_path (target_file_path);
-            bool valid_folder = this.ensure_directory_exists (target_file);
+            ensure_directory_exists (target_file);
             bool file_exists = target_file.query_exists ();
 
+            if (file_exists && !file_config.replace_destination_files)
+                throw new CompressError.IGNORED_FILE ("File exists, and replace destination files is disabled");
+
             FileHandler file_handler;
-            if (valid_folder && (file_config.replace_destination_files || !file_exists)) {
-                if (is_audio) {
-                    file_handler = new FileConverter (file_config.quality_config);
-                    file_handler.process (source_file, target_file);
-                } else if (file_config.copy_noaudio_files) {
-                    file_handler = new FileDuplicator ();
-                    file_handler.process (source_file, target_file);
-                }
-            } else {
-                message (@"Skipping file: $(target_file.get_path())\n");
+            if (is_audio) {
+                file_handler = new FileConverter (file_config.quality_config);
+                file_handler.process (source_file, target_file);
+            } else if (file_config.copy_noaudio_files) {
+                file_handler = new FileDuplicator ();
+                file_handler.process (source_file, target_file);
             }
         }
 
@@ -465,30 +470,16 @@ namespace Press {
         /**
          * Makes sure the directory for a target file exists. Will create folders as necessary.
          *
-         * Will return whether the operation was successful or not.
-         *
-         * @return Whether the operation was successful.
+         * Fails if the operation was unsuccessful.
          */
-        private bool ensure_directory_exists (File target_file) {
+        private void ensure_directory_exists (File target_file)
+        throws Error {
             File? target_parent = target_file.get_parent ();
 
-            bool exists = false;
-
             // NOTE: parent can be null for '/'
-            if (target_parent != null) {
-                exists = target_parent.query_exists (null);
-
-                if (!exists) {
-                    try {
-                        target_parent.make_directory_with_parents (null);
-                        exists = true;
-                    } catch (Error err) {
-                        warning (@"Error creating folders for target file. Message: $(err.message)");
-                    }
-                }
+            if (target_parent != null && !target_parent.query_exists ()) {
+                target_parent.make_directory_with_parents ();
             }
-
-            return exists;
         }
 
         /**

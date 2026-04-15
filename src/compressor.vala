@@ -287,8 +287,8 @@ namespace Press {
          */
         public Compressor (int discoverer_timeout = 3) {
             try {
-                this.file_extension_regex = new Regex ("(?<=\\.)[A-z0-9_-]+$");
-                this.discoverer_timeout = discoverer_timeout;
+                file_extension_regex = new Regex ("(?<=\\.)[A-z0-9_-]+$");
+                discoverer_timeout = discoverer_timeout;
                 running = false;
                 cancelled = false;
             } catch (Error err) {
@@ -312,16 +312,16 @@ namespace Press {
 
             this.config = config;
 
-            this.source_folder = File.new_for_path (config.source_path);
-            this.target_folder = File.new_for_path (config.target_path);
+            source_folder = File.new_for_path (config.source_path);
+            target_folder = File.new_for_path (config.target_path);
 
-            if (!source_folder.query_exists () || !this.target_folder.query_exists ())
+            if (!source_folder.query_exists () || !target_folder.query_exists ())
                 return;
 
             running = true;
             cancelled = false;
 
-            var children = get_children (this.source_folder);
+            var children = get_children (source_folder);
 
             try {
                 var pool = new ThreadPool<File>.with_owned_data ((file) => {
@@ -387,7 +387,7 @@ namespace Press {
                     bool is_folder = info.get_file_type () == FileType.DIRECTORY;
 
                     if (is_folder) {
-                        this.get_children (file, _children);
+                        get_children (file, _children);
                     } else {
                         _children.add (file);
                     }
@@ -421,8 +421,8 @@ namespace Press {
          */
         private void process_file (File source_file)
         throws Error, RegexError, CompressError {
-            string source_folder_path = this.source_folder.get_path ();
-            string target_folder_path = this.target_folder.get_path ();
+            string source_folder_path = source_folder.get_path ();
+            string target_folder_path = target_folder.get_path ();
             string source_file_path = source_file.get_path ();
 
             string relative_path = source_file_path.replace (source_folder_path, "");
@@ -444,10 +444,10 @@ namespace Press {
                     file_config.quality_config.samplerate = min (samplerate, file_config.quality_config.samplerate);
                 }
 
-                target_file_path = this.file_extension_regex.replace (target_file_path,
-                                                                      target_file_path.length,
-                                                                      0,
-                                                                      file_config.quality_config.format.extension);
+                target_file_path = file_extension_regex.replace (target_file_path,
+                                                                 target_file_path.length,
+                                                                 0,
+                                                                 file_config.quality_config.format.extension);
             }
 
             File target_file = File.new_for_path (target_file_path);

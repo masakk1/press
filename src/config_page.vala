@@ -51,12 +51,12 @@ public class Press.ConfigPage : Adw.NavigationPage {
     /**
      * A HashMap of formats with their keywords, as in the presets file. They keywords aren't the display names.
      */
-    public HashMap<string, Press.FormatConfig?> format_list;
+    public HashMap<string, Press.FormatConfig?> format_list { get; private set; }
 
     /**
      * A HashMap of Quality with their keywords, as in the presets file. They keywords aren't the display names.
      */
-    public HashMap<string, Press.QualityConfig?> quality_list;
+    public HashMap<string, Press.QualityConfig?> quality_list { get; private set; }
 
     /**
      * The current configuration. ''Do not modify this object directly'', clone it (``.clone()``) if needed.

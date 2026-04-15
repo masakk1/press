@@ -288,7 +288,7 @@ namespace Press {
         public Compressor (int discoverer_timeout = 3) {
             try {
                 file_extension_regex = new Regex ("(?<=\\.)[A-z0-9_-]+$");
-                discoverer_timeout = discoverer_timeout;
+                this.discoverer_timeout = discoverer_timeout;
                 running = false;
                 cancelled = false;
             } catch (Error err) {

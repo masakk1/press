@@ -324,7 +324,6 @@ namespace Press {
             var children = get_children (this.source_folder);
 
             try {
-                // TODO: if ThreadPool throws an error, it might not allow the yield to ever continue
                 var pool = new ThreadPool<File>.with_owned_data ((file) => {
                     if (!cancelled) {
                         Idle.add (() => {

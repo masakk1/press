@@ -25,20 +25,6 @@
 using Gee;
 using Json;
 
-namespace Press {
-    // Current preset names
-    // They must match the existing names on data/presets.json
-    const string[] TRANSLATABLE_PRESET_NAMES = {
-        N_ ("MPEG / mp3"),
-        N_ ("AAC / m4a"),
-        N_ ("Vorbis / ogg"),
-        N_ ("High Quality"),
-        N_ ("Standard Quality"),
-        N_ ("Libre (ogg)"),
-        N_ ("Compatibility"),
-    };
-}
-
 /**
  * The main configuration page. It actively updates a {@link Press.CompressConfig} as ``config``.
  *
@@ -74,7 +60,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     /**
      * The current configuration. ''Do not modify this object directly'', clone it (``.clone()``) if needed.
-     * 
+     *
      * This property is updated as things are selected on the {@link Press.ConfigPage}.
      */
     public Press.CompressConfig config { get; private set; }

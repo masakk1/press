@@ -109,3 +109,6 @@ core.*
 
 # Test results
 test-results/
+
+# Generated Documentation
+docs/press/

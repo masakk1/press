@@ -107,13 +107,12 @@ public class Press.Window : Adw.ApplicationWindow {
 
         var source_folder = File.new_for_path (config.source_path);
         var target_folder = File.new_for_path (config.target_path);
-        bool folders_exist = source_folder.query_exists (null) && target_folder.query_exists (null);
+        bool folders_exist = source_folder.query_exists () && target_folder.query_exists ();
 
         if (folders_exist) {
             navigation_view.push_by_tag ("compressing_page");
 
-            compressor.compress_library_async.begin (
-                                                     config, (obj, res) => {
+            compressor.compress_library_async.begin (config, (obj, res) => {
                 compressor.compress_library_async.end (res);
 
                 if (compressor.cancelled)

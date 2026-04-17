@@ -29,25 +29,17 @@
 [GtkTemplate (ui = "/io/github/masakk1/press/window.ui")]
 public class Press.Window : Adw.ApplicationWindow {
 
-    [GtkChild]
-    private unowned Press.ConfigPage config_page;
+    [GtkChild] private unowned Press.ConfigPage config_page;
 
-    [GtkChild]
-    private unowned Adw.AlertDialog confirm_dialog;
-    [GtkChild]
-    private unowned Gtk.Button cancel_compressing_button;
-    [GtkChild]
-    private unowned Adw.AlertDialog cancel_dialog;
-    [GtkChild]
-    private unowned Adw.StatusPage compressing_status_page;
-    [GtkChild]
-    private unowned Gtk.Button done_page_back_button;
+    [GtkChild] private unowned Adw.AlertDialog confirm_dialog;
+    [GtkChild] private unowned Gtk.Button cancel_compressing_button;
+    [GtkChild] private unowned Adw.AlertDialog cancel_dialog;
+    [GtkChild] private unowned Adw.StatusPage compressing_status_page;
+    [GtkChild] private unowned Gtk.Button done_page_back_button;
 
-    [GtkChild]
-    private unowned Adw.NavigationView navigation_view;
+    [GtkChild] private unowned Adw.NavigationView navigation_view;
 
-    [GtkChild]
-    private unowned Adw.ToastOverlay toast_overlay;
+    [GtkChild] private unowned Adw.ToastOverlay toast_overlay;
 
     private Compressor compressor;
 

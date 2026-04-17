@@ -66,8 +66,7 @@ namespace Press {
             try {
                 parser.load_from_file (presets_file.get_path ());
             } catch (Error err) {
-                throw new PresetsLoaderError.ERROR_LOADING_FILE (
-                                                                 @"Could not read file from path "
+                throw new PresetsLoaderError.ERROR_LOADING_FILE (@"Could not read file from path "
                                                                  + @"$(presets_file.get_path ()). File should exists.");
             }
 
@@ -166,11 +165,9 @@ namespace Press {
                 Press.FormatConfig? format = format_list[quality_obj.get_string_member ("format")];
 
                 if (format == null) {
-                    warning (
-                             "Couldn't load quality preset %s. Format %s doesn't exist.",
+                    warning ("Couldn't load quality preset %s. Format %s doesn't exist.",
                              quality_obj.get_string_member ("name"),
-                             quality_obj.get_string_member ("format")
-                    );
+                             quality_obj.get_string_member ("format"));
                 } else {
                     Press.QualityConfig quality = Press.QualityConfig () {
                         name = _(quality_obj.get_string_member ("name")),

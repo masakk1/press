@@ -9,7 +9,7 @@ you can use GNOME Builder for a more straight-forward experience.
 
 ### Native, with Meson
 
-The inteded development environment, specially with [Development containers](https://containers.dev).
+The intended development environment, specially with [Development containers](https://containers.dev).
 
 But you can check [Dependencies](#dependencies) for local development.
 
@@ -96,6 +96,38 @@ just install
 ```
 
 ## Contributors Guide
+
+### Code Style Guidelines
+
+
+For this project, use [Elementary OS' Guidelines](https://docs.elementary.io/develop/writing-apps/code-style) with some extra steps:
+
+1. String interpolation `@"word $variable $(obj.call ())"` is generally more readable than `.printf()`. With some exceptions:
+    - Very long strings — such as error messages
+    - Number formatting
+2. Probably OK to use `as` in scenarios where you absolutely know that's what it is, like a `[GtkCallback]`
+3. Try to use `this.` sparingly.
+4. For `[GtkChild]` tags when declaring children, write the tag in the same line as the declaration.
+	```vala
+	[GtkChild] private unowned Adw.ActionRow source_directory_row;
+	```
+    - This does NOT include other tags, like `[GtkCallback]` 
+5. Try to avoid using `constructor {}` syntax, unless it is necessary (i.e. a template)
+6. Document all public methods and sometimes properties. 
+    - Private methods should be documented, but it's optional if they aren't called, or are descriptive enough. (i.e. on_button_pressed isn't called)
+    - Private attributes/properties aren't required to have comments
+    - Public properties don't absolutely need it, but it is recommended
+    - When modifying a method, remember to also update it's existing in-code documentation
+8. Format your code, preferably before a commit. Checkout [formatting](#formatting)
+9. You should avoid stray values, defining constants are preferred.
+    - It's hard to change it afterwards
+    - It's hard to understand what it is
+    - Except for error messages!
+    - OK `const string CUSTOM_NAME = "CustomName"`
+    - NOT `names["CustomName"].call()`
+    - NOT `num * 3.1415`
+        - Instead: `const double PI = 3.1415` and `num * PI`
+    - You don't have to enforce it strictly, but it certainly helps
 
 ### Formatting
 This project uses _EditorConfig_ and `vala-lint`.

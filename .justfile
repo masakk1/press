@@ -1,4 +1,5 @@
 prefix := "/usr"
+docdir := "./docs/press"
 
 # Default recipe
 default:
@@ -26,6 +27,28 @@ lint:
 
 lint-fix:
     io.elementary.vala-lint src -c vala-lint.conf --fix
+
+# == Documentation ==
+
+# Clean and create the generated documentation directory
+docs-setup:
+    rm -r {{docdir}}
+    mkdir {{docdir}}
+
+docs-generate:
+    valadoc --force --package-name=press --package-version=0.2.0 \
+    --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 --pkg=gee-0.8 \
+    --pkg=gstreamer-1.0 --pkg=gstreamer-pbutils-1.0 \
+    -o {{docdir}} \
+    src/*.vala src/*.vapi \
+    --private
+
+# Serves the page in port 3000
+docs-serve port="3000":
+    npx serve {{docdir}} -p {{port}}
+
+# Quick macro to clean, generate, and serve
+docs: docs-setup docs-generate docs-serve
 
 # == Running ==
 

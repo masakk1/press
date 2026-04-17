@@ -75,6 +75,7 @@ namespace Press {
             parse_presets_file_formats (root_obj);
             parse_presets_file_quality (root_obj);
 
+            /* Custom quality requires at least one */
             assert (format_list.size > 0);
             assert (quality_list.size > 0);
         }
@@ -87,7 +88,6 @@ namespace Press {
          * @param display_name should be sent already translated
          */
         public void add_custom_quality (string name, string display_name) {
-            // Will error unless there's an mp3 format
             quality_list[name] = { display_name, null, 128, 44100 };
         }
 

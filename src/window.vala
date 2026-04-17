@@ -53,22 +53,22 @@ public class Press.Window : Adw.ApplicationWindow {
 
         // Compress button
         config_page.compress_button.clicked.connect (compress_button_clicked);
-        confirm_dialog.response.connect (this.answer_confirm_dialog);
+        confirm_dialog.response.connect (answer_confirm_dialog);
 
         // In compressing page
-        cancel_compressing_button.clicked.connect (this.open_cancel_dialog);
-        cancel_dialog.response.connect (this.answer_cancel_dialog);
-        this.compressor.working_on_file.connect (this.change_working_on);
+        cancel_compressing_button.clicked.connect (open_cancel_dialog);
+        cancel_dialog.response.connect (answer_cancel_dialog);
+        compressor.working_on_file.connect (change_working_on);
 
         // In done page
-        done_page_back_button.clicked.connect (this.return_config_page);
+        done_page_back_button.clicked.connect (return_config_page);
     }
 
     private void compress_button_clicked () {
         if (config_page.config.replace_destination_files) {
-            this.open_confirm_dialog ();
+            open_confirm_dialog ();
         } else {
-            this.begin_compression ();
+            begin_compression ();
         }
     }
 
@@ -78,7 +78,7 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private void answer_confirm_dialog (string response) {
         if (response == "compress") {
-            this.begin_compression ();
+            begin_compression ();
         }
     }
 
@@ -88,12 +88,12 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private void answer_cancel_dialog (string response) {
         if (response == "cancel") {
-            this.cancel_compression ();
+            cancel_compression ();
         }
     }
 
     private void change_working_on (string job) {
-        this.compressing_status_page.description = _("Working on %s").printf (job);
+        compressing_status_page.description = _("Working on %s").printf (job);
     }
 
     /**
@@ -112,9 +112,9 @@ public class Press.Window : Adw.ApplicationWindow {
         if (folders_exist) {
             navigation_view.push_by_tag ("compressing_page");
 
-            this.compressor.compress_library_async.begin (
-                                                          config, (obj, res) => {
-                this.compressor.compress_library_async.end (res);
+            compressor.compress_library_async.begin (
+                                                     config, (obj, res) => {
+                compressor.compress_library_async.end (res);
 
                 if (compressor.cancelled)
                     navigation_view.pop_to_tag ("config_page");

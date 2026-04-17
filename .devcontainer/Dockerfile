@@ -10,7 +10,10 @@ RUN apk update && apk add --no-cache \
     gstreamer-dev gst-plugins-base-dev \
     uncrustify gdb just \
     vala vala-language-server vala-lint \
-    gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
+    gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav \
+    vala-doc graphviz npm
+
+RUN npm install -g serve
 
 # Create user adw, grant root access, remove password
 RUN useradd -m -s /bin/bash adw && \

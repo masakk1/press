@@ -24,12 +24,15 @@
  */
 using Gee;
 
-namespace Press.Compressor {
+namespace Press {
 
-    errordomain CompressError {
+    public errordomain CompressError {
         PIPELINE_FAIL,
         ELEMENT_NULL,
-        ELEMENT_LINK
+        ELEMENT_LINK,
+        IGNORED_FILE,
+        PRE_PROCESS,
+        PROCESS
     }
 
     /**
@@ -45,7 +48,7 @@ namespace Press.Compressor {
          * @param source An existing file to process
          * @param target The file to write to
          */
-        public abstract void process (File source, File target);
+        public abstract void process (File source, File target) throws CompressError.PROCESS;
     }
 
     /**
@@ -75,7 +78,8 @@ namespace Press.Compressor {
         /**
          * {@inheritDoc}
          */
-        private void process (File source, File target) {
+        private void process (File source, File target)
+        throws CompressError.PROCESS {
             try {
                 pipeline = create_pipeline ("convert-pipeline-" + source.get_basename ());
 
@@ -89,7 +93,7 @@ namespace Press.Compressor {
                 play ();
                 pipeline.set_state (Gst.State.NULL);
             } catch (CompressError err) {
-                critical (@"Error trying to compress $(source.get_path()) - $(err.code): $(err.message)");
+                throw new CompressError.PROCESS (@"Failed to process file: $(err.message)");
             }
 
             pipeline = null;
@@ -119,7 +123,9 @@ namespace Press.Compressor {
             samplerate_capsfilter = Gst.ElementFactory.make ("capsfilter", "samplerate-capsfilter");
             encoder = Gst.ElementFactory.make (this.encoder_name, "encoder");
 
-            Gst.Element?[] elements = { source, sink, decodebin, audioconvert, audioresample, samplerate_capsfilter, encoder };
+            Gst.Element?[] elements = {
+                source, sink, decodebin, audioconvert, audioresample, samplerate_capsfilter, encoder
+            };
             foreach (Gst.Element ? element in elements) {
                 if (elements == null)
                     throw new CompressError.ELEMENT_NULL (@"Failed to create a necessary element of pipeline");
@@ -135,7 +141,7 @@ namespace Press.Compressor {
         }
 
         /**
-         * Adds the parametrized filters to the pipleine, and links them along the sink.
+         * Adds the parametrized filters to the pipeline, and links them along the sink.
          */
         private void add_pipeline_filters ()
         throws CompressError.ELEMENT_NULL, CompressError.ELEMENT_LINK {
@@ -214,9 +220,21 @@ namespace Press.Compressor {
          *
          * It is called play, because the pipeline says this is the "PLAYING" state.
          */
-        private void play () {
+        private void play ()
+        throws CompressError.PROCESS {
             Gst.Bus bus = pipeline.get_bus ();
-            bus.timed_pop_filtered (Gst.CLOCK_TIME_NONE, Gst.MessageType.ERROR | Gst.MessageType.EOS);
+            Gst.Message msg = bus.timed_pop_filtered (Gst.CLOCK_TIME_NONE, Gst.MessageType.ERROR | Gst.MessageType.EOS);
+
+            if (msg != null && msg.type == Gst.MessageType.ERROR) {
+                GLib.Error err;
+                string debug_info;
+                msg.parse_error (out err, out debug_info);
+
+                throw new CompressError.PROCESS (@"Failed to convert. "
+                                                 + @" - Element: $(msg.src.name)."
+                                                 + @" - Error: $(err.message)"
+                                                 + @" - Debug info: $debug_info");
+            }
 
             bus = null;
         }
@@ -232,22 +250,13 @@ namespace Press.Compressor {
         /**
          * {@inheritDoc}
          */
-        public void process (File source, File target) {
-            source.copy_async.begin (
-                                     target,
-                                     FileCopyFlags.ALL_METADATA | FileCopyFlags.OVERWRITE,
-                                     Priority.DEFAULT,
-                                     null,
-                                     null,
-                                     (obj, res) => {
-                try {
-                    source.copy_async.end (res);
-                } catch (Error err) {
-                    warning (@"Error trying to copy "
-                             + @"$(source.get_path()) to $(target.get_path()). "
-                             + @"Message: $(err.message)");
-                }
-            });
+        public void process (File source, File target)
+        throws CompressError.PROCESS {
+            try {
+                source.copy (target, FileCopyFlags.ALL_METADATA | FileCopyFlags.OVERWRITE);
+            } catch (Error err) {
+                throw new CompressError.PROCESS (@"Failed to copy: $(err.message)");
+            }
         }
     }
 
@@ -255,8 +264,6 @@ namespace Press.Compressor {
      * Compresses files on a directory, given the target quality
      */
     public class Compressor : Object {
-        // note: ^\.?(?<name>\/[^\/\n]+)+(?<ext>\.[A-z0-9\._-]+)$
-
         private Press.CompressConfig config;
 
         private File source_folder;
@@ -267,13 +274,8 @@ namespace Press.Compressor {
          */
         public signal void working_on_file (string path);
 
-        private bool process_cancel = false;
-        private bool process_running = false;
-        public bool cancelled {
-            get {
-                return this.process_cancel;
-            }
-        }
+        private bool running = false;
+        private bool cancelled = false;
 
         private Regex file_extension_regex;
         private int discoverer_timeout;
@@ -285,63 +287,61 @@ namespace Press.Compressor {
          */
         public Compressor (int discoverer_timeout = 3) {
             try {
-                this.file_extension_regex = new Regex ("(?<=\\.)[A-z0-9_-]+$");
+                file_extension_regex = new Regex ("(?<=\\.)[A-z0-9_-]+$");
                 this.discoverer_timeout = discoverer_timeout;
             } catch (Error err) {
-                error (@"Error initializing regex for file extensions. Cannot continue.\nMessage: $(err.message)");
+                error (@"Error initializing regex for file extensions. Cannot continue. - Message: $(err.message)");
             }
         }
 
-        private void start_process () {
-            this.process_cancel = false;
-            this.process_running = true;
-        }
-
-        private void stop_process () {
-            // this.process_cancel = false;
-            this.process_running = false;
-        }
-
         /**
-         * Begins compressing a library. The source and target folders must exist.
-         *
-         * This is the main entry point. A callback will be sent once it has completed. Once it's done, you can check
-         * if it was cancelled using the public property ``cancelled``.
+         * Begins compressing a library, returns whether the operation was successful.
+         * The source and target folders must exist.
          *
          * Only a single compression can run at a time, although many files can be processed simultaneously
          *
          * It uses multi threading to speed the process time.
          */
-        public async void compress_library_async (Press.CompressConfig config) {
-            if (this.process_running)return;
-            this.start_process ();
+        public async bool compress_library_async (Press.CompressConfig config) {
+            if (running)
+                return false;
 
             this.config = config;
 
-            this.source_folder = File.new_for_path (config.source_path);
-            this.target_folder = File.new_for_path (config.target_path);
+            source_folder = File.new_for_path (config.source_path);
+            target_folder = File.new_for_path (config.target_path);
 
-            assert (this.source_folder.query_exists (null));
-            assert (this.target_folder.query_exists (null));
+            if (!source_folder.query_exists () || !target_folder.query_exists ())
+                return false;
 
-            var children = this.get_children (this.source_folder);
+            running = true;
+            cancelled = false;
 
+            var children = get_children (source_folder);
 
-            // Inside the try, every thread is added to the pool
-            // When the try {} block is done, it starts running them.
             try {
-                // TODO: if ThreadPool throws an error, it might not allow the yield to ever continue
                 var pool = new ThreadPool<File>.with_owned_data ((file) => {
-                    if (!this.process_cancel) {
+                    if (!cancelled) {
                         Idle.add (() => {
                             this.working_on_file (file.get_basename ());
                             return Source.REMOVE;
                         });
-                        this.process_file (file);
+
+                        debug (@"Processing file $(file.get_path ())");
+
+                        try {
+                            process_file (file);
+                        } catch (CompressError.IGNORED_FILE err) {
+                            debug (@"Skipping $(file.get_path ()). Reason: $(err.message)");
+                        } catch (CompressError.PROCESS err) {
+                            warning (@"Failed during processing on $(file.get_path ()). Error: $(err.message)");
+                        } catch (Error err) {
+                            warning (@"Failed to process $(file.get_path ()). Error: $(err.message)");
+                        }
                     }
                 }, (int) GLib.get_num_processors (), false);
 
-                foreach ( File file in children ) {
+                foreach (File file in children) {
                     pool.add (file);
                 }
 
@@ -358,58 +358,56 @@ namespace Press.Compressor {
                 critical ("Error creating thread pool in compressor. %s", err.message);
             }
 
-            // if we are continuing because the process has been cancelled
-            if (this.process_cancel) {
-            }
-
-            this.stop_process ();
+            running = false;
+            return !cancelled;
         }
 
         /**
          * Returns the children in a given folder.
+         *
+         * The children parameter is internal.
          */
-        private ArrayList<File> get_children (File folder) {
-            var children = new ArrayList<File> ();
-            this._get_children (folder, children);
-
-            return children;
-        }
-
-        private void _get_children (File folder, ArrayList<File> children) {
-            return_if_fail (folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY);
-
+        private ArrayList<File> get_children (File folder, ArrayList<File> _children = new ArrayList<File> ())
+        requires (folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY) // vala-lint:block-opening-brace-space-before
+        {
             try {
-                var enumerator = folder.enumerate_children (
-                                                            FileAttribute.STANDARD_NAME + ","
+                var enumerator = folder.enumerate_children (FileAttribute.STANDARD_NAME + ","
                                                             + FileAttribute.STANDARD_TYPE,
                                                             FileQueryInfoFlags.NONE,
                                                             null);
 
-                FileInfo info;
-                while ((info = enumerator.next_file ()) != null) {
+                FileInfo info = enumerator.next_file ();
+                while (info != null) {
                     string name = info.get_name ();
                     File file = folder.get_child (name);
 
                     bool is_folder = info.get_file_type () == FileType.DIRECTORY;
 
                     if (is_folder) {
-                        this._get_children (file, children);
+                        get_children (file, _children);
                     } else {
-                        children.add (file);
+                        _children.add (file);
                     }
+
+                    info = enumerator.next_file ();
                 }
 
                 enumerator.close ();
             } catch (Error err) {
                 message ("Error: %s\n", err.message);
             }
+
+            return _children;
         }
 
         /**
          * Processes a {@link GLib.File}. Uses {@link Press.Compressor.FileConverter} for conversions,
          * and {@link Press.Compressor.FileDuplicator} for file copies.
          *
-         * The duplicator will be called for files that don't have audio, and  only if ``copy_noaudio_files`` is
+         * Will throw ``CompressError.IGNORED_FILE`` if the file didn't meet the criteria, or other
+         * {@link Press.CompressError} if the operation finished unsuccessfully.
+         *
+         * The duplicator will be called for files that don't have audio, and only if ``copy_noaudio_files`` is
          * enabled in the ``config``.
          *
          * The target bitrate and samplerate, are limited to the existing properties for each file. If bitrate is
@@ -417,13 +415,11 @@ namespace Press.Compressor {
          * File.
          *
          * If the detected samplerate is 0, the file will be ignored, as it's likely corrupted in some way.
-         *
-         * For the reasons above, a message may be printed saying "Skipping file". Unless it's followed by an error 
-         * message, it's likely fine.
          */
-        private void process_file (File source_file) {
-            string source_folder_path = this.source_folder.get_path ();
-            string target_folder_path = this.target_folder.get_path ();
+        private void process_file (File source_file)
+        throws Error, RegexError, CompressError {
+            string source_folder_path = source_folder.get_path ();
+            string target_folder_path = target_folder.get_path ();
             string source_file_path = source_file.get_path ();
 
             string relative_path = source_file_path.replace (source_folder_path, "");
@@ -433,94 +429,71 @@ namespace Press.Compressor {
             int bitrate;
             int samplerate;
             check_streams (source_file, out is_audio, out bitrate, out samplerate);
-            Press.CompressConfig file_config = config;
+            Press.CompressConfig file_config = config.clone ();
 
             if (is_audio) {
-                if (samplerate == 0) {
-                    critical (@"Samplerate of file $(source_file.get_path()) is 0. It's likely corrupted.");
-                    return;
-                }
+                if (samplerate == 0)
+                    throw new CompressError.PRE_PROCESS (@"Samplerate of file $(source_file.get_path()) is 0. "
+                                                         + "It's likely corrupted.");
+
                 if (bitrate < config.quality_config.bitrate || samplerate < config.quality_config.samplerate) {
-                    file_config = config.clone ();
-
-                    file_config.quality_config.bitrate =
-                        bitrate < file_config.quality_config.bitrate
-                            ? bitrate
-                            : file_config.quality_config.bitrate;
-
-                    file_config.quality_config.samplerate =
-                        samplerate < file_config.quality_config.samplerate
-                            ? samplerate
-                            : file_config.quality_config.samplerate;
+                    file_config.quality_config.bitrate = min (bitrate, file_config.quality_config.bitrate);
+                    file_config.quality_config.samplerate = min (samplerate, file_config.quality_config.samplerate);
                 }
 
-                try {
-                    target_file_path = this.file_extension_regex.replace (
-                                                                          target_file_path,
-                                                                          target_file_path.length,
-                                                                          0,
-                                                                          file_config.quality_config.format.extension);
-                } catch (Error err) {
-                    critical (@"Error trying to change extension name. Message: $(err.message)");
-                    return;
-                }
+                target_file_path = file_extension_regex.replace (target_file_path,
+                                                                 target_file_path.length,
+                                                                 0,
+                                                                 file_config.quality_config.format.extension);
             }
 
             File target_file = File.new_for_path (target_file_path);
-            bool valid_folder = this.ensure_directory_exists (target_file);
+            ensure_directory_exists (target_file);
             bool file_exists = target_file.query_exists ();
 
+            if (file_exists && !file_config.replace_destination_files)
+                throw new CompressError.IGNORED_FILE ("File exists, and replace destination files is disabled");
+
             FileHandler file_handler;
-            if (valid_folder && (file_config.replace_destination_files || !file_exists)) {
-                if (is_audio) {
-                    file_handler = new FileConverter (file_config.quality_config);
-                    file_handler.process (source_file, target_file);
-                } else if (file_config.copy_noaudio_files) {
-                    file_handler = new FileDuplicator ();
-                    file_handler.process (source_file, target_file);
-                }
-            } else {
-                message (@"Skipping file: $(target_file.get_path())\n");
+            if (is_audio) {
+                file_handler = new FileConverter (file_config.quality_config);
+                file_handler.process (source_file, target_file);
+            } else if (file_config.copy_noaudio_files) {
+                file_handler = new FileDuplicator ();
+                file_handler.process (source_file, target_file);
             }
+        }
+
+        /**
+         * Returns the lesser number of the two
+         */
+        private int min (int a, int b) {
+            return a < b ? a : b;
         }
 
         /**
          * Makes sure the directory for a target file exists. Will create folders as necessary.
          *
-         * Will return whether the operation was successful or not.
-         *
-         * @return Whether the operation was successful.
+         * Fails if the operation was unsuccessful.
          */
-        private bool ensure_directory_exists (File target_file) {
+        private void ensure_directory_exists (File target_file)
+        throws Error {
             File? target_parent = target_file.get_parent ();
 
-            bool exists = false;
-
             // NOTE: parent can be null for '/'
-            if (target_parent != null) {
-                exists = target_parent.query_exists (null);
-
-                if (!exists) {
-                    try {
-                        target_parent.make_directory_with_parents (null);
-                        exists = true;
-                    } catch (Error err) {
-                        warning (@"Error creating folders for target file. Message: $(err.message)");
-                    }
-                }
+            if (target_parent != null && !target_parent.query_exists ()) {
+                target_parent.make_directory_with_parents ();
             }
-
-            return exists;
         }
 
         /**
          * Creates a {@link Gst.PbUtils.Discoverer} and tries to look for audio properties in a {@link GLib.File}.
          *
          * If a samplerate is 0, this means the file is //likely corrupted//, or there was an issue parsing it.
-         * 
+         *
          * The Discoverer will look for it for as long as ``discoverer_timeout``.
          *
-         * NOTE: A new Discoverer is created each time this method is called.
+         * A new Discoverer is created each time this method is called.
          */
         private void check_streams (File file, out bool is_audio, out int bitrate, out int samplerate) {
             is_audio = false;
@@ -529,8 +502,7 @@ namespace Press.Compressor {
 
             try {
                 var discoverer = new Gst.PbUtils.Discoverer (discoverer_timeout * Gst.SECOND);
-                string file_uri = file.get_uri ();
-                Gst.PbUtils.DiscovererInfo info = discoverer.discover_uri (file_uri);
+                Gst.PbUtils.DiscovererInfo info = discoverer.discover_uri (file.get_uri ());
 
                 var audio_streams = info.get_audio_streams ();
                 is_audio = audio_streams.length () > 0;
@@ -572,13 +544,13 @@ namespace Press.Compressor {
             int64 size = 0;
 
             try {
-                FileInfo info = file.query_info (
-                                                 FileAttribute.STANDARD_SIZE,
+                FileInfo info = file.query_info (FileAttribute.STANDARD_SIZE,
                                                  FileQueryInfoFlags.NONE,
                                                  null);
 
                 size = info.get_size ();
             } catch (Error err) {
+                debug (@"Failed to get file size for $(file.get_path ()). Message: $(err.message)");
             }
 
             return size;
@@ -589,8 +561,8 @@ namespace Press.Compressor {
          *
          * The running processes will gracefully finish, and not stopped mid-way.
          */
-        public void cancel_process () {
-            this.process_cancel = true;
+        public void cancel () {
+            cancelled = true;
         }
     }
 }

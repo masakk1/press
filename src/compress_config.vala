@@ -27,7 +27,7 @@ using Gee;
 /**
  * To create deep copies of itself
  */
-public interface Press.Clonable<T> {
+public interface Press.Cloneable<T> {
     /**
      * Create a deep copy of ``this``
      */
@@ -68,7 +68,7 @@ public struct Press.QualityConfig {
  *   method(cloned);
  * }}}
  */
-public class Press.CompressConfig : Press.Clonable<Press.CompressConfig> {
+public class Press.CompressConfig : Press.Cloneable<Press.CompressConfig> {
     public string source_path { get; set; }
     public string target_path { get; set; }
     public Press.QualityConfig quality_config;

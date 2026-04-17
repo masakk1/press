@@ -29,54 +29,46 @@
 [GtkTemplate (ui = "/io/github/masakk1/press/window.ui")]
 public class Press.Window : Adw.ApplicationWindow {
 
-    [GtkChild]
-    private unowned Press.ConfigPage config_page;
+    [GtkChild] private unowned Press.ConfigPage config_page;
 
-    [GtkChild]
-    private unowned Adw.AlertDialog confirm_dialog;
-    [GtkChild]
-    private unowned Gtk.Button cancel_compressing_button;
-    [GtkChild]
-    private unowned Adw.AlertDialog cancel_dialog;
-    [GtkChild]
-    private unowned Adw.StatusPage compressing_status_page;
-    [GtkChild]
-    private unowned Gtk.Button done_page_back_button;
+    [GtkChild] private unowned Adw.AlertDialog confirm_dialog;
+    [GtkChild] private unowned Gtk.Button cancel_compressing_button;
+    [GtkChild] private unowned Adw.AlertDialog cancel_dialog;
+    [GtkChild] private unowned Adw.StatusPage compressing_status_page;
+    [GtkChild] private unowned Gtk.Button done_page_back_button;
 
-    [GtkChild]
-    private unowned Adw.NavigationView navigation_view;
+    [GtkChild] private unowned Adw.NavigationView navigation_view;
 
-    [GtkChild]
-    private unowned Adw.ToastOverlay toast_overlay;
+    [GtkChild] private unowned Adw.ToastOverlay toast_overlay;
 
-    private Compressor.Compressor compressor;
+    private Compressor compressor;
 
     /**
      * Creates the main Window
      */
     public Window (Gtk.Application app) {
         application = app;
-        compressor = new Compressor.Compressor ();
+        compressor = new Compressor ();
 
 
         // Compress button
         config_page.compress_button.clicked.connect (compress_button_clicked);
-        confirm_dialog.response.connect (this.answer_confirm_dialog);
+        confirm_dialog.response.connect (answer_confirm_dialog);
 
         // In compressing page
-        cancel_compressing_button.clicked.connect (this.open_cancel_dialog);
-        cancel_dialog.response.connect (this.answer_cancel_dialog);
-        this.compressor.working_on_file.connect (this.change_working_on);
+        cancel_compressing_button.clicked.connect (open_cancel_dialog);
+        cancel_dialog.response.connect (answer_cancel_dialog);
+        compressor.working_on_file.connect (change_working_on);
 
         // In done page
-        done_page_back_button.clicked.connect (this.return_config_page);
+        done_page_back_button.clicked.connect (return_config_page);
     }
 
     private void compress_button_clicked () {
         if (config_page.config.replace_destination_files) {
-            this.open_confirm_dialog ();
+            open_confirm_dialog ();
         } else {
-            this.begin_compression ();
+            begin_compression ();
         }
     }
 
@@ -86,7 +78,7 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private void answer_confirm_dialog (string response) {
         if (response == "compress") {
-            this.begin_compression ();
+            begin_compression ();
         }
     }
 
@@ -96,13 +88,13 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private void answer_cancel_dialog (string response) {
         if (response == "cancel") {
-            this.cancel_compression ();
+            cancel_compression ();
         }
     }
 
     private void change_working_on (string job) {
-        this.compressing_status_page.description = _("Working on %s").printf (job);
-}
+        compressing_status_page.description = _("Working on %s").printf (job);
+    }
 
     /**
      * Begins the compression.
@@ -115,19 +107,18 @@ public class Press.Window : Adw.ApplicationWindow {
 
         var source_folder = File.new_for_path (config.source_path);
         var target_folder = File.new_for_path (config.target_path);
-        bool folders_exist = source_folder.query_exists (null) && target_folder.query_exists (null);
+        bool folders_exist = source_folder.query_exists () && target_folder.query_exists ();
 
         if (folders_exist) {
             navigation_view.push_by_tag ("compressing_page");
 
-            this.compressor.compress_library_async.begin (
-                                                          config, (obj, res) => {
-                this.compressor.compress_library_async.end (res);
+            compressor.compress_library_async.begin (config, (obj, res) => {
+                bool successful = compressor.compress_library_async.end (res);
 
-                if (compressor.cancelled)
-                    navigation_view.pop_to_tag ("config_page");
-                else
+                if (successful)
                     navigation_view.push_by_tag ("done_page");
+                else
+                    navigation_view.pop_to_tag ("config_page");
             });
         } else {
             toast_overlay.add_toast (new Adw.Toast (_("Selected folders don't exist")));
@@ -135,7 +126,7 @@ public class Press.Window : Adw.ApplicationWindow {
     }
 
     private void cancel_compression () {
-        compressor.cancel_process ();
+        compressor.cancel ();
         change_working_on (_("cancelling"));
     }
 

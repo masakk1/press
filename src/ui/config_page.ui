@@ -126,7 +126,7 @@
                     </property>
                     <child type="suffix">
                       <object class="GtkImage" id="samplerate_tooltip">
-                        <property name="visible">true</property>
+                        <property name="visible">false</property>
                         <property name="icon-name">dialog-warning-symbolic</property>
                         <property name="has-tooltip">true</property>
                         <property name="tooltip-text"

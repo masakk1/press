@@ -25,20 +25,6 @@
 using Gee;
 using Json;
 
-namespace Press {
-    // Current preset names
-    // They must match the existing names on data/presets.json
-    const string[] TRANSLATABLE_PRESET_NAMES = {
-        N_ ("MPEG / mp3"),
-        N_ ("AAC / m4a"),
-        N_ ("Vorbis / ogg"),
-        N_ ("High Quality"),
-        N_ ("Standard Quality"),
-        N_ ("Libre (ogg)"),
-        N_ ("Compatibility"),
-    };
-}
-
 /**
  * The main configuration page. It actively updates a {@link Press.CompressConfig} as ``config``.
  *
@@ -65,16 +51,16 @@ public class Press.ConfigPage : Adw.NavigationPage {
     /**
      * A HashMap of formats with their keywords, as in the presets file. They keywords aren't the display names.
      */
-    public HashMap<string, Press.FormatConfig?> format_list;
+    public HashMap<string, Press.FormatConfig?> format_list { get; private set; }
 
     /**
      * A HashMap of Quality with their keywords, as in the presets file. They keywords aren't the display names.
      */
-    public HashMap<string, Press.QualityConfig?> quality_list;
+    public HashMap<string, Press.QualityConfig?> quality_list { get; private set; }
 
     /**
      * The current configuration. ''Do not modify this object directly'', clone it (``.clone()``) if needed.
-     * 
+     *
      * This property is updated as things are selected on the {@link Press.ConfigPage}.
      */
     public Press.CompressConfig config { get; private set; }
@@ -106,7 +92,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     [GtkCallback]
     private void on_source_directory_clicked (Gtk.Button button) {
-        this.select_directory ((folder) => {
+        select_directory ((folder) => {
             string path = folder != null ? folder.get_path () : "nothing";
 
             config.source_path = path;
@@ -116,7 +102,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
     [GtkCallback]
     private void on_target_directory_clicked (Gtk.Button button) {
-        this.select_directory ((folder) => {
+        select_directory ((folder) => {
             string? path = folder != null ? folder.get_path () : "nothing";
 
             config.target_path = path;

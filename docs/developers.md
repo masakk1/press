@@ -41,6 +41,10 @@ sudo dnf install cmake meson ninja vala glib2-devel libgee-devel json-glib-devel
 # Development packages
 sudo dnf install vala-language-server uncrustify gdb git
 
+# Documentation
+sudo dnf install valadoc graphviz npm
+sudo npm install -g serve
+
 # Just:
 sudo dnf install cargo
 cargo install just-lsp

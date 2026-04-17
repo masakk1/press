@@ -141,3 +141,27 @@ This project uses _EditorConfig_ and `vala-lint`.
 2. Run `vala-lint` to check your code
     - `just lint` will say the errors you have
     - `just lint-fix` will try to fix some issues
+
+### Generating docs
+
+To view the written documentation from a website, you can use `vala-doc`.
+
+```bash
+# Clean and setup the directory (only needed once)
+just docs-setup
+
+# Generate the documentation
+just docs-generate
+
+# Serve as a website on localhost:3000
+just docs-serve
+```
+
+You can also quickly run all of the above with. 
+However, running `docs-generate` is still required to update it while it's live.
+```bash
+just docs
+```
+
+> [!NOTE]
+> In VS Code, port 3000 was automatically routed for the devcontainer.

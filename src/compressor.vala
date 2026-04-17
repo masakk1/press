@@ -275,7 +275,7 @@ namespace Press {
         public signal void working_on_file (string path);
 
         private bool running = false;
-        public bool cancelled { get; private set; }
+        private bool cancelled = false;
 
         private Regex file_extension_regex;
         private int discoverer_timeout;
@@ -289,26 +289,22 @@ namespace Press {
             try {
                 file_extension_regex = new Regex ("(?<=\\.)[A-z0-9_-]+$");
                 this.discoverer_timeout = discoverer_timeout;
-                running = false;
-                cancelled = false;
             } catch (Error err) {
                 error (@"Error initializing regex for file extensions. Cannot continue. - Message: $(err.message)");
             }
         }
 
         /**
-         * Begins compressing a library. The source and target folders must exist.
-         *
-         * This is the main entry point. A callback will be sent once it has completed. Once it's done, you can check
-         * if it was cancelled using the public property ``cancelled``.
+         * Begins compressing a library, returns whether the operation was successful.
+         * The source and target folders must exist.
          *
          * Only a single compression can run at a time, although many files can be processed simultaneously
          *
          * It uses multi threading to speed the process time.
          */
-        public async void compress_library_async (Press.CompressConfig config) {
+        public async bool compress_library_async (Press.CompressConfig config) {
             if (running)
-                return;
+                return false;
 
             this.config = config;
 
@@ -316,7 +312,7 @@ namespace Press {
             target_folder = File.new_for_path (config.target_path);
 
             if (!source_folder.query_exists () || !target_folder.query_exists ())
-                return;
+                return false;
 
             running = true;
             cancelled = false;
@@ -363,6 +359,7 @@ namespace Press {
             }
 
             running = false;
+            return !cancelled;
         }
 
         /**

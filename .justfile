@@ -9,15 +9,15 @@ default:
 
 # Regular setup
 setup:
-    meson setup _build --prefix={{prefix}}
+    meson setup _build --prefix={{ prefix }}
 
 # Setup with --reconfigure
 setup-reconfigure:
-    meson setup --reconfigure _build --prefix={{prefix}}
+    meson setup --reconfigure _build --prefix={{ prefix }}
 
 # Setup with --wipe
 setup-wipe:
-    meson setup --wipe _build --prefix={{prefix}}
+    meson setup --wipe _build --prefix={{ prefix }}
 
 compile:
     meson compile -C _build
@@ -32,20 +32,20 @@ lint-fix:
 
 # Clean and create the generated documentation directory
 docs-setup:
-    rm -r {{docdir}}
-    mkdir {{docdir}}
+    rm -r {{ docdir }}
+    mkdir {{ docdir }}
 
 docs-generate:
-    valadoc --force --package-name=press --package-version=0.2.0 \
+    valadoc --force --package-name=press --package-version=0.3.0 \
     --pkg=gtk4 --pkg=libadwaita-1 --pkg=json-glib-1.0 --pkg=gee-0.8 \
     --pkg=gstreamer-1.0 --pkg=gstreamer-pbutils-1.0 \
-    -o {{docdir}} \
+    -o {{ docdir }} \
     src/*.vala src/*.vapi \
     --private
 
 # Serves the page in port 3000
 docs-serve port="3000":
-    npx serve {{docdir}} -p {{port}}
+    npx serve {{ docdir }} -p {{ port }}
 
 # Quick macro to clean, generate, and serve
 docs: docs-setup docs-generate docs-serve
@@ -54,13 +54,13 @@ docs: docs-setup docs-generate docs-serve
 
 # Compile and run the binary - Optionally with a language
 run lang="": compile
-    LANGUAGE={{lang}} \
+    LANGUAGE={{ lang }} \
     XDG_DATA_DIRS=data:${XDG_DATA_DIRS:-/usr/local/share:/usr/share} \
     _build/src/press
 
 # "run" with debugging on
 run-debug lang="": compile
-    G_MESSAGES_DEBUG=all just run {{lang}}
+    G_MESSAGES_DEBUG=all just run {{ lang }}
 
 # == Installing ==
 

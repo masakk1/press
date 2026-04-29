@@ -60,7 +60,7 @@ public class Press.Application : Adw.Application {
             developer_name = "Masakk1",
             // Note to Translators: Add your name here
             translator_credits = _("translator-credits"),
-            version = "0.2.0",
+            version = "0.3.0",
             developers = developers,
             copyright = "MIT © 2026 Masakk1",
         };
@@ -70,7 +70,7 @@ public class Press.Application : Adw.Application {
 
     /**
      * Currently, there are no preferences. This function does nothing.
-     * 
+     *
      * The menu entry is commented, too.
      */
     private void on_preferences_action () {

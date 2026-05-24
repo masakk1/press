@@ -33,6 +33,16 @@
             "filters": [
                 "oggmux"
             ]
+        },
+        "flac": {
+            "name": "FLAC",
+            "extension": "flac",
+            "encoder": "flacenc",
+            "encoderProperties": {},
+            "bitrateMult": 0,
+            "filters": [
+                "flacparse"
+            ]
         }
     },
     "quality_presets": {

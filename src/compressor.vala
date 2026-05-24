@@ -188,13 +188,14 @@ namespace Press {
 
         /**
          * Configures the created elements. Adds encoder properties, links the samplerate caps filter.
+         *
+         * A bitrate multiplier of 0 means avoiding setting the bitrate entirely. Which is required for Lossless formats.
          */
         private void configure_elements (File source_file, File target_file) {
             source.set ("location", source_file.get_path ());
             sink.set ("location", target_file.get_path ());
             samplerate_capsfilter.set ("caps", Gst.Caps.from_string (@"audio/x-raw,rate=$(quality.samplerate)"));
 
-            // Required for lossless formats, like FLAC
             if (quality.format.bitrate_multiplier > 0)
                 encoder.set ("bitrate", quality.bitrate * quality.format.bitrate_multiplier);
 

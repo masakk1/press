@@ -193,7 +193,10 @@ namespace Press {
             source.set ("location", source_file.get_path ());
             sink.set ("location", target_file.get_path ());
             samplerate_capsfilter.set ("caps", Gst.Caps.from_string (@"audio/x-raw,rate=$(quality.samplerate)"));
-            encoder.set ("bitrate", quality.bitrate * quality.format.bitrate_multiplier);
+
+            // Required for lossless formats, like FLAC
+            if (quality.format.bitrate_multiplier > 0)
+                encoder.set ("bitrate", quality.bitrate * quality.format.bitrate_multiplier);
 
             // Encoder properties
             foreach (var property in quality.format.encoder_properties ) {

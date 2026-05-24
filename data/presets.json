@@ -41,7 +41,7 @@
             "encoderProperties": {},
             "bitrateMult": 0,
             "filters": [
-                "flactag"
+                "flacparse"
             ]
         }
     },

@@ -100,6 +100,7 @@ Another example would be mp3s. lamemp3 requires some specific parameters, and so
 - **bitrateMult**: By default, bitrate is in kbps — i.e. 192 kbps. Different encoders take b/s.
     - in kbps? Leave it as 1: `"bitrateMult": 1,`
     - in bps? Multiply by 1000: `"bitrateMult": 1000,`
+    - disable setting the bitrate by setting it to 0. This is **required** for lossless formats.
 - **filters**: the rest of the GStreamer elements such as remuxers or parsers. These go right after the encoder.
     - for `avenc_aac`, we only need a single remuxer:
         ```json

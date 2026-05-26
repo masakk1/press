@@ -95,18 +95,26 @@
                   </object>
                 </child>
                 <child>
-                  <object class="AdwSpinRow">
-                    <signal name="notify::value" handler="on_bitrate_changed"></signal>
-                    <property name="title" translatable="yes">Bitrate (Kbps)</property>
-                    <property name="adjustment">
-                      <object class="GtkAdjustment">
-                        <property name="lower">64</property>
-                        <property name="upper">320</property>
-                        <property name="value">128</property>
-                        <property name="page-increment">32</property>
-                        <property name="step-increment">16</property>
+                  <object class="AdwExpanderRow">
+                    <property name="title" translatable="yes">Change Bitrate</property>
+                    <property name="show-enable-switch">true</property>
+                    <property name="enable-expansion">false</property>
+                    <signal name="notify::enable-expansion" handler="on_bitrate_expand"></signal>
+                    <child>
+                      <object class="AdwSpinRow" id="bitrate_row">
+                        <signal name="notify::value" handler="on_bitrate_changed"></signal>
+                        <property name="title" translatable="yes">Kilo bits per second (Kbps)</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">64</property>
+                            <property name="upper">320</property>
+                            <property name="value">128</property>
+                            <property name="page-increment">32</property>
+                            <property name="step-increment">16</property>
+                          </object>
+                        </property>
                       </object>
-                    </property>
+                    </child>
                   </object>
                 </child>
                 <child>

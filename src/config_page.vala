@@ -41,6 +41,7 @@ public class Press.ConfigPage : Adw.NavigationPage {
     [GtkChild] private unowned Adw.ComboRow custom_format_selection;
     [GtkChild] private unowned Adw.SwitchRow replace_destination_files_switch;
     [GtkChild] private unowned Adw.SwitchRow copy_noaudio_files_switch;
+    [GtkChild] private unowned Adw.SpinRow samplerate_row;
     [GtkChild] private unowned Gtk.Image samplerate_tooltip;
 
     /**
@@ -213,6 +214,16 @@ public class Press.ConfigPage : Adw.NavigationPage {
 
         // Not a common samplerate
         samplerate_tooltip.visible = !(value == 44100 || value == 48000);
+    }
+
+    [GtkCallback]
+    private void on_samplerate_expand (GLib.Object obj, GLib.ParamSpec _) {
+        var expander_row = obj as Adw.ExpanderRow;
+        var expansion_enabled = expander_row.enable_expansion;
+
+        var custom_quality = quality_list[CUSTOM_QUALITY_NAME];
+        custom_quality.samplerate = expansion_enabled ? (int) samplerate_row.value : 0;
+        update_custom_quality (custom_quality);
     }
 
     [GtkCallback]

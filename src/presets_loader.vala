@@ -87,7 +87,7 @@ namespace Press {
          * @param display_name should be sent already translated
          */
         public void add_custom_quality (string name, string display_name) {
-            quality_list[name] = { display_name, null, 128, 44100 };
+            quality_list[name] = { display_name, null, 128, 0 };
         }
 
         /**

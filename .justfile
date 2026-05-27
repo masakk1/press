@@ -32,7 +32,7 @@ lint-fix:
 
 # Clean and create the generated documentation directory
 docs-setup:
-    rm -r {{ docdir }}
+    rm -rf {{ docdir }}
     mkdir {{ docdir }}
 
 docs-generate:

@@ -86,9 +86,7 @@
             <child>
               <object class="AdwPreferencesGroup" id="custom_quality_group">
                 <property name="title" translatable="yes">Custom Target Quality</property>
-                <property
-                  name="description"
-                  translatable="yes">Manually configure the maximum target quality.</property>
+                <property name="description" translatable="yes">Manually configure the maximum target quality.</property>
                 <property name="visible">false</property>
                 <child>
                   <object class="AdwComboRow" id="custom_format_selection">
@@ -97,40 +95,55 @@
                   </object>
                 </child>
                 <child>
-                  <object class="AdwSpinRow">
-                    <signal name="notify::value" handler="on_bitrate_changed"></signal>
-                    <property name="title" translatable="yes">Bitrate (Kbps)</property>
-                    <property name="adjustment">
-                      <object class="GtkAdjustment">
-                        <property name="lower">64</property>
-                        <property name="upper">320</property>
-                        <property name="value">128</property>
-                        <property name="page-increment">32</property>
-                        <property name="step-increment">16</property>
+                  <object class="AdwExpanderRow">
+                    <property name="title" translatable="yes">Change Bitrate</property>
+                    <property name="show-enable-switch">true</property>
+                    <property name="enable-expansion">false</property>
+                    <signal name="notify::enable-expansion" handler="on_bitrate_expand"></signal>
+                    <child>
+                      <object class="AdwSpinRow" id="bitrate_row">
+                        <signal name="notify::value" handler="on_bitrate_changed"></signal>
+                        <property name="title" translatable="yes">Kilo bits per second (Kbps)</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">64</property>
+                            <property name="upper">320</property>
+                            <property name="value">128</property>
+                            <property name="page-increment">32</property>
+                            <property name="step-increment">16</property>
+                          </object>
+                        </property>
                       </object>
-                    </property>
+                    </child>
                   </object>
                 </child>
                 <child>
-                  <object class="AdwSpinRow">
-                    <signal name="notify::value" handler="on_samplerate_changed"></signal>
-                    <property name="title" translatable="yes">Sample Rate (Hz)</property>
-                    <property name="adjustment">
-                      <object class="GtkAdjustment">
-                        <property name="lower">8000</property>
-                        <property name="upper">96000</property>
-                        <property name="value">44100</property>
-                        <property name="page-increment">4000</property>
-                        <property name="step-increment">1000</property>
-                      </object>
-                    </property>
-                    <child type="suffix">
-                      <object class="GtkImage" id="samplerate_tooltip">
-                        <property name="visible">false</property>
-                        <property name="icon-name">dialog-warning-symbolic</property>
-                        <property name="has-tooltip">true</property>
-                        <property name="tooltip-text"
-                          translatable="yes">Samplerates other than 44100 or 48000 won't work well</property>
+                  <object class="AdwExpanderRow">
+                    <property name="title" translatable="yes">Change Sample Rate</property>
+                    <property name="show-enable-switch">true</property>
+                    <property name="enable-expansion">false</property>
+                    <signal name="notify::enable-expansion" handler="on_samplerate_expand"></signal>
+                    <child>
+                      <object class="AdwSpinRow" id="samplerate_row">
+                        <signal name="notify::value" handler="on_samplerate_changed"></signal>
+                        <property name="title" translatable="yes">Hertz (Hz)</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">8000</property>
+                            <property name="upper">96000</property>
+                            <property name="value">44100</property>
+                            <property name="page-increment">4000</property>
+                            <property name="step-increment">1000</property>
+                          </object>
+                        </property>
+                        <child type="suffix">
+                          <object class="GtkImage" id="samplerate_tooltip">
+                            <property name="visible">false</property>
+                            <property name="icon-name">dialog-warning-symbolic</property>
+                            <property name="has-tooltip">true</property>
+                            <property name="tooltip-text" translatable="yes">Samplerates other than 44100 or 48000 won't work well</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>

@@ -190,14 +190,18 @@ namespace Press {
          * Configures the created elements. Adds encoder properties, links the samplerate caps filter.
          *
          * A bitrate multiplier of 0 means avoiding setting the bitrate entirely. Which is required for Lossless formats.
+         *
+         * If bitrate or samplerate is less or equal to 0, then they wont be enforced respectively.
          */
         private void configure_elements (File source_file, File target_file) {
             source.set ("location", source_file.get_path ());
             sink.set ("location", target_file.get_path ());
-            samplerate_capsfilter.set ("caps", Gst.Caps.from_string (@"audio/x-raw,rate=$(quality.samplerate)"));
 
-            if (quality.format.bitrate_multiplier > 0)
+            if (quality.bitrate * quality.format.bitrate_multiplier > 0)
                 encoder.set ("bitrate", quality.bitrate * quality.format.bitrate_multiplier);
+
+            if (quality.samplerate > 0)
+                samplerate_capsfilter.set ("caps", Gst.Caps.from_string (@"audio/x-raw,rate=$(quality.samplerate)"));
 
             // Encoder properties
             foreach (var property in quality.format.encoder_properties ) {
@@ -457,6 +461,9 @@ namespace Press {
 
             if (file_exists && !file_config.replace_destination_files)
                 throw new CompressError.IGNORED_FILE ("File exists, and replace destination files is disabled");
+
+            debug (@"Processing $(source_file.get_basename ()) @ "
+                   + "$(file_config.quality_config.bitrate) bps, $(file_config.quality_config.samplerate) Hz");
 
             FileHandler file_handler;
             if (is_audio) {

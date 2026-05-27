@@ -191,7 +191,8 @@ namespace Press {
          *
          * A bitrate multiplier of 0 means avoiding setting the bitrate entirely. Which is required for Lossless formats.
          *
-         * If bitrate or samplerate is less or equal to 0, then they wont be enforced respectively.
+         * If bitrate or samplerate is less or equal to 0, then they wont be enforced respectively. Bit depth is
+         * ignored if it's null or an empty string.
          */
         private void configure_elements (File source_file, File target_file) {
             source.set ("location", source_file.get_path ());

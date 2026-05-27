@@ -200,8 +200,15 @@ namespace Press {
             if (quality.bitrate * quality.format.bitrate_multiplier > 0)
                 encoder.set ("bitrate", quality.bitrate * quality.format.bitrate_multiplier);
 
+            string capsfilter_string = "audio/x-raw";
             if (quality.samplerate > 0)
-                samplerate_capsfilter.set ("caps", Gst.Caps.from_string (@"audio/x-raw,rate=$(quality.samplerate)"));
+                capsfilter_string += ",rate=%d".printf (quality.samplerate);
+
+            if (quality.bitdepth_format.length > 0)
+                capsfilter_string += ",format=%s".printf (quality.bitdepth_format);
+
+            if (capsfilter_string != "audio/x-raw")
+                samplerate_capsfilter.set ("caps", Gst.Caps.from_string (capsfilter_string));
 
             // Encoder properties
             foreach (var property in quality.format.encoder_properties ) {

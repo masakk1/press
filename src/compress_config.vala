@@ -32,7 +32,6 @@ public interface Press.Cloneable<T> {
      * Create a deep copy of ``this``
      */
     public abstract T clone ();
-
 }
 
 /**
@@ -42,7 +41,7 @@ public struct Press.FormatConfig {
     public string name;
     public string extension;
     public string encoder;
-    public HashMap<string, Value ?> encoder_properties;
+    public HashMap<string, Value?> encoder_properties;
     public int bitrate_multiplier;
     public string[] filters;
 }
@@ -57,6 +56,7 @@ public struct Press.QualityConfig {
     public Press.FormatConfig format;
     public int bitrate;
     public int samplerate;
+    public string bitdepth_format;
 }
 
 /**
@@ -93,5 +93,4 @@ public class Press.CompressConfig : Press.Cloneable<Press.CompressConfig> {
         config.replace_destination_files = this.replace_destination_files;
         return config;
     }
-
 }

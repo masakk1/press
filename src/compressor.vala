@@ -471,7 +471,8 @@ namespace Press {
                 throw new CompressError.IGNORED_FILE ("File exists, and replace destination files is disabled");
 
             debug (@"Processing $(source_file.get_basename ()) @ "
-                   + "$(file_config.quality_config.bitrate) bps, $(file_config.quality_config.samplerate) Hz");
+                   + @"$(file_config.quality_config.bitrate) bps, $(file_config.quality_config.samplerate) Hz, "
+                   + @"depth as $(file_config.quality_config.bitdepth_format)");
 
             FileHandler file_handler;
             if (is_audio) {

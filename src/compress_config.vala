@@ -52,10 +52,17 @@ public struct Press.FormatConfig {
  * Except for a custom config, it should never be changed.
  */
 public struct Press.QualityConfig {
+    /** Quality display name */
     public string name;
     public Press.FormatConfig format;
+    /** Bit rate in Kbps */
     public int bitrate;
+    /** Sample rate in Hz */
     public int samplerate;
+    /**
+     * String representing a bit depth format by a GStreamer caps filter.
+     * Such as: S16LE, U8, F64LE, S32BE, etc...
+     */
     public string bitdepth_format;
 }
 

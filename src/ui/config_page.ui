@@ -118,17 +118,10 @@
                   </object>
                 </child>
                 <child>
-                  <object class="AdwExpanderRow">
-                    <property name="title" translatable="yes">Change Bit Depth</property>
-                    <property name="show-enable-switch">true</property>
-                    <property name="enable-expansion">false</property>
-                    <signal name="notify::enable-expansion" handler="on_bitdepth_expand"></signal>
-                    <child>
-                      <object class="AdwComboRow" id="bitdepth_row">
-                        <signal name="notify::value" handler="on_bitdepth_changed"></signal>
-                        <property name="title" translatable="yes">Bits (Little Endian)</property>
-                      </object>
-                    </child>
+                  <object class="AdwSwitchRow">
+                    <property name="title" translatable="yes">Set Bit-depth to 16-bit</property>
+                    <property name="active">false</property>
+                    <signal name="notify::active" handler="on_bitdepth16_switched"></signal>
                   </object>
                 </child>
                 <child>

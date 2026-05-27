@@ -42,7 +42,6 @@ public class Press.ConfigPage : Adw.NavigationPage {
     [GtkChild] private unowned Adw.SwitchRow replace_destination_files_switch;
     [GtkChild] private unowned Adw.SwitchRow copy_noaudio_files_switch;
     [GtkChild] private unowned Adw.SpinRow bitrate_row;
-    [GtkChild] private unowned Adw.ComboRow bitdepth_row;
     [GtkChild] private unowned Adw.SpinRow samplerate_row;
     [GtkChild] private unowned Gtk.Image samplerate_tooltip;
 
@@ -216,16 +215,9 @@ public class Press.ConfigPage : Adw.NavigationPage {
     }
 
     [GtkCallback]
-    private void on_bitdepth_changed (GLib.Object obj, GLib.ParamSpec _) {
-        // TODO
-    }
-
-    [GtkCallback]
-    private void on_bitdepth_expand (GLib.Object obj, GLib.ParamSpec _) {
-        var expander_row = obj as Adw.ExpanderRow;
-        var expansion_enabled = expander_row.enable_expansion;
-
-        // TODO
+    private void on_bitdepth16_switched (GLib.Object obj, GLib.ParamSpec _) {
+        var switch_row = obj as Adw.SwitchRow;
+        var value = switch_row.active;
     }
 
     [GtkCallback]

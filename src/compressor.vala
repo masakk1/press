@@ -205,7 +205,7 @@ namespace Press {
             if (quality.samplerate > 0)
                 capsfilter_string += ",rate=%d".printf (quality.samplerate);
 
-            if (quality.bitdepth_format.length > 0)
+            if (quality.bitdepth_format != null && quality.bitdepth_format != "")
                 capsfilter_string += ",format=%s".printf (quality.bitdepth_format);
 
             if (capsfilter_string != "audio/x-raw")
@@ -472,7 +472,7 @@ namespace Press {
 
             debug (@"Processing $(source_file.get_basename ()) @ "
                    + @"$(file_config.quality_config.bitrate) bps, $(file_config.quality_config.samplerate) Hz, "
-                   + @"depth as $(file_config.quality_config.bitdepth_format)");
+                   + @"depth as $(file_config.quality_config.bitdepth_format ?? "null")");
 
             FileHandler file_handler;
             if (is_audio) {

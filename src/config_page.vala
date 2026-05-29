@@ -215,6 +215,16 @@ public class Press.ConfigPage : Adw.NavigationPage {
     }
 
     [GtkCallback]
+    private void on_bitdepth16_switched (GLib.Object obj, GLib.ParamSpec _) {
+        var switch_row = obj as Adw.SwitchRow;
+        var value = switch_row.active;
+
+        var custom_quality = quality_list[CUSTOM_QUALITY_NAME];
+        custom_quality.bitdepth_format = value ? "S16LE" : null;
+        update_custom_quality (custom_quality);
+    }
+
+    [GtkCallback]
     private void on_samplerate_changed (GLib.Object obj, GLib.ParamSpec pspec) {
         var spin_row = obj as Adw.SpinRow;
         var value = (int) spin_row.value;

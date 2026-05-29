@@ -118,6 +118,13 @@
                   </object>
                 </child>
                 <child>
+                  <object class="AdwSwitchRow">
+                    <property name="title" translatable="yes">Set Bit-depth to 16-bit</property>
+                    <property name="active">false</property>
+                    <signal name="notify::active" handler="on_bitdepth16_switched"></signal>
+                  </object>
+                </child>
+                <child>
                   <object class="AdwExpanderRow">
                     <property name="title" translatable="yes">Change Sample Rate</property>
                     <property name="show-enable-switch">true</property>

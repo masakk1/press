@@ -87,7 +87,7 @@ namespace Press {
          * @param display_name should be sent already translated
          */
         public void add_custom_quality (string name, string display_name) {
-            quality_list[name] = { display_name, null, 0, 0 };
+            quality_list[name] = { display_name, null, 0, 0, null };
         }
 
         /**
@@ -173,6 +173,7 @@ namespace Press {
                         name = _(quality_obj.get_string_member ("name")),
                         format = format,
                         bitrate = (int32) quality_obj.get_int_member ("bitrate"),
+                        bitdepth_format = quality_obj.get_string_member ("bitdepth_format"),
                         samplerate = (int32) quality_obj.get_int_member ("samplerate")
                     };
 

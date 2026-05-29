@@ -50,24 +50,28 @@
             "name": "High Quality",
             "format": "m4a",
             "bitrate": 192,
+            "bitdepth_format": "",
             "samplerate": 48000
         },
         "standard": {
             "name": "Standard Quality",
             "format": "m4a",
             "bitrate": 128,
+            "bitdepth_format": "",
             "samplerate": 44100
         },
         "libre": {
             "name": "Libre (ogg)",
             "format": "vogg",
             "bitrate": 128,
+            "bitdepth_format": "",
             "samplerate": 44100
         },
         "compatibility": {
             "name": "Compatibility",
             "format": "mp3",
             "bitrate": 128,
+            "bitdepth_format": "",
             "samplerate": 44100
         }
     }

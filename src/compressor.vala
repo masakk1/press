@@ -191,7 +191,8 @@ namespace Press {
          *
          * A bitrate multiplier of 0 means avoiding setting the bitrate entirely. Which is required for Lossless formats.
          *
-         * If bitrate or samplerate is less or equal to 0, then they wont be enforced respectively.
+         * If bitrate or samplerate is less or equal to 0, then they wont be enforced respectively. Bit depth is
+         * ignored if it's null or an empty string.
          */
         private void configure_elements (File source_file, File target_file) {
             source.set ("location", source_file.get_path ());
@@ -200,8 +201,15 @@ namespace Press {
             if (quality.bitrate * quality.format.bitrate_multiplier > 0)
                 encoder.set ("bitrate", quality.bitrate * quality.format.bitrate_multiplier);
 
+            string capsfilter_string = "audio/x-raw";
             if (quality.samplerate > 0)
-                samplerate_capsfilter.set ("caps", Gst.Caps.from_string (@"audio/x-raw,rate=$(quality.samplerate)"));
+                capsfilter_string += ",rate=%d".printf (quality.samplerate);
+
+            if (quality.bitdepth_format != null && quality.bitdepth_format != "")
+                capsfilter_string += ",format=%s".printf (quality.bitdepth_format);
+
+            if (capsfilter_string != "audio/x-raw")
+                samplerate_capsfilter.set ("caps", Gst.Caps.from_string (capsfilter_string));
 
             // Encoder properties
             foreach (var property in quality.format.encoder_properties ) {
@@ -463,7 +471,8 @@ namespace Press {
                 throw new CompressError.IGNORED_FILE ("File exists, and replace destination files is disabled");
 
             debug (@"Processing $(source_file.get_basename ()) @ "
-                   + "$(file_config.quality_config.bitrate) bps, $(file_config.quality_config.samplerate) Hz");
+                   + @"$(file_config.quality_config.bitrate) bps, $(file_config.quality_config.samplerate) Hz, "
+                   + @"depth as $(file_config.quality_config.bitdepth_format ?? "null")");
 
             FileHandler file_handler;
             if (is_audio) {

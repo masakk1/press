@@ -32,7 +32,6 @@ public interface Press.Cloneable<T> {
      * Create a deep copy of ``this``
      */
     public abstract T clone ();
-
 }
 
 /**
@@ -42,7 +41,7 @@ public struct Press.FormatConfig {
     public string name;
     public string extension;
     public string encoder;
-    public HashMap<string, Value ?> encoder_properties;
+    public HashMap<string, Value?> encoder_properties;
     public int bitrate_multiplier;
     public string[] filters;
 }
@@ -53,10 +52,18 @@ public struct Press.FormatConfig {
  * Except for a custom config, it should never be changed.
  */
 public struct Press.QualityConfig {
+    /** Quality display name */
     public string name;
     public Press.FormatConfig format;
+    /** Bit rate in Kbps */
     public int bitrate;
+    /** Sample rate in Hz */
     public int samplerate;
+    /**
+     * String representing a bit depth format by a GStreamer caps filter.
+     * Such as: S16LE, U8, F64LE, S32BE, etc...
+     */
+    public string bitdepth_format;
 }
 
 /**
@@ -93,5 +100,4 @@ public class Press.CompressConfig : Press.Cloneable<Press.CompressConfig> {
         config.replace_destination_files = this.replace_destination_files;
         return config;
     }
-
 }

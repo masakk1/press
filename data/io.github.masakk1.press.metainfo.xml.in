@@ -39,6 +39,12 @@
   <!-- (https://hughsie.github.io/oars/generate.html) - use oars-1.1 -->
   <content_rating type="oars-1.1" />
 
+  <supports>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <control>touch</control>
+  </supports>
+
   <branding>
     <color type="primary" scheme_preference="light">#c061cb</color>
     <color type="primary" scheme_preference="dark">#613583</color>

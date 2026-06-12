@@ -43,7 +43,6 @@
                             <child>
                               <object class="GtkProgressBar" id="compressing_progress_bar">
                                 <property name="show-text">true</property>
-                                <property name="fraction">0.2</property>
                                 <property name="halign">fill</property>
                               </object>
                             </child>

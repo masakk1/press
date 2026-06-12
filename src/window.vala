@@ -98,6 +98,11 @@ public class Press.Window : Adw.ApplicationWindow {
         compressing_status_page.description = _("Finished %s (%d/%d)").printf (file_name, thread_index, total_threads);
     }
 
+    private void clean_compressing_page () {
+        compressing_progress_bar.fraction = 0;
+        compressing_status_page.description = "";
+    }
+
     /**
      * Begins the compression.
      *
@@ -121,6 +126,8 @@ public class Press.Window : Adw.ApplicationWindow {
                     navigation_view.push_by_tag ("done_page");
                 else
                     navigation_view.pop_to_tag ("config_page");
+
+                clean_compressing_page ();
             });
         } else {
             toast_overlay.add_toast (new Adw.Toast (_("Selected folders don't exist")));

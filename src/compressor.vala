@@ -360,7 +360,10 @@ namespace Press {
                             Idle.add (() => {
                                 /* NOTE: completed_threads is safe in this Idle callback */
                                 this.finished_file (file.get_basename (), ++completed_threads, total_files, success);
-                                debug (@"Finished processing file $(file.get_path ()). Success: $success. Thread: $completed_threads/$total_files");
+
+                                debug (@"Finished processing file $(file.get_path ()). "
+                                       + @"Success: $success. Thread: $completed_threads/$total_files");
+
                                 return Source.REMOVE;
                             });
                         }

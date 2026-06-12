@@ -136,7 +136,7 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private void cancel_compression () {
         compressor.cancel ();
-        compressing_status_page.description = _("Gracefully cancelling...");
+        compressing_status_page.description = _("Gracefully cancelling…");
     }
 
     private void return_config_page () {

@@ -33,6 +33,7 @@ public class Press.Window : Adw.ApplicationWindow {
 
     [GtkChild] private unowned Adw.AlertDialog confirm_dialog;
     [GtkChild] private unowned Gtk.Button cancel_compressing_button;
+    [GtkChild] private unowned Gtk.ProgressBar compressing_progress_bar;
     [GtkChild] private unowned Adw.AlertDialog cancel_dialog;
     [GtkChild] private unowned Adw.StatusPage compressing_status_page;
     [GtkChild] private unowned Gtk.Button done_page_back_button;
@@ -58,7 +59,7 @@ public class Press.Window : Adw.ApplicationWindow {
         // In compressing page
         cancel_compressing_button.clicked.connect (open_cancel_dialog);
         cancel_dialog.response.connect (answer_cancel_dialog);
-        compressor.working_on_file.connect (change_working_on);
+        compressor.finished_file.connect (finished_file);
 
         // In done page
         done_page_back_button.clicked.connect (return_config_page);
@@ -92,8 +93,9 @@ public class Press.Window : Adw.ApplicationWindow {
         }
     }
 
-    private void change_working_on (string job) {
-        compressing_status_page.description = _("Working on %s").printf (job);
+    private void finished_file (string file_name, int thread_index, int total_threads, bool success) {
+        compressing_progress_bar.fraction = thread_index / (float) total_threads;
+        compressing_status_page.description = _("Finished %s (%d/%d)").printf (file_name, thread_index, total_threads);
     }
 
     /**
@@ -127,7 +129,7 @@ public class Press.Window : Adw.ApplicationWindow {
 
     private void cancel_compression () {
         compressor.cancel ();
-        change_working_on (_("cancelling"));
+        compressing_status_page.description = _("Gracefully cancelling...");
     }
 
     private void return_config_page () {

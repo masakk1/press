@@ -20,6 +20,7 @@
                 <property name="can-pop">false</property>
                 <child>
                   <object class="AdwToolbarView">
+                    <property name="height-request">300</property>
                     <child type="top">
                       <object class="AdwHeaderBar">
                         <child type="start">
@@ -35,12 +36,19 @@
                     <property name="content">
                       <object class="AdwStatusPage" id="compressing_status_page">
                         <property name="title" translatable="yes">Compressing</property>
-                        <property name="description">...</property>
-                        <property name="paintable">
-                          <object class="AdwSpinnerPaintable">
-                            <property name="widget">compressing_status_page</property>
+                        <child>
+                          <object class="AdwClamp">
+                            <property name="maximum-size">600</property>
+                            <property name="tightening-threshold">300</property>
+                            <child>
+                              <object class="GtkProgressBar" id="compressing_progress_bar">
+                                <property name="show-text">true</property>
+                                <property name="fraction">0.2</property>
+                                <property name="halign">fill</property>
+                              </object>
+                            </child>
                           </object>
-                        </property>
+                        </child>
                       </object>
                     </property>
                   </object>
@@ -72,9 +80,7 @@
                     <property name="content">
                       <object class="AdwStatusPage">
                         <property name="title" translatable="yes">All done!</property>
-                        <property
-                          name="description"
-                          translatable="yes">Your files are now compressed at the target directory.</property>
+                        <property name="description" translatable="yes">Your files are now compressed at the target directory.</property>
                       </object>
                     </property>
                   </object>
@@ -87,9 +93,7 @@
     </property>
     <object class="AdwAlertDialog" id="confirm_dialog">
       <property name="heading" translatable="yes">Compress and replace all files?</property>
-      <property
-        name="body"
-        translatable="yes">This will replace files with the same name at the destination directory.</property>
+      <property name="body" translatable="yes">This will replace files with the same name at the destination directory.</property>
       <property name="default-response">compress</property>
       <property name="close-response">cancel</property>
       <responses>
@@ -99,9 +103,7 @@
     </object>
     <object class="AdwAlertDialog" id="cancel_dialog">
       <property name="heading" translatable="yes">Cancel compression?</property>
-      <property
-        name="body"
-        translatable="yes">This will stop the compression, but wont remove the changes already made.</property>
+      <property name="body" translatable="yes">This will stop the compression, but wont remove the changes already made.</property>
       <property name="default-response">continue</property>
       <property name="close-response">continue</property>
       <responses>

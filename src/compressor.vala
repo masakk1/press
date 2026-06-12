@@ -285,12 +285,6 @@ namespace Press {
         private File source_folder;
         private File target_folder;
 
-        /* TODO: Remove working on */
-        /**
-         * Called when a file is about to be processed.
-         */
-        public signal void working_on_file (string path);
-
         /**
          * Called when a file has been fully processed. Returns information about the results and what's left.
          * @param filename The path of the file that was processed
@@ -350,13 +344,6 @@ namespace Press {
                 int completed_threads = 0;
                 var pool = new ThreadPool<File>.with_owned_data ((file) => {
                     if (!cancelled) {
-                        /* TODO: Remove working on */
-                        Idle.add (() => {
-                            this.working_on_file (file.get_basename ());
-                            return Source.REMOVE;
-                        });
-
-                        debug (@"Processing file $(file.get_path ())");
                         bool success = false;
 
                         try {

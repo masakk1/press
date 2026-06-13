@@ -286,9 +286,13 @@ namespace Press {
         private File target_folder;
 
         /**
-         * Called when a file is about to be processed.
+         * Called when a file has been fully processed. Returns information about the results and what's left.
+         * @param file_name The path of the file that was processed
+         * @param index The index of the file that was processed, in relation to the total
+         * @param total The total number of files to process
+         * @param success Whether the file was processed successfully
          */
-        public signal void working_on_file (string path);
+        public signal void finished_file (string file_name, int index, int total, bool success);
 
         private bool running = false;
         private bool cancelled = false;
@@ -334,25 +338,34 @@ namespace Press {
             cancelled = false;
 
             var children = get_children (source_folder);
+            int total_files = children.size;
 
             try {
+                int completed_threads = 0;
                 var pool = new ThreadPool<File>.with_owned_data ((file) => {
                     if (!cancelled) {
-                        Idle.add (() => {
-                            this.working_on_file (file.get_basename ());
-                            return Source.REMOVE;
-                        });
-
-                        debug (@"Processing file $(file.get_path ())");
+                        bool success = false;
 
                         try {
                             process_file (file);
+                            /* if everything went correctly */
+                            success = true;
                         } catch (CompressError.IGNORED_FILE err) {
                             debug (@"Skipping $(file.get_path ()). Reason: $(err.message)");
                         } catch (CompressError.PROCESS err) {
                             warning (@"Failed during processing on $(file.get_path ()). Error: $(err.message)");
                         } catch (Error err) {
                             warning (@"Failed to process $(file.get_path ()). Error: $(err.message)");
+                        } finally {
+                            Idle.add (() => {
+                                /* NOTE: completed_threads is safe in this Idle callback */
+                                this.finished_file (file.get_basename (), ++completed_threads, total_files, success);
+
+                                debug (@"Finished processing file $(file.get_path ()). "
+                                       + @"Success: $success. Thread: $completed_threads/$total_files");
+
+                                return Source.REMOVE;
+                            });
                         }
                     }
                 }, (int) GLib.get_num_processors (), false);

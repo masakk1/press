@@ -95,20 +95,24 @@ public class Press.ConfigPage : Adw.NavigationPage {
     [GtkCallback]
     private void on_source_directory_clicked (Gtk.Button button) {
         select_directory ((folder) => {
-            string path = folder != null ? folder.get_path () : "nothing";
+            string? path = folder ? .get_path ();
 
-            config.source_path = path;
-            source_directory_row.subtitle = path;
+            if (path != null) {
+                config.source_path = path;
+                source_directory_row.subtitle = path;
+            }
         });
     }
 
     [GtkCallback]
     private void on_target_directory_clicked (Gtk.Button button) {
         select_directory ((folder) => {
-            string? path = folder != null ? folder.get_path () : "nothing";
+            string? path = folder ? .get_path ();
 
-            config.target_path = path;
-            target_directory_row.subtitle = path;
+            if (path != null) {
+                config.target_path = path;
+                target_directory_row.subtitle = path;
+            }
         });
     }
 

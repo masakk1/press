@@ -287,12 +287,12 @@ namespace Press {
 
         /**
          * Called when a file has been fully processed. Returns information about the results and what's left.
-         * @param filename The path of the file that was processed
+         * @param file_name The path of the file that was processed
          * @param index The index of the file that was processed, in relation to the total
          * @param total The total number of files to process
          * @param success Whether the file was processed successfully
          */
-        public signal void finished_file (string filename, int index, int total, bool success);
+        public signal void finished_file (string file_name, int index, int total, bool success);
 
         private bool running = false;
         private bool cancelled = false;

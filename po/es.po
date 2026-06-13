@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: press\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:00+0000\n"
+"POT-Creation-Date: 2026-06-13 16:55+0000\n"
 "PO-Revision-Date: 2026-04-01 20:25+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -75,133 +75,132 @@ msgstr "Importa entre miles de formatos con GStreamer"
 msgid "Masakk1"
 msgstr "Masakk1"
 
-#: data/io.github.masakk1.press.metainfo.xml.in:52
+#: data/io.github.masakk1.press.metainfo.xml.in:57
 msgid "Landing page in desktop, with a light theme"
 msgstr "Página de inicio en el escritorio, en blanco"
 
-#: data/io.github.masakk1.press.metainfo.xml.in:57
+#: data/io.github.masakk1.press.metainfo.xml.in:61
 msgid "Landing page in a desktop, in a dark theme"
 msgstr "Página de inicio en el escripotior, en negro"
 
-#: data/io.github.masakk1.press.metainfo.xml.in:62
+#: data/io.github.masakk1.press.metainfo.xml.in:65
 msgid "Files are being compressed in a dark desktop window"
 msgstr "Archivos siendo comprimidos en una ventana de escritorio oscura"
 
-#: data/io.github.masakk1.press.metainfo.xml.in:67
+#: data/io.github.masakk1.press.metainfo.xml.in:69
 msgid "Landing page in white, in phone format"
 msgstr "Página de inicio en blanco, en formato móvil"
 
-#: src/window.vala:99
+#: src/window.vala:98
 #, c-format
-msgid "Working on %s"
-msgstr "Trabajando con %s"
+msgid "Finished %s (%d/%d)"
+msgstr "Terminado %s (%d/%d)"
 
-#: src/window.vala:123
+#: src/window.vala:133
 msgid "Selected folders don't exist"
 msgstr "Las carpetas selecciondas no existen"
 
-#: src/window.vala:129
-#, fuzzy
-msgid "cancelling"
-msgstr "Cancelar"
+#: src/window.vala:139
+msgid "Gracefully cancelling…"
+msgstr "Cerrando cuidadosamente…"
 
-#. Current preset names
-#. They must match the existing names on data/presets.json
-#: src/config_page.vala:32
-msgid "MPEG / mp3"
-msgstr "MPEG / mp3"
-
-#: src/config_page.vala:33
-msgid "AAC / m4a"
-msgstr "AAC / m4a"
-
-#: src/config_page.vala:34
-msgid "Vorbis / ogg"
-msgstr "Vorbis / ogg"
-
-#: src/config_page.vala:35
-msgid "High Quality"
-msgstr "Alta"
-
-#: src/config_page.vala:36
-msgid "Standard Quality"
-msgstr "Tradicional"
-
-#: src/config_page.vala:37
-msgid "Libre (ogg)"
-msgstr "Libre (ogg)"
-
-#: src/config_page.vala:38
-msgid "Compatibility"
-msgstr "Compatibilidad"
-
-#: src/config_page.vala:114
+#: src/config_page.vala:146
 msgid "Custom"
 msgstr "Personalizado"
 
 #. Note to Translators: Add your name here
-#: src/application.vala:55
+#: src/application.vala:62
 msgid "translator-credits"
 msgstr "Masakk1"
 
-#: src/ui/window.ui:18 src/ui/config_page.ui:144
+#. Current preset names
+#. They must match the existing names on data/presets.json
+#: src/translatable.vala:29
+msgid "MPEG / mp3"
+msgstr "MPEG / mp3"
+
+#: src/translatable.vala:30
+msgid "AAC / m4a"
+msgstr "AAC / m4a"
+
+#: src/translatable.vala:31
+msgid "Vorbis / ogg"
+msgstr "Vorbis / ogg"
+
+#: src/translatable.vala:32
+msgid "High Quality"
+msgstr "Alta"
+
+#: src/translatable.vala:33
+msgid "Standard Quality"
+msgstr "Tradicional"
+
+#: src/translatable.vala:34
+msgid "Libre (ogg)"
+msgstr "Libre (ogg)"
+
+#: src/translatable.vala:35
+msgid "Compatibility"
+msgstr "Compatibilidad"
+
+#: src/ui/window.ui:18 src/ui/config_page.ui:164
 msgid "Compress"
 msgstr "Comprimir"
 
-#: src/ui/window.ui:27
+#: src/ui/window.ui:28
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/ui/window.ui:37
+#: src/ui/window.ui:38
 msgid "Compressing"
 msgstr "Comprimiendo"
 
-#: src/ui/window.ui:52
+#: src/ui/window.ui:59
 msgid "Done"
 msgstr "Hecho"
 
-#: src/ui/window.ui:65
+#: src/ui/window.ui:72
 msgid "Back"
 msgstr "Volver"
 
-#: src/ui/window.ui:74
+#: src/ui/window.ui:81
 msgid "All done!"
 msgstr "Hecho!"
 
-#: src/ui/window.ui:77
+#: src/ui/window.ui:82
 msgid "Your files are now compressed at the target directory."
 msgstr "Tus archivos se han comprimido en la carpeta de destino."
 
-#: src/ui/window.ui:89
+#: src/ui/window.ui:94
 msgid "Compress and replace all files?"
 msgstr "¿Comprimir y reemplazar todos los archivos?"
 
-#: src/ui/window.ui:92
+#: src/ui/window.ui:95
 msgid ""
 "This will replace files with the same name at the destination directory."
 msgstr ""
 "Esta acción reemplazará los archivos con el mismo nombre en el destino."
 
-#: src/ui/window.ui:96 src/ui/window.ui:109
+#: src/ui/window.ui:99 src/ui/window.ui:110
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/ui/window.ui:97
+#: src/ui/window.ui:100
 msgid "_Compress"
 msgstr "_Comprimir"
 
-#: src/ui/window.ui:101
+#: src/ui/window.ui:104
 msgid "Cancel compression?"
 msgstr "Cancelar compresión?"
 
-#: src/ui/window.ui:104
+#: src/ui/window.ui:105
 msgid ""
 "This will stop the compression, but wont remove the changes already made."
 msgstr ""
 "Esta acción parará la compresión, pero no va a eliminar los cambios ya "
 "hechos."
 
-#: src/ui/window.ui:108
+#: src/ui/window.ui:109
 msgid "_Continue"
 msgstr "_Continua"
 
@@ -255,37 +254,60 @@ msgstr "Copiar archivos sin audio en el destino"
 msgid "Custom Target Quality"
 msgstr "Perfil de Calidad Personalizada"
 
-#: src/ui/config_page.ui:91
+#: src/ui/config_page.ui:89
 msgid "Manually configure the maximum target quality."
 msgstr "Configura manualmente la mayor calidad deseada posible."
 
-#: src/ui/config_page.ui:95
+#: src/ui/config_page.ui:93
 msgid "Encoder / Format"
 msgstr "Codificador / Formato"
 
-#: src/ui/config_page.ui:102
-msgid "Bitrate (Kbps)"
-msgstr "Tasa de bits (Kbps)"
+#: src/ui/config_page.ui:99
+msgid "Change Bitrate"
+msgstr "Cambiar tasa de bits"
 
-#: src/ui/config_page.ui:117
-msgid "Sample Rate (Hz)"
-msgstr "Tasa de muestreo (Hz)"
+#: src/ui/config_page.ui:106
+msgid "Kilo bits per second (Kbps)"
+msgstr "Kilo-bits por segundo"
 
-#: src/ui/config_page.ui:133
+#: src/ui/config_page.ui:122
+msgid "Set Bit-depth to 16-bit"
+msgstr "Configurar Profundidad de bits a 16"
+
+#: src/ui/config_page.ui:129
+msgid "Change Sample Rate"
+msgstr "Cambiar Tasa de Muestreo"
+
+#: src/ui/config_page.ui:136
+msgid "Hertz (Hz)"
+msgstr "Hercios (Hz)"
+
+#: src/ui/config_page.ui:151
 msgid "Samplerates other than 44100 or 48000 won't work well"
 msgstr "Excepto 44100 y 48000, otras tasas de frecuencia no funcionan bien."
 
-#: src/ui/config_page.ui:166
+#: src/ui/config_page.ui:186
 msgid "_Open Presets Location"
 msgstr "_Localizar Perfiles"
 
-#: src/ui/config_page.ui:170
+#: src/ui/config_page.ui:190
 msgid "_Keyboard Shortcuts"
 msgstr "_Muestra atajos"
 
-#: src/ui/config_page.ui:174
+#: src/ui/config_page.ui:194
 msgid "_About Press"
 msgstr "_Sobre Press"
+
+#, c-format
+#~ msgid "Working on %s"
+#~ msgstr "Trabajando con %s"
+
+#, fuzzy
+#~ msgid "cancelling"
+#~ msgstr "Cancelar"
+
+#~ msgid "Bitrate (Kbps)"
+#~ msgstr "Tasa de bits (Kbps)"
 
 #~ msgid "A caption"
 #~ msgstr "test test"
